@@ -41,11 +41,19 @@ eclipse.platform.baseurl = ${eclipse.url}/eclipse/updates
 eclipse.platform.name    = Platform_${eclipse.platform.version}
 eclipse.platform.url     = "${eclipse.platform.baseurl}/${eclipse.version}/${eclipse.platform.version}"
 
--plugin.10.eclipse.platform: \
-    aQute.bnd.repository.p2.provider.P2Repository; \
-        name  = ${eclipse.platform.name}; \
-        url   = ${eclipse.platform.url}; \
-        cache = ${cache}
+# Remote Repositories
+#-plugin.10.eclipse.platform: \
+#    aQute.bnd.repository.p2.provider.P2Repository; \
+#        name  = ${eclipse.platform.name}; \
+#        url   = ${eclipse.platform.url}; \
+#        cache = ${cache}
+
+# use fixed indices to reduce load time on new workspaces
+-plugin.20.eclipse.platform: \
+    aQute.bnd.repository.osgi.OSGiRepository;\
+        locations=$[fileuri;${.}]/fixedIndices/p2-Platform_R-4.24-202206070700-index.xml.gz;\
+        name=${eclipse.platform.name};\
+        max.stale=-1
 
 # Eclipse Simultaneous release 
 eclipse.simu.baseurl     = ${eclipse.url}/releases
