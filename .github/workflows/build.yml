@@ -34,7 +34,7 @@ jobs:
        path: ${GITHUB_WORKSPACE}/eim/generated/distributions/executable/eim.jar
      -
       name: Release api artifact
-      uses: actions/uploadßartifact@v3
+      uses: actions/upload-artifact@v3
       with: 
        name: eim.api-${{ steps.version.outputs.version }}.jar
        path: ${GITHUB_WORKSPACE}/eim/generated/distributions/executable/eim.api.jar
