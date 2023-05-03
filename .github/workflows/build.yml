@@ -21,7 +21,7 @@ jobs:
       name: Build application, run tests and create coverage reports
       id: script
       run: |
-        /bin/bash ${{ GITHUB_WORKSPACE }}/buildAndTest.sh
+        /bin/bash ${{ github.workspace }}/buildAndTest.sh
      - 
       name: version
       run: echo "::set-output name=version::$(cat version)"
@@ -31,10 +31,10 @@ jobs:
       uses: actions/upload-artifact@v3
       with: 
        name: eim-${{ steps.version.outputs.version }}.jar
-       path: ${{ GITHUB_WORKSPACE }}/eim/generated/distributions/executable/eim.jar
+       path: ${{ github.workspace }}/eim/generated/distributions/executable/eim.jar
      -
       name: Release api artifact
       uses: actions/upload-artifact@v3
       with: 
        name: eim.api-${{ steps.version.outputs.version }}.jar
-       path: ${{ GITHUB_WORKSPACE }}/eim/generated/distributions/executable/eim.api.jar
+       path: ${{ github.workspace }}/eim/generated/distributions/executable/eim.api.jar
