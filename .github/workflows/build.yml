@@ -27,30 +27,14 @@ jobs:
       run: echo "::set-output name=version::$(cat version)"
       id: version
      -
-      name: Release build artifact
-      uses: actions/create-release@v1
-      with:
-        draft: false
-        prerelease: false
-        release_name: ${{ steps.version.outputs.version }}
-        tag_name: ${{ github.ref }}
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-     - name: upload implementation artifact
-       uses: actions/upload-release-asset@v1
-       env:
-        GITHUB_TOKEN: ${{ github.token }}
-       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./eim/generated/distributions/executable/eim.jar
-        asset_name: eim.jar
-        asset_content_type: application/java-archive
-     - name: upload api artifact
-       uses: actions/upload-release-asset@v1
-       env:
-        GITHUB_TOKEN: ${{ github.token }}
-       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./eim.api/generated/distributions/executable/eim.api.jar
-        asset_name: eim.jar
-        asset_content_type: application/java-archive
+      name: Release implementation artifact
+      uses: actions/uploadßartifact@v3
+      with: 
+       name: eim-${{ steps.version.outputs.version }}.jar
+       path: ${GITHUB_WORKSPACE}/eim/generated/distributions/executable/eim.jar
+     -
+      name: Release api artifact
+      uses: actions/uploadßartifact@v3
+      with: 
+       name: eim.api-${{ steps.version.outputs.version }}.jar
+       path: ${GITHUB_WORKSPACE}/eim/generated/distributions/executable/eim.api.jar
