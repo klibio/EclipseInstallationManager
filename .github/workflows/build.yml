@@ -26,4 +26,3 @@ jobs:
       name: Create release and upload artifacts to release
       run: |
         /bin/bash ${{ github.workspace }}/createReleaseAndArtifacts.sh
-        
