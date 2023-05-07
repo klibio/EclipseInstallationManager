@@ -22,19 +22,8 @@ jobs:
       id: script
       run: |
         /bin/bash ${{ github.workspace }}/buildAndTest.sh
-     - 
-      name: version
-      run: echo "::set-output name=version::$(cat version)"
-      id: version
      -
-      name: Release implementation artifact
-      uses: actions/upload-artifact@v3
-      with: 
-       name: eim-${{ steps.version.outputs.version }}.jar
-       path: ${{ github.workspace }}/eim/generated/distributions/executable/eim.jar
-     -
-      name: Release api artifact
-      uses: actions/upload-artifact@v3
-      with: 
-       name: eim.api-${{ steps.version.outputs.version }}.jar
-       path: ${{ github.workspace }}/eim/generated/distributions/executable/eim.api.jar
+      name: Create release and upload artifacts to release
+      run: |
+        /bin/bash ${{ github.workspace }}/createReleaseAndArtifacts.sh
+        
