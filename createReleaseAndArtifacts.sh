@@ -9,7 +9,7 @@ version=$(cat version)
 tag=v${version}
 branch=$(echo ${GITHUB_REF#refs/heads/})
 
-if [[ ${branch} = "main"]]; then
+if [[ ${branch} = "main" ]]; then
     gh release create ${tag}\
         --latest \
         --title "Eclipse Installation Manager (EIM) v${version}" \
