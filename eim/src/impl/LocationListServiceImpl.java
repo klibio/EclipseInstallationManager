@@ -24,12 +24,22 @@ import org.eclipse.oomph.util.Pair;
 
 @Component
 public class LocationListServiceImpl implements ListLocationService {
-	Map<Integer, Pair<Installation, Workspace>> executionMap = new HashMap<>();
+	private Map<Integer, Pair<Installation, Workspace>> executionMap = new HashMap<>();
 
 	@Override
-	public void listLocations() {
+	public void listLocations(String locationFile) {
+		File file;
+		if(locationFile.equals("oomph")) {
+			String oomphhome = System.getProperty("user.home", System.getenv("HOME"))
+					.concat("/.eclipse/org.eclipse.oomph.setup");
+			String setupfile = oomphhome + "/setups/locations.setup";
+			file = new File(setupfile);
+		} else {
+			file = new File(locationFile);
+		}
+		
 		// refresh map entries
-		fetchEntries();
+		fetchEntries(file);
 		
 		//print map details
 		for (Map.Entry<Integer, Pair<Installation, Workspace>> entry : executionMap.entrySet()) {
@@ -47,11 +57,7 @@ public class LocationListServiceImpl implements ListLocationService {
 
 	}
 
-	private Resource loadLocationResource() throws RuntimeException {
-		String oomphhome = System.getProperty("user.home", System.getenv("HOME"))
-				.concat("/.eclipse/org.eclipse.oomph.setup");
-		String setupfile = oomphhome + "/setups/locations.setup";
-		File file = new File(setupfile);
+	private Resource loadLocationResource(File file) throws RuntimeException {
 		URI uri = URI.createFileURI(file.getAbsolutePath());
 		System.out.println("Loading EMF model " + uri);
 
@@ -59,15 +65,14 @@ public class LocationListServiceImpl implements ListLocationService {
 
 		Resource resource = resourceSet.getResource(uri, true);
 		System.out.println("Loaded " + uri);
+		
 		return resource;
-		
-		
 	}
 
-	public void fetchEntries() {
+	public void fetchEntries(File file) {
 		Map<Integer, Pair<Installation, Workspace>> executionMapTemp = new HashMap<>();
 		try {
-			Resource resource = loadLocationResource();
+			Resource resource = loadLocationResource(file);
 			
 			// iterate contents of the loaded resource.
 			int i = 1;
@@ -92,7 +97,7 @@ public class LocationListServiceImpl implements ListLocationService {
 					}
 					executionMap = executionMapTemp;
 				} else {
-					System.out.println("given file is not a LocationCatalog");
+					System.out.println("The given file is not a LocationCatalog");
 				}
 			}
 			

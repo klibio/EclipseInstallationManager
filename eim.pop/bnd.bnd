@@ -11,7 +11,12 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 	org.mockito.mockito-core,\
 	org.knowhowlab.osgi.testing.all,\
 	eim.api;version=latest,\
-	org.eclipse.e4.core.di.annotations
+	org.eclipse.e4.core.di.annotations,\
+	org.eclipse.oomph.setup,\
+	org.eclipse.core.resources,\
+	org.eclipse.oomph.util,\
+	org.junit,\
+	org.apache.commons.commons-io
 
 -dependson: \
     eim
@@ -19,4 +24,7 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 -privatepackage: \
     eim.pop
 
-Bundle-Version: 0.1.0.${tstamp}
+-includeresource.resources: \
+    resources
+
+Bundle-Version: 0.2.0.${tstamp}

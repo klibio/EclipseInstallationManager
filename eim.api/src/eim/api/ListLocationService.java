@@ -10,7 +10,7 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface ListLocationService {
 	
-	public void listLocations();
+	public void listLocations(String locationFile);
 	
 	public Map<Integer, Pair<Installation, Workspace>> getLocationEntries();
 }
