@@ -76,7 +76,7 @@ junit: \
   junit-jupiter-api
 mockito: org.mockito.mockito-all
 
-Bundle-Version:             0.1.0.${tstamp}
+Bundle-Version:             0.2.0.${tstamp}
 
 -remoteworkspace        true
 -runfw:                 org.eclipse.osgi
