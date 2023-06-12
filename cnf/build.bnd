@@ -76,11 +76,10 @@ junit: \
   junit-jupiter-api
 mockito: org.mockito.mockito-all
 
-
 Bundle-Version:             0.1.0.${tstamp}
 
 -remoteworkspace        true
 -runfw:                 org.eclipse.osgi
 -runee:                 JavaSE-11
 
-
+Automatic-Module-Name: ${project.name}

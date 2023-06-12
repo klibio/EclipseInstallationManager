@@ -1,1 +1,2 @@
+Bundle-SymbolicName: ${project.name}.command;singleton:=true
 Private-Package: command

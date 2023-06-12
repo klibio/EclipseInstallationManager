@@ -2,19 +2,20 @@
 	osgi.core,\
 	osgi.cmpn,\
 	osgi.annotation,\
-	org.eclipse.equinox.app,\
 	eim.api;version=latest,\
 	org.apache.felix.gogo.runtime,\
+    org.apache.felix.scr,\
+    org.eclipse.core.runtime,\
+	org.eclipse.emf.ecore,\
+	org.eclipse.emf.common,\
+	org.eclipse.equinox.app,\
 	org.eclipse.oomph.base,\
 	org.eclipse.oomph.base.edit,\
 	org.eclipse.oomph.setup,\
-	org.eclipse.oomph.setup.core,\
-	org.eclipse.emf.ecore,\
-	org.eclipse.emf.common
+	org.eclipse.oomph.setup.core
     
+-sub: *.bnd
 -includeresource: ./root/
 
 Bundle-Version: 0.2.0.${tstamp;yyyyMMdd-HHmmss}
--runrequires: bnd.identity;id='eim.api'
-
--sub: *.bnd
+Require-Bundle: org.eclipse.oomph.setup.core

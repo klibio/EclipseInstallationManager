@@ -1,6 +1,8 @@
 package impl;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
@@ -19,7 +21,7 @@ import eim.api.ListLocationService;
 
 @Component
 public class LocationListServiceImpl implements ListLocationService {
-	
+
 	@Override
 	public void listLocations() {
 		String oomphhome = System.getProperty("user.home", System.getenv("HOME"))
@@ -37,6 +39,7 @@ public class LocationListServiceImpl implements ListLocationService {
 			System.out.println("Loaded " + uri);
 
 			// iterate contents of the loaded resource.
+			int i = 1;
 			for (EObject eObject : resource.getContents()) {
 				if (eObject instanceof LocationCatalog) {
 					LocationCatalog catalog = (LocationCatalog) eObject;
@@ -46,8 +49,21 @@ public class LocationListServiceImpl implements ListLocationService {
 					while (instIterator.hasNext()) {
 						Entry<Installation, EList<Workspace>> instEntry = instIterator.next();
 						Installation inst = instEntry.getKey();
-						System.out.format("## installation inside <%s>\n", inst.eResource().getURI());
-						instEntry.getValue().forEach(w -> System.out.println("   wrkspc: " + w.eResource().getURI()));
+						Resource eResource = inst.eResource();
+						if (eResource != null) {
+							EList<Workspace> wrkspcList = instEntry.getValue();
+							for (Workspace wrkspc : wrkspcList) {
+								URI wrkspcURI = wrkspc.eResource().getURI();
+								Path instPath = Paths.get(eResource.getURI().toFileString()).getParent().getParent()
+										.getParent();
+								Path wrkspcPath = Paths.get(wrkspcURI.toFileString()).getParent().getParent()
+										.getParent().getParent();
+								System.out.format("adding launch entry %s\necl: <%s>\nwrk: <%s>\n", i++, instPath,
+										wrkspcPath);
+							}
+						} else {
+							System.out.format("## installation <%s>\n", inst.getName());
+						}
 					}
 				} else {
 					System.out.println("no LocationCatalog found");

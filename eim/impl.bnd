@@ -1,1 +1,7 @@
+Require-Bundle: org.eclipse.core.runtime,\
+    org.eclipse.oomph.setup,\
+    org.eclipse.oomph.setup.core,\
+    org.apache.felix.scr
+
+Bundle-SymbolicName: ${project.name}.impl;singleton:=true
 Private-Package: impl
