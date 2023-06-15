@@ -1,0 +1,4 @@
+-include: ~eim.bndrun
+
+-runproperties.DEBUG: \
+    logback.configurationFile=${workspace}/eim/logback-DEBUG.xml
