@@ -12,7 +12,7 @@ branch=$(echo ${GITHUB_REF#refs/heads/})
 
 # rename jars to include the version
 mv ${GITHUB_WORKSPACE}/eim/generated/distributions/executable/eim.jar ${GITHUB_WORKSPACE}/eim/generated/distributions/executable/eim_${version}.jar
-mv ${GITHUB_WORKSPACE}/eim.api/generated/distributions/executable/eim.api.jar ${GITHUB_WORKSPACE}/eim.api/generated/eim.api_${apiVersion}.jar
+mv ${GITHUB_WORKSPACE}/eim.api/generated/eim.api.jar ${GITHUB_WORKSPACE}/eim.api/generated/eim.api_${apiVersion}.jar
 
 if [[ ${branch} = "main" ]]; then
     gh release create ${tag}\
