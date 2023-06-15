@@ -9,6 +9,8 @@ import org.eclipse.oomph.util.Pair;
 import org.osgi.annotation.versioning.ConsumerType;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.log.Logger;
+import org.osgi.service.log.LoggerFactory;
 
 import eim.api.EclipseService;
 import eim.api.ListLocationService;
@@ -17,7 +19,6 @@ import eim.api.ListLocationService;
 		"osgi.command.function=startProcess", "osgi.command.function=startEntry" })
 @ConsumerType
 public class EclipseStarterCommand {
-
 	private EclipseService eclService;
 	private ListLocationService listLocSvc;
 

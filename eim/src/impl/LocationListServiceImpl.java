@@ -29,7 +29,7 @@ public class LocationListServiceImpl implements ListLocationService {
 	@Override
 	public void listLocations(String locationFile) {
 		File file;
-		if(locationFile.equals("oomph")) {
+		if(locationFile == null || locationFile.isBlank()) {
 			String oomphhome = System.getProperty("user.home", System.getenv("HOME"))
 					.concat("/.eclipse/org.eclipse.oomph.setup");
 			String setupfile = oomphhome + "/setups/locations.setup";

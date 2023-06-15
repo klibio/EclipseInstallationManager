@@ -64,7 +64,7 @@ public class EclipseServiceImpl implements EclipseService {
 					.getParent().getParent();
 			Path workspacePath = Paths.get(entry.getElement2().eResource().getURI().toFileString()).getParent()
 					.getParent().getParent().getParent();
-
+			System.getProperty("eclipse.launcher.name");
 			Path programPath = installationPath.resolve("eclipse.exe");
 			ArrayList<String> args = new ArrayList<String>();
 			args.add("ws=" + workspacePath.toString());

@@ -21,5 +21,4 @@
 -sub: *.bnd
 -includeresource: ./root/
 
-Bundle-Version: 0.2.0.${tstamp;yyyyMMdd-HHmmss}
 Require-Bundle: org.eclipse.oomph.setup.core

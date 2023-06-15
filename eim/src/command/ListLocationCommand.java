@@ -21,7 +21,7 @@ public class ListLocationCommand {
 	
 	@Descriptor("List all available installations and workspaces done with the Eclipse Installer")
 	public void listLocations() {
-		listService.listLocations("oomph");
+		listService.listLocations(null);
 	}
 	
 	@Descriptor("List all available installations and workspaces from a specific locations file")
