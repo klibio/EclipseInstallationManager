@@ -1,6 +1,5 @@
 package eim.pop;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.knowhowlab.osgi.testing.assertions.BundleAssert.assertBundleState;
@@ -8,7 +7,6 @@ import static org.knowhowlab.osgi.testing.assertions.OSGiAssert.getBundleContext
 import static org.knowhowlab.osgi.testing.assertions.ServiceAssert.assertServiceAvailable;
 import static org.knowhowlab.osgi.testing.assertions.ServiceAssert.assertServiceUnavailable;
 import static org.knowhowlab.osgi.testing.utils.BundleUtils.findBundle;
-import static org.mockito.ArgumentMatchers.anyMap;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -16,16 +14,13 @@ import java.lang.management.RuntimeMXBean;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.AbstractMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.util.BasicEList;
-import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.common.util.URI;
@@ -131,10 +126,10 @@ public class EIMTest {
 		EList<Workspace> inst2Workspaces = new BasicEList<>();
 		inst2Workspaces.add(workspace1);
 		inst2Workspaces.add(workspace2);
-		
+
 		installations.put(installation1, inst1Workspaces);
 		installations.put(installation2, inst2Workspaces);
-		
+
 		Resource catalogResource = resourceSet.createResource(catalogURI);
 		catalogResource.getContents().add(locationCatalog);
 		try {
@@ -142,7 +137,7 @@ public class EIMTest {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		Path locationsCatalogPath = Paths.get(catalog);
 		assertTrue(Files.exists(locationsCatalogPath));
 

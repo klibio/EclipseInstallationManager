@@ -9,8 +9,6 @@ import org.eclipse.oomph.util.Pair;
 import org.osgi.annotation.versioning.ConsumerType;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.log.Logger;
-import org.osgi.service.log.LoggerFactory;
 
 import eim.api.EclipseService;
 import eim.api.ListLocationService;
