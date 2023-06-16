@@ -13,8 +13,15 @@ import org.osgi.service.component.annotations.Reference;
 import eim.api.EclipseService;
 import eim.api.ListLocationService;
 
-@Component(service = EclipseStarterCommand.class, property = { "osgi.command.scope=zEIM",
-		"osgi.command.function=startProcess", "osgi.command.function=startEntry" })
+//@formatter:off
+@Component(
+		service = EclipseStarterCommand.class,
+		property = {
+				"osgi.command.scope=zEIM",
+				"osgi.command.function=startProcess",
+				"osgi.command.function=startEntry"
+		})
+//@formatter:on
 @ConsumerType
 public class EclipseStarterCommand {
 	private EclipseService eclService;
