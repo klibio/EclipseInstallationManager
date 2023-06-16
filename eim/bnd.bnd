@@ -17,7 +17,7 @@
 	org.apache.commons.lang3,\
 	assertj-core,\
 	org.eclipse.oomph.util,\
-	slf4j.api
+	slf4j.api;version='2.0'
     
 -sub: *.bnd
 -includeresource: ./root/
