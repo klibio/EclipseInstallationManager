@@ -10,7 +10,7 @@
     launch.keep=false,\
     \
     org.osgi.framework.bootdelegation='org.xml.*,org.xml.sax.helpers.*',\
-    logback.configurationFile=${workspace}/eim/logback.xml
+    logback.configurationFile=${workspace}/eim/logback.xml,\
     osgi.console=
 
 -runrequires: \
