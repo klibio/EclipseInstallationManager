@@ -18,27 +18,30 @@ import java.util.Map;
 import org.eclipse.oomph.util.Pair;
 import org.eclipse.oomph.setup.Installation;
 import org.eclipse.oomph.setup.Workspace;
+import org.eclipse.equinox.app.IApplication;
+import org.eclipse.equinox.app.IApplicationContext;
 
 @ConsumerType
-public class TrayApplication {
+public class TrayApplication implements IApplication {
 	
-	private static EclipseService eclService;
-	private static ListLocationService listLocSvc;
-	private static Map<Integer, Pair<Installation, Workspace>> locationEntries;
+	private EclipseService eclService;
+	private ListLocationService listLocSvc;
+	private Map<Integer, Pair<Installation, Workspace>> locationEntries;
 	@Reference
 	public void bindEclipseService(EclipseService eclsvc) {
-		TrayApplication.eclService = eclsvc;
+		this.eclService = eclsvc;
 	}
 
 	@Reference
 	public void bindLocationService(ListLocationService listLocSvc) {
-		TrayApplication.listLocSvc = listLocSvc;
+		this.listLocSvc = listLocSvc;
 	}
 	
 	
 	public static boolean dispose = false;
-
-	public static void main(String[] args) {
+	
+	@Override
+	public Object start(IApplicationContext context) throws Exception {
 		locationEntries = listLocSvc.getLocationEntries();
 		Display display = new Display();
 		Shell shell = new Shell(display);
@@ -59,15 +62,6 @@ public class TrayApplication {
 			item.addListener(SWT.Selection, event -> System.out.println("selection"));
 			item.addListener(SWT.DefaultSelection, event -> System.out.println("default selection"));
 			final Menu menu = new Menu(shell, SWT.POP_UP);
-
-			// TODO: Replace this with functional implementation
-//			for (int i = 0; i < 8; i++) {
-//				MenuItem mi = new MenuItem(menu, SWT.PUSH);
-//				mi.setText("Item" + i);
-//				mi.addListener(SWT.Selection, event -> System.out.println("selection " + event.widget));
-//				if (i == 0)
-//					menu.setDefaultItem(mi);
-//			}
 			for (Map.Entry<Integer, Pair<Installation, Workspace>> entry : locationEntries.entrySet()) {
 				Integer key = entry.getKey();
 				Pair<Installation, Workspace> val = entry.getValue();
@@ -97,6 +91,13 @@ public class TrayApplication {
 		image.dispose();
 		image2.dispose();
 		display.dispose();
+		return IApplication.EXIT_OK;
+	}
+
+	@Override
+	public void stop() {
+		// nothing to do
+		
 	}
 
 }
