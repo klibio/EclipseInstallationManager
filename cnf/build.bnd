@@ -1,5 +1,6 @@
 version=$(cat;${workspace}/version)
 apiVersion=$(cat;${workspace}/apiVersion)
+trayVersion=$(cat;${workspace}/trayVersion)
 cache=${.}/cache
 
 # JUnit

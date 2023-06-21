@@ -14,11 +14,13 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import eim.api.EclipseService;
 import eim.api.ListLocationService;
+import org.eclipse.jface.dialogs.InputDialog;
 
 @Component(immediate = true)
 public class TrayApplication {
@@ -30,8 +32,10 @@ public class TrayApplication {
 	private Map<Integer, Pair<Installation, Workspace>> locationEntries;
 
 	public static boolean dispose = false;
-
-	public void activate() throws Exception {
+	
+	@Activate
+	public void activate() {
+		listLocSvc.listLocations(null);
 		locationEntries = listLocSvc.getLocationEntries();
 		Display display = new Display();
 		Shell shell = new Shell(display);
@@ -55,12 +59,11 @@ public class TrayApplication {
 			for (Map.Entry<Integer, Pair<Installation, Workspace>> entry : locationEntries.entrySet()) {
 				Integer key = entry.getKey();
 				Pair<Installation, Workspace> val = entry.getValue();
+				
+				String installationName = val.getElement1().getQualifiedName();
 
-				String installationName = val.getElement1().getName();
-				String workspaceName = val.getElement2().getName();
-
-				MenuItem mi = new MenuItem(menu, SWT.PUSH);
-				mi.setText("Entry " + key + "\n" + installationName + "\n" + workspaceName);
+				MenuItem mi = new MenuItem(menu, SWT.WRAP | SWT.PUSH);
+				mi.setText(installationName);
 				mi.addListener(SWT.Selection, event -> eclService.startEntry(key, locationEntries));
 				if (key == 1) {
 					menu.setDefaultItem(mi);
@@ -79,7 +82,5 @@ public class TrayApplication {
 		image2.dispose();
 		display.dispose();
 	}
-	
-	// TODO: Create exit button to close Tray Application
 
 }

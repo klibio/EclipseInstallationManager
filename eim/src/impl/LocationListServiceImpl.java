@@ -17,6 +17,7 @@ import org.eclipse.oomph.setup.Installation;
 import org.eclipse.oomph.setup.LocationCatalog;
 import org.eclipse.oomph.setup.Workspace;
 import org.eclipse.oomph.setup.internal.core.util.SetupCoreUtil;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

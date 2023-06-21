@@ -11,10 +11,13 @@
 	org.eclipse.oomph.setup,\
 	org.eclipse.oomph.util,\
 	org.eclipse.equinox.app,\
-	slf4j.api
+	slf4j.api,\
+	org.eclipse.jface,\
+	org.eclipse.oomph.base,\
+	org.eclipse.emf.ecore,\
+	org.eclipse.emf.common
 	
 Bundle-SymbolicName: ${project.name};singleton:=true
-Bundle-Version: 0.1.0.${tstamp;"yyyymmdd-HHmmss"}
--includeresource: ./root/
+Bundle-Version: ${trayVersion}.${tstamp;"yyyymmdd-HHmmss"}
 -privatepackage: \
     tray.impl
