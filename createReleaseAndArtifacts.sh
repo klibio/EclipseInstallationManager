@@ -9,12 +9,14 @@ pwd
 
 version=$(cat version)
 apiVersion=$(cat apiVersion)
+trayVersion="0.1.0"
 tag=v${version}
 branch=$(echo ${GITHUB_REF#refs/heads/})
 
 # rename jars to include the version
 mv ${github_workspace}/eim/generated/gradle/distributions/executable/eim.jar ${github_workspace}/eim/generated/gradle/distributions/executable/eim_${version}.jar
 mv ${github_workspace}/eim.api/generated/gradle/eim.api.jar ${github_workspace}/eim.api/generated/gradle/eim.api_${apiVersion}.jar
+mv ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.jar ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray_${trayVersion}.jar
 
 if [[ ${branch} = "main" ]]; then
     gh release create ${tag}\
@@ -22,7 +24,8 @@ if [[ ${branch} = "main" ]]; then
         --title "Eclipse Installation Manager (EIM) v${version}" \
         --generate-notes \
         ${github_workspace}/eim/generated/gradle/distributions/executable/eim_${version}.jar \
-        ${github_workspace}/eim.api/generated/gradle/eim.api_${apiVersion}.jar
+        ${github_workspace}/eim.api/generated/gradle/eim.api_${apiVersion}.jar \
+        ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray_${trayVersion}.jar
 else
     echo "# Skipping release because the branch is not main"
 fi

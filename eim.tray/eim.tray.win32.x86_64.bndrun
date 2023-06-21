@@ -1,27 +1,34 @@
--runfw: org.eclipse.osgi;version='[3.18.300.v20230220-1352,3.18.300.v20230220-1352]'
+-runfw: org.eclipse.osgi;version='[3.18,4)'
 -runee: JavaSE-17
+-resolve.effective: active
 
--runsystemcapabilities: \
-    osgi.native;\
-    osgi.native.osname:List<String>="Windows10,Windows7,Windows 7,Win32";\
-    osgi.native.osversion:Version="6.1.0";\
-    osgi.native.processor:List<String>="x86-64,amd64,em64t,x86_64";\
-    osgi.native.language=en_US
+-runsystemcapabilities: ${native_capability}
 -runproperties: \
     launch.keep=false,\
     eclipse.application=eim.tray.application,\
-    osgi.ws=win32,\
-    osgi.os=win32,\
-    osgi.arch=x86_64
+    osgi.console.enable.builtin=false
+
 -runblacklist: \
     osgi.identity;filter:='(osgi.identity=*cocoa*)',\
     osgi.identity;filter:='(osgi.identity=*linux*)'
-    
+
 -runrequires: \
 	bnd.identity;id='eim.tray',\
 	bnd.identity;id='eim.api',\
 	bnd.identity;id='eim.impl',\
-	bnd.identity;id='bndtools.runtime.applaunch.eclipse4';version:Version='0.1.0.20141204-0657'
+	bnd.identity;id='bndtools.runtime.applaunch.eclipse4',\
+	bnd.identity;id='ch.qos.logback.classic';version:Version='1.2.12',\
+	bnd.identity;id='ch.qos.logback.core';version:Version='1.2.12'
+
+-runbundles+: \
+    bndtools.runtime.applaunch.eclipse4; startlevel=1,\
+    org.apache.felix.scr;                startlevel=2,\
+    org.eclipse.equinox.common;          startlevel=2,\
+    org.eclipse.equinox.event;           startlevel=2,\
+    org.eclipse.core.runtime;            startlevel=3,\
+    org.eclipse.equinox.p2.*;            startlevel=4,\
+    *;                                   startlevel=5
+
 -runbundles: \
 	bcpg;version='[1.72.2,1.72.3)',\
 	bcprov;version='[1.72.0,1.72.1)',\
@@ -95,4 +102,6 @@
 	org.sat4j.pb;version='[2.3.6,2.3.7)',\
 	org.tukaani.xz;version='[1.9.0,1.9.1)',\
 	slf4j.api;version='[1.7.36,1.7.37)',\
-	slf4j.nop;version='[1.7.36,1.7.37)'
+	ch.qos.logback.classic;version='[1.2.12,1.2.13)',\
+	ch.qos.logback.core;version='[1.2.12,1.2.13)'
+	

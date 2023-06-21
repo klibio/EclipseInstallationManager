@@ -1,5 +1,10 @@
 package tray.impl;
 
+import java.util.Map;
+
+import org.eclipse.oomph.setup.Installation;
+import org.eclipse.oomph.setup.Workspace;
+import org.eclipse.oomph.util.Pair;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -9,39 +14,24 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
-import org.osgi.annotation.versioning.ConsumerType;
+import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+
 import eim.api.EclipseService;
 import eim.api.ListLocationService;
-import java.util.Map;
 
-import org.eclipse.oomph.util.Pair;
-import org.eclipse.oomph.setup.Installation;
-import org.eclipse.oomph.setup.Workspace;
-import org.eclipse.equinox.app.IApplication;
-import org.eclipse.equinox.app.IApplicationContext;
+@Component(immediate = true)
+public class TrayApplication {
 
-@ConsumerType
-public class TrayApplication implements IApplication {
-	
+	@Reference
 	private EclipseService eclService;
+	@Reference
 	private ListLocationService listLocSvc;
 	private Map<Integer, Pair<Installation, Workspace>> locationEntries;
-	@Reference
-	public void bindEclipseService(EclipseService eclsvc) {
-		this.eclService = eclsvc;
-	}
 
-	@Reference
-	public void bindLocationService(ListLocationService listLocSvc) {
-		this.listLocSvc = listLocSvc;
-	}
-	
-	
 	public static boolean dispose = false;
-	
-	@Override
-	public Object start(IApplicationContext context) throws Exception {
+
+	public void activate() throws Exception {
 		locationEntries = listLocSvc.getLocationEntries();
 		Display display = new Display();
 		Shell shell = new Shell(display);
@@ -65,20 +55,17 @@ public class TrayApplication implements IApplication {
 			for (Map.Entry<Integer, Pair<Installation, Workspace>> entry : locationEntries.entrySet()) {
 				Integer key = entry.getKey();
 				Pair<Installation, Workspace> val = entry.getValue();
-				
+
 				String installationName = val.getElement1().getName();
 				String workspaceName = val.getElement2().getName();
-				
+
 				MenuItem mi = new MenuItem(menu, SWT.PUSH);
-				mi.setText("Entry " + key + "\n"
-						+ installationName + "\n"
-						+ workspaceName
-						);
+				mi.setText("Entry " + key + "\n" + installationName + "\n" + workspaceName);
 				mi.addListener(SWT.Selection, event -> eclService.startEntry(key, locationEntries));
 				if (key == 1) {
 					menu.setDefaultItem(mi);
 				}
-				
+
 			}
 			item.addListener(SWT.MenuDetect, event -> menu.setVisible(true));
 			item.setImage(image2);
@@ -91,13 +78,8 @@ public class TrayApplication implements IApplication {
 		image.dispose();
 		image2.dispose();
 		display.dispose();
-		return IApplication.EXIT_OK;
 	}
-
-	@Override
-	public void stop() {
-		// nothing to do
-		
-	}
+	
+	// TODO: Create exit button to close Tray Application
 
 }

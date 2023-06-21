@@ -18,6 +18,9 @@
 	org.eclipse.oomph.util,\
 	org.slf4j.api
 -sub: *.bnd
--includeresource: ./root/
+-includeresource: \
+    ./root/,\
+    logback.xml
+
 
 Require-Bundle: org.eclipse.oomph.setup.core

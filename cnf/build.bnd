@@ -24,8 +24,4 @@ testbin     ${target-dir}/test-classes
 
 Bundle-Version:             ${version}.${tstamp;yyyyMMdd-HHmmss}
 
--remoteworkspace        true
--runfw:                 org.eclipse.osgi
--runee:                 JavaSE-11
-
 Automatic-Module-Name: ${project.name}
