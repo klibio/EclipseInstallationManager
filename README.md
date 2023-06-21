@@ -30,3 +30,12 @@ With the numbers returned by this command you can execute
 startEntry <number>
 ```
 to start the installation/workspace entry.
+
+## The tray application
+Every release also includes a small application, which uses the Eclipse Installation Manager in the form of a Tray Application. This shall be seen as a small test consumer for the tool.
+The Tray App will be released with every release of the Eclipse Installation Manager. The version of the manager defines the latest tag.
+
+Start the tray application by downloading the version which matches your platform and execute
+```
+java -jar eim.tray.<platform>.jar
+```
