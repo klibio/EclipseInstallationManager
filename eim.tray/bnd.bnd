@@ -15,9 +15,10 @@
 	org.eclipse.oomph.base,\
 	org.eclipse.emf.ecore,\
 	org.eclipse.emf.common,\
-	eim.api;version='1.0'
+	eim.api;version='1.0',\
+	lc.kra.system.system-hook.bundle
 	
 Bundle-SymbolicName: ${project.name};singleton:=true
-Bundle-Version: 0.3.1.${tstamp;yyyyMMdd-HHmmss}
+Bundle-Version: 0.3.2
 -privatepackage: \
     tray.impl

@@ -23,6 +23,9 @@ import org.slf4j.LoggerFactory;
 
 import eim.api.EIMService;
 import eim.api.LocationCatalogEntry;
+import lc.kra.system.keyboard.GlobalKeyboardHook;
+import lc.kra.system.keyboard.event.GlobalKeyAdapter;
+import lc.kra.system.keyboard.event.GlobalKeyEvent;
 
 @Component(immediate = true)
 public class TrayApplication {
@@ -100,7 +103,25 @@ public class TrayApplication {
 			// TODO: Add Settings Menu on SWT.MenuDetect for refresh of the catalog
 			item.setImage(image2);
 			item.setHighlightImage(image);
+			
+			logger.debug("Adding new hotkey");
+			GlobalKeyboardHook keyboardHook = new GlobalKeyboardHook(true);
+			
+			keyboardHook.addKeyListener(new GlobalKeyAdapter() {
+				
+				@Override
+				public void keyPressed(GlobalKeyEvent event) {
+					if(event.getVirtualKeyCode() == GlobalKeyEvent.VK_SHIFT + GlobalKeyEvent.VK_E) {
+						logger.debug("Registering Hotkey Event for Shift+E");
+						menu.setVisible(true);
+					}
+				}
+			});
+			
 		}
+		
+		
+		
 		logger.debug("Waiting for disposal");
 		while (!dispose) {
 			if (!display.readAndDispatch())
