@@ -16,6 +16,11 @@ trayVersion=$(basename -s .jar $(find ${releaseRepo}/eim.tray/ -name 'eim.tray-*
 
 tag=v${trayVersion}
 
+# do not try to release if tag already exists and skip gravefully
+if [ git show-ref --tags --verify --quiet "refs/tags/${tag}" ]; then
+    exit 0
+fi
+
 branch=$(echo ${GITHUB_REF#refs/heads/})
 
 # rename jars to include the version
