@@ -10,7 +10,7 @@ show_downloads: true
 github:
   public: true
   is_project_page: true
-  release_url: https://github.com/A7exSchin/EclipseInstallationManager/releases/tag/v0.3.1
+  release_url: https://github.com/A7exSchin/EclipseInstallationManager/releases
   repository_url: https://github.com/A7exSchin/EclipseInstallationManager
 
 # Build settings
