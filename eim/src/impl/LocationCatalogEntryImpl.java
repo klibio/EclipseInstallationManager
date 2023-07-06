@@ -25,10 +25,16 @@ public class LocationCatalogEntryImpl extends LocationCatalogEntry {
 		this.installation = installation;
 		this.workspace = workspace;
 		this.tags = tags;
-		this.installationPath = Paths.get(installation.eResource().getURI().toFileString()).getParent().getParent()
-				.getParent();
-		this.workspacePath = Paths.get(workspace.eResource().getURI().toFileString()).getParent().getParent()
-				.getParent().getParent();
+		Path fullInstallationPath = Paths.get(installation.eResource().getURI().toFileString());
+		Path fullWorkspacePath = Paths.get(workspace.eResource().getURI().toFileString());
+		String osProp = System.getProperty("os.name");
+		if (osProp.matches(".*Mac.*")) {
+			Path installPath = fullInstallationPath.getParent().getParent().getParent().getParent().getParent();
+			this.installationPath = installPath;
+		} else {
+			this.installationPath = fullInstallationPath.getParent().getParent().getParent();
+		}
+		this.workspacePath = fullWorkspacePath.getParent().getParent().getParent().getParent();
 		this.installationFolderName = installationPath.getParent().toFile().getName();
 		this.workspaceFolderName = workspacePath.toFile().getName();
 	}

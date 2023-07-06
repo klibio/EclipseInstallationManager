@@ -1,5 +1,34 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<repository xmlns="http://www.osgi.org/xmlns/repository/v1.0.0" name="Templates" increment="1681325064203">
+<repository xmlns="http://www.osgi.org/xmlns/repository/v1.0.0" name="Templates" increment="1688395900058">
+  <resource>
+    <capability namespace="osgi.identity">
+      <attribute name="osgi.identity" value="io.klib.bndtools.templates"/>
+      <attribute name="type" value="osgi.bundle"/>
+      <attribute name="version" value="0.1.0.202303301059" type="Version"/>
+    </capability>
+    <capability namespace="osgi.wiring.bundle">
+      <attribute name="bundle-version" value="0.1.0.202303301059" type="Version"/>
+      <attribute name="osgi.wiring.bundle" value="io.klib.bndtools.templates"/>
+    </capability>
+    <capability namespace="osgi.wiring.host">
+      <attribute name="bundle-version" value="0.1.0.202303301059" type="Version"/>
+      <attribute name="osgi.wiring.host" value="io.klib.bndtools.templates"/>
+    </capability>
+    <capability namespace="org.bndtools.template">
+      <attribute name="help" value="rcp.headless-help.xml"/>
+      <attribute name="name" value="Headless RCP Application"/>
+      <attribute name="ranking" value="1001.0" type="Double"/>
+      <attribute name="org.bndtools.template" value="project"/>
+      <attribute name="category" value="Klibio bndtools project templates"/>
+      <attribute name="dir" value="templates/rcp.headless"/>
+    </capability>
+    <capability namespace="osgi.content">
+      <attribute name="size" value="3564" type="Long"/>
+      <attribute name="mime" value="application/vnd.osgi.bundle"/>
+      <attribute name="url" value="io.klib.bndtools.templates/io.klib.bndtools.templates-0.1.0.jar"/>
+      <attribute name="osgi.content" value="D4F6DB391D24FD2477410D92761643EA11D9BA4C4DC8081575FA0C21D863C9F2"/>
+    </capability>
+  </resource>
   <resource>
     <capability namespace="osgi.identity">
       <attribute name="osgi.identity" value="org.bndtools.templates.osgi"/>
@@ -91,35 +120,6 @@
       <attribute name="mime" value="application/vnd.osgi.bundle"/>
       <attribute name="url" value="org.bndtools.templates.osgi/org.bndtools.templates.osgi-7.0.0.jar"/>
       <attribute name="osgi.content" value="274A856A7D66B1B56D976F1619B5DE2253635305EC8D1BA271389F8AB5623495"/>
-    </capability>
-  </resource>
-  <resource>
-    <capability namespace="osgi.identity">
-      <attribute name="osgi.identity" value="io.klib.bndtools.templates"/>
-      <attribute name="type" value="osgi.bundle"/>
-      <attribute name="version" value="0.1.0.202303301059" type="Version"/>
-    </capability>
-    <capability namespace="osgi.wiring.bundle">
-      <attribute name="bundle-version" value="0.1.0.202303301059" type="Version"/>
-      <attribute name="osgi.wiring.bundle" value="io.klib.bndtools.templates"/>
-    </capability>
-    <capability namespace="osgi.wiring.host">
-      <attribute name="bundle-version" value="0.1.0.202303301059" type="Version"/>
-      <attribute name="osgi.wiring.host" value="io.klib.bndtools.templates"/>
-    </capability>
-    <capability namespace="org.bndtools.template">
-      <attribute name="help" value="rcp.headless-help.xml"/>
-      <attribute name="name" value="Headless RCP Application"/>
-      <attribute name="ranking" value="1001.0" type="Double"/>
-      <attribute name="org.bndtools.template" value="project"/>
-      <attribute name="category" value="Klibio bndtools project templates"/>
-      <attribute name="dir" value="templates/rcp.headless"/>
-    </capability>
-    <capability namespace="osgi.content">
-      <attribute name="size" value="3564" type="Long"/>
-      <attribute name="mime" value="application/vnd.osgi.bundle"/>
-      <attribute name="url" value="io.klib.bndtools.templates/io.klib.bndtools.templates-0.1.0.jar"/>
-      <attribute name="osgi.content" value="D4F6DB391D24FD2477410D92761643EA11D9BA4C4DC8081575FA0C21D863C9F2"/>
     </capability>
   </resource>
 </repository>
