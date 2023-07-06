@@ -31,6 +31,7 @@ mv ${github_workspace}/eim.api/generated/gradle/eim.api.jar ${github_workspace}/
 mv ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.win32.x86_64.jar ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.win32.x86_64_${trayVersion}.jar
 mv ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.linux.x86_64.jar ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.linux.x86_64_${trayVersion}.jar
 mv ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.cocoa.aarch64.jar ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.cocoa.aarch64_${trayVersion}.jar
+mv ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.cocoa.x86_64.jar ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.cocoa.x86_64_${trayVersion}.jar
 
 if [[ ${branch} = "main" ]]; then
     gh release create ${tag}\
@@ -41,7 +42,8 @@ if [[ ${branch} = "main" ]]; then
         ${github_workspace}/eim.api/generated/gradle/eim.api_${apiVersion}.jar \
         ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.win32.x86_64_${trayVersion}.jar \
         ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.linux.x86_64_${trayVersion}.jar \
-        ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.cocoa.aarch64_${trayVersion}.jar
+        ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.cocoa.aarch64_${trayVersion}.jar \
+        ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.cocoa.x86_64_${trayVersion}.jar
 else
     echo "# Skipping release because the branch is not main"
 fi
