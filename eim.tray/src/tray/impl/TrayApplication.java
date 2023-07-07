@@ -15,6 +15,8 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -33,14 +35,21 @@ public class TrayApplication {
 	private LinkedList<LocationCatalogEntry> locationEntries;
 	private Logger logger = LoggerFactory.getLogger(TrayApplication.class);
 	private LinkedHashMap<LocationCatalogEntry, LinkedList<LocationCatalogEntry>> installationGroupedMap = new LinkedHashMap<>();;
-
-	public static boolean dispose = false;
+	public boolean dispose = false;
 
 	@Activate
-	public void activate() {
+	public void activate(BundleContext context) {
 		dataInitialization();
 		createMappedInstallationEntries();
 		createDisplay();
+		
+		try {
+			logger.debug("Shutting down the OSGi framework");
+			context.getBundle(0).stop();
+		} catch (BundleException e) {
+			logger.debug("Something went wrong shutting down the OSGi framework");
+			e.printStackTrace();
+		}
 	}
 
 	private void dataInitialization() {
@@ -67,7 +76,6 @@ public class TrayApplication {
 			item.setToolTipText("Eclipse Installation Manager");
 			item.addListener(SWT.Show, event -> System.out.println("show"));
 			item.addListener(SWT.Hide, event -> System.out.println("hide"));
-			item.addListener(SWT.Selection, event -> System.out.println("selection"));
 			item.addListener(SWT.DefaultSelection, event -> System.out.println("default selection"));
 			final Menu menu = new Menu(shell, SWT.POP_UP);
 
@@ -95,7 +103,13 @@ public class TrayApplication {
 					mi.addListener(SWT.MouseHover, event -> subMenu.setVisible(true));
 				}
 			});
-			item.addListener(SWT.MenuDetect, event -> menu.setVisible(true));
+			final Menu subMenu = new Menu(shell, SWT.POP_UP);
+			MenuItem quitApp = new MenuItem(subMenu, SWT.WRAP | SWT.PUSH);
+			quitApp.setText("Quit");
+			quitApp.addListener(SWT.Selection, event -> dispose());
+			
+			item.addListener(SWT.Selection, event -> menu.setVisible(true));
+			item.addListener(SWT.MenuDetect, event -> subMenu.setVisible(true));
 
 			// TODO: Add Settings Menu on SWT.MenuDetect for refresh of the catalog
 			item.setImage(image2);
@@ -110,6 +124,10 @@ public class TrayApplication {
 		image.dispose();
 		image2.dispose();
 		display.dispose();
+	}
+
+	private void dispose() {
+		this.dispose = true;
 	}
 
 	private void createMappedInstallationEntries() {

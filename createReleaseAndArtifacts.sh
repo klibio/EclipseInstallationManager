@@ -18,6 +18,7 @@ tag=v${trayVersion}
 
 # do not try to release if tag already exists and skip gravefully
 if git show-ref --tags --verify --quiet "refs/tags/${tag}"; then
+    echo "Tag ${tag} does already exist, skipping release gracefully."
     exit 0
 fi
 
