@@ -36,7 +36,8 @@ public class EIMServiceImpl implements EIMService {
 
 	private static final Logger logger = LoggerFactory.getLogger(EIMServiceImpl.class);
 	private LinkedList<LocationCatalogEntry> locationEntries = new LinkedList<>();
-
+	private String locationFile;
+	
 	@Override
 	public Process startProcess(String command, String workingDir, String[] args) {
 		Map<String, String> arguments = new HashMap<String, String>();
@@ -100,6 +101,7 @@ public class EIMServiceImpl implements EIMService {
 
 	@Override
 	public void listLocations(String locationFile) {
+		this.locationFile = locationFile;
 		File file;
 		if (locationFile == null || locationFile.isBlank()) {
 			logger.debug("Utilizing the default locations.setup file of the Eclipse Installer.");
@@ -188,5 +190,9 @@ public class EIMServiceImpl implements EIMService {
 	public LinkedList<LocationCatalogEntry> getLocationEntries() {
 		return locationEntries;
 	}
-
+	
+	@Override
+	public void refreshLocations() {
+		listLocations(this.locationFile);
+	}
 }

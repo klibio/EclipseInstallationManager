@@ -5,4 +5,4 @@ Require-Bundle: org.eclipse.core.runtime,\
 
 Bundle-SymbolicName: ${project.name}.impl;singleton:=true
 Private-Package: impl
-Bundle-Version: 1.0.1
+Bundle-Version: 1.0.2

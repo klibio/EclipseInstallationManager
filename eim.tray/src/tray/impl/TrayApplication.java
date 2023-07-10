@@ -31,7 +31,7 @@ public class TrayApplication {
 
 	@Reference
 	private EIMService eclService;
-
+	
 	private LinkedList<LocationCatalogEntry> locationEntries;
 	private Logger logger = LoggerFactory.getLogger(TrayApplication.class);
 	private LinkedHashMap<LocationCatalogEntry, LinkedList<LocationCatalogEntry>> installationGroupedMap = new LinkedHashMap<>();;
@@ -77,33 +77,17 @@ public class TrayApplication {
 			item.addListener(SWT.Show, event -> System.out.println("show"));
 			item.addListener(SWT.Hide, event -> System.out.println("hide"));
 			item.addListener(SWT.DefaultSelection, event -> System.out.println("default selection"));
-			final Menu menu = new Menu(shell, SWT.POP_UP);
-
-			installationGroupedMap.forEach((installation, workspaceList) -> {
-				if (workspaceList.size() == 1) {
-					MenuItem mi = new MenuItem(menu, SWT.WRAP | SWT.PUSH);
-					LocationCatalogEntry workspaceCatalogEntry = workspaceList.get(0);
-					Integer launchNumber = workspaceCatalogEntry.getID();
-					String itemLabel = launchNumber + " # " + installation.getInstallationFolderName() + " # "
-							+ workspaceCatalogEntry.getWorkspaceFolderName();
-					mi.setText(itemLabel);
-					mi.addListener(SWT.Selection, event -> eclService.startEntry(workspaceCatalogEntry));
-				} else {
-					MenuItem mi = new MenuItem(menu, SWT.CASCADE);
-					mi.setText(installation.getInstallationFolderName());
-					Menu subMenu = new Menu(shell, SWT.DROP_DOWN);
-					mi.setMenu(subMenu);
-
-					for (LocationCatalogEntry entry : workspaceList) {
-						MenuItem subMenuItem = new MenuItem(subMenu, SWT.PUSH);
-						Integer launchNumber = entry.getID();
-						subMenuItem.setText(launchNumber + " # " + entry.getWorkspaceFolderName());
-						subMenuItem.addListener(SWT.Selection, event -> eclService.startEntry(entry));
-					}
-					mi.addListener(SWT.MouseHover, event -> subMenu.setVisible(true));
-				}
-			});
+			
+			Menu menu = createMainMenu(shell);
+			
 			final Menu subMenu = new Menu(shell, SWT.POP_UP);
+			
+			// Add button to refresh catalog
+			MenuItem refreshApp = new MenuItem(subMenu, SWT.WRAP | SWT.PUSH);
+			refreshApp.setText("Refresh Entries");
+			refreshApp.addListener(SWT.Selection, event -> refresh(shell));
+			
+			// Add the button to Quit the application
 			MenuItem quitApp = new MenuItem(subMenu, SWT.WRAP | SWT.PUSH);
 			quitApp.setText("Quit");
 			quitApp.addListener(SWT.Selection, event -> dispose());
@@ -155,7 +139,7 @@ public class TrayApplication {
 			installationMap.put(installationEntry, mappedWorkspaces);
 		}
 
-		installationGroupedMap.putAll(installationMap);
+		installationGroupedMap = installationMap;
 
 	}
 
@@ -181,6 +165,49 @@ public class TrayApplication {
 			result = true;
 		}
 		return result;
+	}
+	
+	private Menu createMainMenu(Shell shell) {
+		final Menu menu = new Menu(shell, SWT.POP_UP);
+
+		installationGroupedMap.forEach((installation, workspaceList) -> {
+			if (workspaceList.size() == 1) {
+				MenuItem mi = new MenuItem(menu, SWT.WRAP | SWT.PUSH);
+				LocationCatalogEntry workspaceCatalogEntry = workspaceList.get(0);
+				Integer launchNumber = workspaceCatalogEntry.getID();
+				String itemLabel = launchNumber + " # " + installation.getInstallationFolderName() + " # "
+						+ workspaceCatalogEntry.getWorkspaceFolderName();
+				mi.setText(itemLabel);
+				mi.addListener(SWT.Selection, event -> eclService.startEntry(workspaceCatalogEntry));
+			} else {
+				MenuItem mi = new MenuItem(menu, SWT.CASCADE);
+				mi.setText(installation.getInstallationFolderName());
+				Menu subMenu = new Menu(shell, SWT.DROP_DOWN);
+				mi.setMenu(subMenu);
+
+				for (LocationCatalogEntry entry : workspaceList) {
+					MenuItem subMenuItem = new MenuItem(subMenu, SWT.PUSH);
+					Integer launchNumber = entry.getID();
+					subMenuItem.setText(launchNumber + " # " + entry.getWorkspaceFolderName());
+					subMenuItem.addListener(SWT.Selection, event -> eclService.startEntry(entry));
+				}
+				mi.addListener(SWT.MouseHover, event -> subMenu.setVisible(true));
+			}
+		});
+		
+		return menu;
+	}
+	
+	private void refresh(Shell shell) {
+		Display display = shell.getDisplay();
+		logger.debug("Refreshing location catalog entries!");
+		eclService.refreshLocations();
+		this.locationEntries = eclService.getLocationEntries();
+		createMappedInstallationEntries();
+		
+		// due to app not being in focus dispose and recreate
+		display.dispose();
+		createDisplay();
 	}
 
 }

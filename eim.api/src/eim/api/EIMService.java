@@ -13,4 +13,6 @@ public interface EIMService {
 	public void listLocations(String locationFile);
 	
 	public LinkedList<LocationCatalogEntry> getLocationEntries();
+	
+	public void refreshLocations();
 }
