@@ -9,7 +9,6 @@
 	ch.qos.logback.core;version='[1.2.12,1.2.13)',\
 	eim.api;version=snapshot,\
 	eim.command;version=snapshot,\
-	eim.impl;version=snapshot,\
 	org.apache.commons.codec;version='[1.14.0,1.14.1)',\
 	org.apache.felix.gogo.command;version='[1.1.2,1.1.3)',\
 	org.apache.felix.gogo.runtime;version='[1.1.6,1.1.7)',\
@@ -76,4 +75,16 @@
 	org.sat4j.core;version='[2.3.6,2.3.7)',\
 	org.sat4j.pb;version='[2.3.6,2.3.7)',\
 	org.tukaani.xz;version='[1.9.0,1.9.1)',\
-	slf4j.api;version='[1.7.36,1.7.37)'
+	slf4j.api;version='[1.7.36,1.7.37)',\
+	eim.impl;version=snapshot,\
+	org.apache.commons.commons-io;version='[2.13.0,2.13.1)',\
+	org.apache.commons.lang3;version='[3.12.0,3.12.1)'
+-runrepos: \
+	Workspace,\
+	Local,\
+	Platform_R-4.27-202303020300,\
+	Oomph 1.25,\
+	OSGi R7 API,\
+	Maven Central,\
+	Templates,\
+	Local

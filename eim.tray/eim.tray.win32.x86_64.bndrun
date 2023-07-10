@@ -6,7 +6,8 @@
 -runproperties: \
     launch.keep=false,\
     osgi.console.enable.builtin=false,\
-    org.osgi.framework.bootdelegation='org.xml.*,org.xml.sax.helpers.*'
+    org.osgi.framework.bootdelegation='org.xml.*,org.xml.sax.helpers.*',\
+    logback.configurationFile=${workspace}/eim/logback.xml
 
 -runblacklist: \
     osgi.identity;filter:='(osgi.identity=*cocoa*)',\
@@ -25,7 +26,6 @@
 	bcprov;version='[1.72.0,1.72.1)',\
 	ch.qos.logback.classic;version='[1.2.12,1.2.13)',\
 	ch.qos.logback.core;version='[1.2.12,1.2.13)',\
-	eim.api;version=snapshot,\
 	eim.impl;version=snapshot,\
 	eim.tray;version=snapshot,\
 	org.apache.commons.codec;version='[1.14.0,1.14.1)',\
@@ -94,4 +94,6 @@
 	org.sat4j.core;version='[2.3.6,2.3.7)',\
 	org.sat4j.pb;version='[2.3.6,2.3.7)',\
 	org.tukaani.xz;version='[1.9.0,1.9.1)',\
-	slf4j.api;version='[1.7.36,1.7.37)'
+	slf4j.api;version='[1.7.36,1.7.37)',\
+	eim.api;version='[1.1.1,1.1.2)',\
+	eim.util;version=snapshot

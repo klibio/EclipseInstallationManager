@@ -2,6 +2,8 @@ package impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -27,6 +29,8 @@ import org.slf4j.LoggerFactory;
 
 import eim.api.EIMService;
 import eim.api.LocationCatalogEntry;
+import eim.util.FileUtils;
+import eim.util.SystemUtils;
 
 /**
  * This class controls all aspects of the application's execution
@@ -37,7 +41,7 @@ public class EIMServiceImpl implements EIMService {
 	private static final Logger logger = LoggerFactory.getLogger(EIMServiceImpl.class);
 	private LinkedList<LocationCatalogEntry> locationEntries = new LinkedList<>();
 	private String locationFile;
-	
+
 	@Override
 	public Process startProcess(String command, String workingDir, String[] args) {
 		Map<String, String> arguments = new HashMap<String, String>();
@@ -87,15 +91,23 @@ public class EIMServiceImpl implements EIMService {
 			logger.debug("Workspace path is " + workspacePath.toAbsolutePath().toString());
 
 			System.getProperty("eclipse.launcher.name");
-			Path programPath = installationPath.resolve("eclipse.exe");
+
+			Path executablePath = null;
+			try {
+				executablePath = determineExecutable(installationPath);
+			} catch (IOException e) {
+				logger.error("An error occurred during determination of the executable!");
+				e.printStackTrace();
+			}
+
 			ArrayList<String> args = new ArrayList<String>();
 			args.add("ws=" + workspacePath.toString());
 			String[] simpleArray = new String[args.size()];
 			args.toArray(simpleArray);
 
-			logger.debug("Starting " + programPath.toString() + " in working directory " + installationPath.toString()
-					+ " with arguments\n " + Arrays.toString(simpleArray));
-			startProcess(programPath.toString(), installationPath.toString(), simpleArray);
+			logger.debug("Starting " + executablePath.toString() + " in working directory "
+					+ installationPath.toString() + " with arguments\n " + Arrays.toString(simpleArray));
+			startProcess(executablePath.toString(), installationPath.toString(), simpleArray);
 		}
 	}
 
@@ -167,7 +179,8 @@ public class EIMServiceImpl implements EIMService {
 							EList<Workspace> wrkspcList = instEntry.getValue();
 							for (Workspace wrkspc : wrkspcList) {
 								LocationCatalogEntry entry = new LocationCatalogEntryImpl(i, inst, wrkspc, null);
-								logger.debug("Added entry " + entry.getInstallationFolderName() + " with workspace " + entry.getWorkspaceFolderName());
+								logger.debug("Added entry " + entry.getInstallationFolderName() + " with workspace "
+										+ entry.getWorkspaceFolderName());
 								entryListTemp.add(entry);
 								i++;
 							}
@@ -190,9 +203,85 @@ public class EIMServiceImpl implements EIMService {
 	public LinkedList<LocationCatalogEntry> getLocationEntries() {
 		return locationEntries;
 	}
-	
+
 	@Override
 	public void refreshLocations() {
 		listLocations(this.locationFile);
 	}
+
+	private Path determineExecutable(Path installationPath) throws IOException {
+		Path executablePath = null;
+		logger.debug("Trying to find the correct executable");
+		String executableName = getIniName(installationPath);
+		if (SystemUtils.IS_OS_WINDOWS) {
+			executablePath = installationPath.resolve(executableName + ".exe");
+		} else if (SystemUtils.IS_OS_MAC) {
+			Path tempPath = installationPath.resolve("Eclipse.app/Contents/MacOS");
+			File tempFile = tempPath.toFile();
+
+			if (tempFile.exists()) {
+				try {
+					DirectoryStream<Path> stream = Files.newDirectoryStream(installationPath,
+							new DirectoryStream.Filter<Path>() {
+
+								@Override
+								public boolean accept(Path entry) throws IOException {
+									return !Files.isDirectory(entry);
+								}
+							});
+					LinkedList<Path> executables = new LinkedList<>();
+					stream.forEach(entry -> {
+						executables.add(entry);
+					});
+					if (executables.size() == 1) {
+						executablePath = executables.getFirst();
+					} else {
+						logger.error(
+								"Found multiple applications in the MacOS application folder. Is this the correct folder?");
+					}
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+			} else {
+				logger.error("No executable found in" + tempPath.toString());
+				throw new IOException();
+			}
+		} else if (SystemUtils.IS_OS_LINUX) {
+			executablePath = installationPath.resolve(executableName);
+		} else {
+			logger.error("Unsupported operating system " + System.getProperty("os.name"));
+		}
+
+		return executablePath;
+	}
+
+	private String getIniName(Path path) throws IOException {
+		String result = null;
+		if (!Files.isDirectory(path)) {
+			throw new IllegalArgumentException(path.toString() + " must be a directory!");
+		}
+
+		DirectoryStream<Path> stream = Files.newDirectoryStream(path);
+		LinkedList<Path> inis = new LinkedList<>();
+
+		Iterator<Path> iniFileIterator = stream.iterator();
+		while (iniFileIterator.hasNext()) {
+			Path filePath = iniFileIterator.next();
+			if(FileUtils.getFileExtension(filePath.getFileName()).equals("ini")) {
+				inis.add(filePath);
+				logger.debug("Found ini file " + filePath);
+			}
+		}
+		stream.close();
+		if (inis.size() != 1) {
+			logger.error("None or Multiple inis found, is this the right directory?");
+		} else {
+			result = FileUtils.getBasename(inis.getFirst().getFileName().toString());
+		}
+
+		return result;
+	}
+
 }

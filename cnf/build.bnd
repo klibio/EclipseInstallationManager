@@ -27,6 +27,7 @@ target-dir  generated${if;${driver;eclipse};;/${driver}}
 bin         ${target-dir}/classes
 testbin     ${target-dir}/test-classes
 
-Bundle-Version: 1.0.0
+-snapshot: ${tstamp}
+Bundle-Version: 1.0.3.SNAPSHOT
 
 Automatic-Module-Name: ${project.name}
