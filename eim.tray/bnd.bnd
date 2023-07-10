@@ -18,6 +18,6 @@
 	eim.api;version='1.1'
 	
 Bundle-SymbolicName: ${project.name};singleton:=true
-Bundle-Version: 0.3.4
+Bundle-Version: 0.3.5
 -privatepackage: \
     tray.impl
