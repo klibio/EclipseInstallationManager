@@ -21,7 +21,8 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 	org.eclipse.emf.common,\
 	org.eclipse.swt.win32.win32.x86_64,\
 	org.eclipse.oomph.base,\
-	eim.api;version='1.0'
+	eim.api;version='1.0',\
+	eim.util;version=latest
 
 -dependson: \
     eim
