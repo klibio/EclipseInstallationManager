@@ -4,3 +4,27 @@
 @import "{{ site.theme }}";
 
 #show-releases span { background: transparent url(../images/download-icon.png) 12px 50% no-repeat; }
+
+div.main-header { 
+    display: flex;
+    align-content: center;
+    align-items: center;
+}
+
+div.main-header img{
+    flex-grow: 0;
+    flex-shrink: 0;
+    height: 112px;
+    width: 112px;
+}
+
+div.main-header h1{
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+@media screen and (max-width: 600px) {
+    div.main-header { 
+        flex-direction: column;
+    }
+}

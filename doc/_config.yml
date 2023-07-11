@@ -7,6 +7,7 @@ baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://a7exschin.github.io/EclipseInstallationManager/" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  A7exSchin
 show_downloads: true
+header_logo: ./assets/images/EIM-Color_512x.png
 github:
   public: true
   is_project_page: true
