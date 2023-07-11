@@ -216,19 +216,12 @@ public class EIMServiceImpl implements EIMService {
 		if (SystemUtils.IS_OS_WINDOWS) {
 			executablePath = installationPath.resolve(executableName + ".exe");
 		} else if (SystemUtils.IS_OS_MAC) {
-			Path tempPath = installationPath.resolve("Eclipse.app/Contents/MacOS");
+			Path tempPath = installationPath.resolve("Contents/MacOS");
 			File tempFile = tempPath.toFile();
 
 			if (tempFile.exists()) {
 				try {
-					DirectoryStream<Path> stream = Files.newDirectoryStream(installationPath,
-							new DirectoryStream.Filter<Path>() {
-
-								@Override
-								public boolean accept(Path entry) throws IOException {
-									return !Files.isDirectory(entry);
-								}
-							});
+					DirectoryStream<Path> stream = Files.newDirectoryStream(installationPath);
 					LinkedList<Path> executables = new LinkedList<>();
 					stream.forEach(entry -> {
 						executables.add(entry);
