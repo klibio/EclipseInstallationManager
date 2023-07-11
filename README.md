@@ -1,4 +1,6 @@
-# example bndtools eclipse workspace
+<img src="./assets/EIM-Color_512x.png" width="25%">
+
+# Eclipse Installation Manager
 This repository contains an example workspace including minimal repositories for development of eclipse products.
 
 ## How to run
