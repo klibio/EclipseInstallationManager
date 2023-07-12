@@ -1,6 +1,7 @@
 # List repository contents using GAV coordinates
 org.apache.commons:commons-lang3:3.12.0
 commons-io:commons-io:2.13.0
+com.github.kwhat:jnativehook:2.2.2
 
 # Testing
 org.junit.jupiter:junit-jupiter:5.9.2
