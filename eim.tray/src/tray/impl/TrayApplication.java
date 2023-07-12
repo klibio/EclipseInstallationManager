@@ -1,9 +1,12 @@
 package tray.impl;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+
+import javax.imageio.stream.FileImageInputStream;
 
 import org.eclipse.oomph.setup.Installation;
 import org.eclipse.swt.SWT;
@@ -14,8 +17,10 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -62,7 +67,14 @@ public class TrayApplication {
 		Display display = new Display();
 		Shell shell = new Shell(display);
 		Image image = new Image(display, 16, 16);
-		Image trayIcon = new Image(display, "./icons/EIM-Color_512x.png");
+		Bundle bundle = FrameworkUtil.getBundle(this.getClass());
+		Image trayIcon = null;
+		try {
+			trayIcon = new Image(display, bundle.getEntry("/icon/EIM-Color_512x.png").openStream());
+		} catch (IOException e) {
+			logger.error("Something went wrong loading the Icon from the Bundle.");
+			e.printStackTrace();
+		}
 
 		final Tray tray = display.getSystemTray();
 		if (tray == null) {

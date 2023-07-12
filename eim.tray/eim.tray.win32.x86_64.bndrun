@@ -1,6 +1,7 @@
 -runfw: org.eclipse.osgi;version='[3.18,4)'
 -runee: JavaSE-17
 -resolve.effective: active
+-runstorage: rt
 
 -runsystemcapabilities: ${native_capability}
 -runproperties: \
