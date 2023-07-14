@@ -23,6 +23,12 @@ Start the tray application by downloading the version which matches your platfor
 java -jar eim.tray.<platform>.jar
 ```
 
+Please not, that if you are on MacOS, you need to execute 
+
+```
+java -XstartOnFirstThread -jar eim.tray.cocoa.<arch>_<version>.jar
+```
+
 ## How to run console application
 
 Download the latest `eim.jar` from the releases page.
@@ -32,6 +38,8 @@ Execute the JAR with
 ```
 java -jar eim.jar
 ```
+
+
 
 ## Current capabilitites
 
