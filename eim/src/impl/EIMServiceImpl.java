@@ -52,7 +52,7 @@ public class EIMServiceImpl implements EIMService {
 		}
 		Map<String, String> env = pb.environment();
 
-		if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+		if (SystemUtils.IS_OS_WINDOWS) {
 			env.put("TEMP", System.getenv("TEMP"));
 			env.put("SYSTEMDRIVE", System.getenv("SYSTEMDRIVE"));
 		}
@@ -210,43 +210,28 @@ public class EIMServiceImpl implements EIMService {
 	}
 
 	private Path determineExecutable(Path installationPath) throws IOException {
-		Path executablePath = null;
+		// Default values for paths work with Windows and Linux
+		Path executablePath = installationPath;
+		Path iniPath = installationPath;
 		logger.debug("Trying to find the correct executable");
-		String executableName = getIniName(installationPath);
-		if (SystemUtils.IS_OS_WINDOWS) {
-			executablePath = installationPath.resolve(executableName + ".exe");
-		} else if (SystemUtils.IS_OS_MAC) {
-			Path tempPath = installationPath.resolve("Contents/MacOS");
-			File tempFile = tempPath.toFile();
 
-			if (tempFile.exists()) {
-				try {
-					DirectoryStream<Path> stream = Files.newDirectoryStream(installationPath);
-					LinkedList<Path> executables = new LinkedList<>();
-					stream.forEach(entry -> {
-						executables.add(entry);
-					});
-					if (executables.size() == 1) {
-						executablePath = executables.getFirst();
-					} else {
-						logger.error(
-								"Found multiple applications in the MacOS application folder. Is this the correct folder?");
-					}
-
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
-			} else {
-				logger.error("No executable found in" + tempPath.toString());
-				throw new IOException();
-			}
-		} else if (SystemUtils.IS_OS_LINUX) {
-			executablePath = installationPath.resolve(executableName);
-		} else {
-			logger.error("Unsupported operating system " + System.getProperty("os.name"));
+		// Change defaults if on MacOS
+		if (SystemUtils.IS_OS_MAC) {
+			logger.debug("MacOS detected, adjusting Paths");
+			iniPath = installationPath.resolve("Contents/Eclipse/");
+			executablePath = installationPath.resolve("Contents/MacOS/");
 		}
 
+		String executableName = getIniName(iniPath);
+
+		// Windows require .exe file ending
+		if (SystemUtils.IS_OS_WINDOWS) {
+			logger.debug("Windows detected, adjusting executable");
+			executablePath = executablePath.resolve(executableName + ".exe");
+		} else {
+			executablePath = executablePath.resolve(executableName);
+		}
+		
 		return executablePath;
 	}
 
@@ -262,7 +247,7 @@ public class EIMServiceImpl implements EIMService {
 		Iterator<Path> iniFileIterator = stream.iterator();
 		while (iniFileIterator.hasNext()) {
 			Path filePath = iniFileIterator.next();
-			if(FileUtils.getFileExtension(filePath.getFileName()).equals("ini")) {
+			if (FileUtils.getFileExtension(filePath.getFileName()).equals("ini")) {
 				inis.add(filePath);
 				logger.debug("Found ini file " + filePath);
 			}

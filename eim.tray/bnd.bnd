@@ -18,7 +18,7 @@
 	eim.api;version='1.1'
 	
 Bundle-SymbolicName: ${project.name};singleton:=true
-Bundle-Version: 0.3.7
+Bundle-Version: 0.3.8
 -includeresource: \
     ./resources,\
     @${repo;com.github.kwhat:jnativehook;2.2.2}!/!(META-INF/*),\

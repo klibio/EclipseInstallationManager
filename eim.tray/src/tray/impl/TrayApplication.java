@@ -6,8 +6,6 @@ import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
-import javax.imageio.stream.FileImageInputStream;
-
 import org.eclipse.oomph.setup.Installation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -15,6 +13,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.ToolTip;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 import org.osgi.framework.Bundle;
@@ -178,6 +177,7 @@ public class TrayApplication {
 		final Menu menu = new Menu(shell, SWT.POP_UP);
 
 		installationGroupedMap.forEach((installation, workspaceList) -> {
+
 			if (workspaceList.size() == 1) {
 				MenuItem mi = new MenuItem(menu, SWT.WRAP | SWT.PUSH);
 				LocationCatalogEntry workspaceCatalogEntry = workspaceList.get(0);
@@ -195,6 +195,7 @@ public class TrayApplication {
 				for (LocationCatalogEntry entry : workspaceList) {
 					MenuItem subMenuItem = new MenuItem(subMenu, SWT.PUSH);
 					Integer launchNumber = entry.getID();
+					subMenuItem.setToolTipText(entry.getInstallationPath().toString());
 					subMenuItem.setText(launchNumber + " # " + entry.getWorkspaceFolderName());
 					subMenuItem.addListener(SWT.Selection, event -> eclService.startEntry(entry));
 				}
