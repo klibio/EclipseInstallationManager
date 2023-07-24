@@ -20,7 +20,7 @@
 	org.osgi.service.prefs
 	
 Bundle-SymbolicName: ${project.name};singleton:=true
-Bundle-Version: 0.3.8
+Bundle-Version: 0.4.0
 -includeresource: \
     ./resources,\
     @${repo;com.github.kwhat:jnativehook;2.2.2}!/!(META-INF/*),\
