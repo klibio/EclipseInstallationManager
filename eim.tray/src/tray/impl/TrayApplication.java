@@ -141,7 +141,11 @@ public class TrayApplication {
 		trayIcon.dispose();
 		display.dispose();
 	}
-
+	
+	/**
+	 * Fetches preference and executes if that preference exists
+	 * @param shell Shell to attach the UI to
+	 */
 	private void startEclipseInstaller(Shell shell) {
 		if (checkIfPreferenceKeyExists("eclipse.installer.path")) {
 			Path installerPath = Paths.get(eimPrefs.get("eclipse.installer.path", null));
@@ -152,7 +156,12 @@ public class TrayApplication {
 		}
 
 	}
-
+	
+	/**
+	 * Checks if a preference in the eimPrefs preferences already exists
+	 * @param key 
+	 * @return True or False
+	 */
 	private boolean checkIfPreferenceKeyExists(String key) {
 		boolean result = false;
 		try {
@@ -166,7 +175,11 @@ public class TrayApplication {
 
 		return result;
 	}
-
+	
+	/**
+	 * Starts the FileDialog to set the Eclipse Installer preference
+	 * @param shell
+	 */
 	private void spawnInstallerDialog(Shell shell) {
 		FileDialog selectInstallerLocation = new FileDialog(shell, SWT.OPEN);
 		selectInstallerLocation.setFilterExtensions(new String[] { "*.exe" });
@@ -175,7 +188,12 @@ public class TrayApplication {
 
 		savePreference("eclipse.installer.path", result);
 	}
-
+	
+	/**
+	 * Saves a preference to the EIM Preferences 
+	 * @param key for the new preference
+	 * @param pref preference value
+	 */
 	private void savePreference(String key, String pref) {
 		logger.debug("Saving preference " + pref + " to settings.");
 		eimPrefs.put(key, pref);
