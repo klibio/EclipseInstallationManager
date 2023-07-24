@@ -11,7 +11,7 @@ header_logo: ./assets/images/EIM-Color_512x.png
 github:
   public: true
   is_project_page: true
-  release_url: https://github.com/A7exSchin/EclipseInstallationManager/releases
+  release_url: https://github.com/A7exSchin/EclipseInstallationManager/releases/latest
   repository_url: https://github.com/A7exSchin/EclipseInstallationManager
 
 # Build settings
