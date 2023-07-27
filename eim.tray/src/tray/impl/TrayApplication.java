@@ -3,13 +3,11 @@ package tray.impl;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.oomph.setup.Installation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -26,16 +24,15 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eim.api.EIMService;
 import eim.api.LocationCatalogEntry;
+import eim.util.PreferenceUtils;
 import eim.util.SystemUtils;
 
-@Component(immediate = true)
 public class TrayApplication {
 
 	IEclipsePreferences properties = InstanceScope.INSTANCE.getNode("tray.impl");
@@ -43,16 +40,17 @@ public class TrayApplication {
 
 	@Reference
 	private EIMService eclService;
-
-	private LinkedList<LocationCatalogEntry> locationEntries;
+	
+	@Reference
+	private DataController dataController;
+	
 	private Logger logger = LoggerFactory.getLogger(TrayApplication.class);
-	private LinkedHashMap<LocationCatalogEntry, LinkedList<LocationCatalogEntry>> installationGroupedMap = new LinkedHashMap<>();;
+	private LinkedHashMap<LocationCatalogEntry, LinkedList<LocationCatalogEntry>> installationGroupedMap;
 	public boolean dispose = false;
 
 	@Activate
 	public void activate(BundleContext context) {
-		dataInitialization();
-		createMappedInstallationEntries();
+		installationGroupedMap = dataController.getInstallationMap();
 		createDisplay();
 
 		try {
@@ -62,15 +60,6 @@ public class TrayApplication {
 			logger.debug("Something went wrong shutting down the OSGi framework");
 			e.printStackTrace();
 		}
-	}
-
-	/*
-	 * Loads data into the services and fetches it
-	 */
-	private void dataInitialization() {
-		logger.debug("Loading data");
-		eclService.listLocations(null);
-		locationEntries = eclService.getLocationEntries();
 	}
 
 	/*
@@ -142,43 +131,31 @@ public class TrayApplication {
 		trayIcon.dispose();
 		display.dispose();
 	}
-	
+
 	/**
 	 * Fetches preference and executes if that preference exists
+	 * 
 	 * @param shell Shell to attach the UI to
 	 */
 	private void startEclipseInstaller(Shell shell) {
-		if (checkIfPreferenceKeyExists("eclipse.installer.path")) {
-			Path installerPath = Paths.get(eimPrefs.get("eclipse.installer.path", null));
-			eclService.startProcess(installerPath.toString(), null, null);
-		} else {
-			logger.error("The Eclipse Installer Path is no longer available. Please choose another one!");
-			spawnInstallerDialog(shell);
-		}
-
-	}
-	
-	/**
-	 * Checks if a preference in the eimPrefs preferences already exists
-	 * @param key 
-	 * @return True or False
-	 */
-	private boolean checkIfPreferenceKeyExists(String key) {
-		boolean result = false;
 		try {
-			String[] keys = eimPrefs.keys();
-			if (Arrays.asList(keys).contains(key)) {
-				result = true;
+			if (PreferenceUtils.checkIfPreferenceKeyExists("eclipse.installer.path", eimPrefs)) {
+				Path installerPath = Paths.get(eimPrefs.get("eclipse.installer.path", null));
+				eclService.startProcess(installerPath.toString(), null, null);
+			} else {
+				logger.error("The Eclipse Installer Path is no longer available. Please choose another one!");
+				spawnInstallerDialog(shell);
 			}
-		} catch (BackingStoreException e) {
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		return result;
 	}
-	
+
 	/**
 	 * Starts the FileDialog to set the Eclipse Installer preference
+	 * 
 	 * @param shell
 	 */
 	private void spawnInstallerDialog(Shell shell) {
@@ -189,23 +166,7 @@ public class TrayApplication {
 		selectInstallerLocation.setFilterPath(null);
 		String result = selectInstallerLocation.open();
 
-		savePreference("eclipse.installer.path", result);
-	}
-	
-	/**
-	 * Saves a preference to the EIM Preferences 
-	 * @param key for the new preference
-	 * @param pref preference value
-	 */
-	private void savePreference(String key, String pref) {
-		logger.debug("Saving preference " + pref + " to settings.");
-		eimPrefs.put(key, pref);
-		try {
-			eimPrefs.flush();
-		} catch (BackingStoreException e) {
-			logger.error("Something went wrong writing the setting " + key);
-			e.printStackTrace();
-		}
+		PreferenceUtils.savePreference("eclipse.installer.path", result, eimPrefs);
 	}
 
 	/*
@@ -213,81 +174,6 @@ public class TrayApplication {
 	 */
 	private void dispose() {
 		this.dispose = true;
-	}
-
-	/**
-	 * Creates a unique map, which maps unique installations to workspaces they were
-	 * used with Note: A InstallationEntry can simultaneously represent an
-	 * installation and a workspace Type of the Map is <LocationCatalogEntry,
-	 * List<LocationCatalogEntry>>
-	 */
-	private void createMappedInstallationEntries() {
-		logger.debug("creating installation - workspaces map");
-
-		LinkedHashMap<LocationCatalogEntry, LinkedList<LocationCatalogEntry>> installationMap = new LinkedHashMap<>();
-		LinkedList<LocationCatalogEntry> installations = new LinkedList<>();
-
-		locationEntries.forEach(locationCatalogEntry -> {
-			if (!checkIfListContainsInstallation(locationCatalogEntry, installations)) {
-				logger.debug("List does not contain locationCatalogEntry "
-						+ locationCatalogEntry.getInstallationFolderName());
-				installations.add(locationCatalogEntry);
-			}
-		});
-
-		for (LocationCatalogEntry installationEntry : installations) {
-			LinkedList<LocationCatalogEntry> mappedWorkspaces = new LinkedList<>();
-			locationEntries.forEach(locationCatalogEntry -> {
-				if (checkIfInstallationURIequals(installationEntry.getInstallation(),
-						locationCatalogEntry.getInstallation())) {
-					mappedWorkspaces.add(locationCatalogEntry);
-				}
-			});
-			installationMap.put(installationEntry, mappedWorkspaces);
-		}
-
-		installationGroupedMap = installationMap;
-
-	}
-
-	/**
-	 * Helper method which checks if an entry already exists in a given list,
-	 * compared by URI.
-	 * 
-	 * @param entry            A LocationCatalogEntry which is to be searched for in
-	 *                         the list
-	 * @param installationList the list that should be searched in
-	 * @return boolean, True if installationList contains entry, false otherwise
-	 */
-	private boolean checkIfListContainsInstallation(LocationCatalogEntry entry,
-			LinkedList<LocationCatalogEntry> installationList) {
-		Installation installation1 = entry.getInstallation();
-		boolean result = false;
-
-		for (LocationCatalogEntry listEntry : installationList) {
-			if (checkIfInstallationURIequals(installation1, listEntry.getInstallation())) {
-				result = true;
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Compares two installations by their path
-	 * 
-	 * @param inst1
-	 * @param inst2
-	 * @return boolean, true if they paths are equal, false otherwise
-	 */
-	private boolean checkIfInstallationURIequals(Installation inst1, Installation inst2) {
-		Path path1 = Paths.get(inst1.eResource().getURI().toFileString());
-		Path path2 = Paths.get(inst2.eResource().getURI().toFileString());
-
-		boolean result = false;
-		if (path1.compareTo(path2) == 0) {
-			result = true;
-		}
-		return result;
 	}
 
 	/**
@@ -340,12 +226,13 @@ public class TrayApplication {
 	private void refresh(Shell shell) {
 		Display display = shell.getDisplay();
 		logger.debug("Refreshing location catalog entries!");
-		eclService.refreshLocations();
-		this.locationEntries = eclService.getLocationEntries();
-		createMappedInstallationEntries();
-
-		// due to app not being in focus dispose and recreate
+		dataController.refreshData();
 		display.dispose();
 		createDisplay();
+	}
+	
+	public TrayApplication(EIMService service, DataController controller) {
+		this.eclService = service;
+		this.dataController = controller;
 	}
 }

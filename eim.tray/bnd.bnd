@@ -18,8 +18,10 @@
 	eim.api;version='1.1',\
 	org.eclipse.equinox.preferences,\
 	org.osgi.service.prefs,\
-	eim.util;version=latest
+	eim.util;version=latest,\
+	org.osgi.service.component.annotations
 	
+Bundle-Activator: tray.impl.Activator
 Bundle-SymbolicName: ${project.name};singleton:=true
 Bundle-Version: 0.4.1
 -includeresource: \
