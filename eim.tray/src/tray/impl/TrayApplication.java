@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import eim.api.EIMService;
 import eim.api.LocationCatalogEntry;
+import eim.util.SystemUtils;
 
 @Component(immediate = true)
 public class TrayApplication {
@@ -182,7 +183,9 @@ public class TrayApplication {
 	 */
 	private void spawnInstallerDialog(Shell shell) {
 		FileDialog selectInstallerLocation = new FileDialog(shell, SWT.OPEN);
-		selectInstallerLocation.setFilterExtensions(new String[] { "*.exe" });
+		if (SystemUtils.IS_OS_WINDOWS) {
+			selectInstallerLocation.setFilterExtensions(new String[] { "*.exe" });
+		}
 		selectInstallerLocation.setFilterPath(null);
 		String result = selectInstallerLocation.open();
 
