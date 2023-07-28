@@ -16,12 +16,16 @@ import org.slf4j.LoggerFactory;
 import eim.api.EIMService;
 import eim.api.LocationCatalogEntry;
 import eim.util.FileUtils;
+
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
 import org.osgi.service.component.annotations.Activate;
 
-public class DataController {
+@Component(immediate=true)
+public class TrayAppController {
 
 	private LinkedList<LocationCatalogEntry> locationEntries;
-	private Logger logger = LoggerFactory.getLogger(DataController.class);
+	private Logger logger = LoggerFactory.getLogger(TrayAppController.class);
 	private LinkedHashMap<LocationCatalogEntry, LinkedList<LocationCatalogEntry>> installationGroupedMap = new LinkedHashMap<>();
 	private LinkedList<LocationCatalogEntry> uniqueInstallations = new LinkedList<>();
 	private LinkedList<LocationCatalogEntry> uniqueWorkspaces = new LinkedList<>();
@@ -32,14 +36,31 @@ public class DataController {
 	@Reference
 	private EIMService eclService;
 	
+	private TrayApplication trayApplication = new TrayApplication(this);
+	
 	@Activate
-	public void activate() {
+	public void activate(BundleContext context) {
 		dataInitialization();
 		
 		identifyUniqueInstallations();
 		identifyUniqueWorkspaces();
 
 		createMappedInstallationEntries();
+		
+		startTrayApplication(context);
+		
+		try {
+			logger.debug("Shutting down the OSGi framework");
+			context.getBundle(0).stop();
+		} catch (BundleException e) {
+			logger.debug("Something went wrong shutting down the OSGi framework");
+			e.printStackTrace();
+		}
+	}
+	
+	private void startTrayApplication(BundleContext context) {
+		trayApplication.setInstallationMap(installationGroupedMap);
+		trayApplication.activate(context);
 	}
 
 	private void identifyUniqueInstallations() {
@@ -159,7 +180,22 @@ public class DataController {
 		createMappedInstallationEntries();
 	}
 	
-	public DataController(EIMService service) {
-		this.eclService = service;
+	/**
+	 * Method from the UI which starts an LocationCatalogEntry, passed to the Service through the Controller
+	 * @param entryToExecute
+	 */
+	public void startEntry(LocationCatalogEntry entryToExecute) {
+		eclService.startEntry(entryToExecute);
 	}
+	
+	/**
+	 * Method from the UI which starts a Command, passed to the Service through the Controller
+	 * @param command Command to execute
+	 * @param workingDir Working directory for the command
+	 * @param args Command arguments
+	 */
+	public void startProcess(String command, String workingDir, String[] args) {
+		eclService.startProcess(command, workingDir, args);
+	}
+	
 }
