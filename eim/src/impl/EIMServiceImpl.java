@@ -175,10 +175,11 @@ public class EIMServiceImpl implements EIMService {
 						Entry<Installation, EList<Workspace>> instEntry = instIterator.next();
 						Installation inst = instEntry.getKey();
 						Resource eResource = inst.eResource();
+						String name = inst.getName();
 						if (eResource != null) {
 							EList<Workspace> wrkspcList = instEntry.getValue();
 							for (Workspace wrkspc : wrkspcList) {
-								LocationCatalogEntry entry = new LocationCatalogEntryImpl(i, inst, wrkspc, null);
+								LocationCatalogEntry entry = new LocationCatalogEntryImpl(i, inst, wrkspc, null, name);
 								logger.debug("Added entry " + entry.getInstallationFolderName() + " with workspace "
 										+ entry.getWorkspaceFolderName());
 								entryListTemp.add(entry);

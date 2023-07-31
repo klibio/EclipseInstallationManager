@@ -22,10 +22,10 @@ import org.osgi.framework.BundleException;
 import org.osgi.service.component.annotations.Activate;
 
 @Component(immediate=true)
-public class TrayAppController {
+public class UIAppController {
 
 	private LinkedList<LocationCatalogEntry> locationEntries;
-	private Logger logger = LoggerFactory.getLogger(TrayAppController.class);
+	private Logger logger = LoggerFactory.getLogger(UIAppController.class);
 	private LinkedHashMap<LocationCatalogEntry, LinkedList<LocationCatalogEntry>> installationGroupedMap = new LinkedHashMap<>();
 	private LinkedList<LocationCatalogEntry> uniqueInstallations = new LinkedList<>();
 	private LinkedList<LocationCatalogEntry> uniqueWorkspaces = new LinkedList<>();
@@ -61,6 +61,10 @@ public class TrayAppController {
 	private void startTrayApplication(BundleContext context) {
 		trayApplication.setInstallationMap(installationGroupedMap);
 		trayApplication.activate(context);
+	}
+	
+	public void openManagementView() {
+		new ManagementView(this).showOverviewMenu();
 	}
 
 	private void identifyUniqueInstallations() {

@@ -13,9 +13,10 @@
 	bcprov;version='[1.72.0,1.72.1)',\
 	ch.qos.logback.classic;version='[1.2.12,1.2.13)',\
 	ch.qos.logback.core;version='[1.2.12,1.2.13)',\
-	eim.api;version=snapshot,\
+	eim.api;version='[1.2.0,1.2.1)',\
 	eim.impl;version=snapshot,\
 	eim.tray;version=snapshot,\
+	eim.util;version=snapshot,\
 	org.apache.commons.codec;version='[1.14.0,1.14.1)',\
 	org.apache.felix.gogo.command;version='[1.1.2,1.1.3)',\
 	org.apache.felix.gogo.runtime;version='[1.1.6,1.1.7)',\
@@ -85,5 +86,4 @@
 	org.sat4j.core;version='[2.3.6,2.3.7)',\
 	org.sat4j.pb;version='[2.3.6,2.3.7)',\
 	org.tukaani.xz;version='[1.9.0,1.9.1)',\
-	slf4j.api;version='[1.7.36,1.7.37)',\
-	eim.util;version=latest
+	slf4j.api;version='[1.7.36,1.7.37)'

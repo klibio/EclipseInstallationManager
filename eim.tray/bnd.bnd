@@ -11,11 +11,10 @@
 	org.eclipse.oomph.util,\
 	org.eclipse.equinox.app,\
 	slf4j.api,\
-	org.eclipse.jface,\
 	org.eclipse.oomph.base,\
 	org.eclipse.emf.ecore,\
 	org.eclipse.emf.common,\
-	eim.api;version='1.1',\
+	eim.api;version='1.2',\
 	org.eclipse.equinox.preferences,\
 	org.osgi.service.prefs,\
 	eim.util;version=latest,\

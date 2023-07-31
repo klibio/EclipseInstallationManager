@@ -14,7 +14,7 @@
 	org.eclipse.oomph.setup.core,\
 	org.eclipse.oomph.util,\
 	org.slf4j.api,\
-	eim.api;version='1.1',\
+	eim.api;version='1.2',\
 	eim.util;version=latest
 -sub: *.bnd
 -dependson: eim.api

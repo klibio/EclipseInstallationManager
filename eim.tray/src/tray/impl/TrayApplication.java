@@ -34,7 +34,7 @@ public class TrayApplication {
 	IEclipsePreferences properties = InstanceScope.INSTANCE.getNode("tray.impl");
 	Preferences eimPrefs = properties.node("eim.prefs");
 
-	private TrayAppController dataController;
+	private UIAppController dataController;
 
 	private Logger logger = LoggerFactory.getLogger(TrayApplication.class);
 	private LinkedHashMap<LocationCatalogEntry, LinkedList<LocationCatalogEntry>> installationGroupedMap;
@@ -56,7 +56,7 @@ public class TrayApplication {
 		Bundle bundle = FrameworkUtil.getBundle(this.getClass());
 		Image trayIcon = null;
 		try {
-			trayIcon = new Image(display, bundle.getEntry("/icon/EIM-Color_512x.png").openStream());
+			trayIcon = new Image(display, bundle.getEntry("/icons/EIM-Color_512x.png").openStream());
 		} catch (IOException e) {
 			logger.error("Something went wrong loading the Icon from the Bundle.");
 			e.printStackTrace();
@@ -116,6 +116,17 @@ public class TrayApplication {
 		display.dispose();
 	}
 
+	private void openManagementView() {
+		Display.getDefault().asyncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				dataController.openManagementView();
+			}
+			
+		});
+	}
+
 	/**
 	 * Fetches preference and executes if that preference exists
 	 * 
@@ -169,6 +180,12 @@ public class TrayApplication {
 	private Menu createMainMenu(Shell shell) {
 		final Menu menu = new Menu(shell, SWT.POP_UP);
 
+		MenuItem openOverview = new MenuItem(menu, SWT.WRAP | SWT.PUSH | SWT.BOLD);
+		openOverview.setText("Open Management Overview");
+		openOverview.addListener(SWT.Selection, e -> openManagementView());
+
+		new MenuItem(menu, SWT.HORIZONTAL | SWT.SEPARATOR);
+
 		// Create a new MenuItem for each installation-workspace pair
 		installationGroupedMap.forEach((installation, workspaceList) -> {
 
@@ -215,7 +232,7 @@ public class TrayApplication {
 		createDisplay();
 	}
 
-	public TrayApplication(TrayAppController controller) {
+	public TrayApplication(UIAppController controller) {
 		this.dataController = controller;
 	}
 

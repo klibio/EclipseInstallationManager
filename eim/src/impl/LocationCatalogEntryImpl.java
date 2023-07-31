@@ -18,13 +18,15 @@ public class LocationCatalogEntryImpl extends LocationCatalogEntry {
 	private Path workspacePath;
 	private String installationFolderName;
 	private String workspaceFolderName;
+	private String name;
 
-	public LocationCatalogEntryImpl(Integer id, Installation installation, Workspace workspace, String[] tags) {
+	public LocationCatalogEntryImpl(Integer id, Installation installation, Workspace workspace, String[] tags, String name) {
 		super(id, installation, workspace, tags);
 		this.id = id;
 		this.installation = installation;
 		this.workspace = workspace;
 		this.tags = tags;
+		this.name = name;
 		Path fullInstallationPath = Paths.get(installation.eResource().getURI().toFileString());
 		Path fullWorkspacePath = Paths.get(workspace.eResource().getURI().toFileString());
 		String osProp = System.getProperty("os.name");
@@ -37,6 +39,15 @@ public class LocationCatalogEntryImpl extends LocationCatalogEntry {
 		this.workspacePath = fullWorkspacePath.getParent().getParent().getParent().getParent();
 		this.installationFolderName = installationPath.getParent().toFile().getName();
 		this.workspaceFolderName = workspacePath.toFile().getName();
+	}
+	
+	@Override
+	public String getName() {
+		return name;
+	}
+	@Override
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override
