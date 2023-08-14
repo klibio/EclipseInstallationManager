@@ -19,22 +19,36 @@ import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.prefs.Preferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eim.api.EIMService;
 import eim.api.LocationCatalogEntry;
 import eim.util.PreferenceUtils;
 import eim.util.SystemUtils;
 
+@Component(immediate = true)
 public class TrayApplication {
 
-	IEclipsePreferences properties = InstanceScope.INSTANCE.getNode("tray.impl");
-	Preferences eimPrefs = properties.node("eim.prefs");
+	private IEclipsePreferences properties = InstanceScope.INSTANCE.getNode("tray.impl");
+	private Preferences eimPrefs = properties.node("eim.prefs");
+	private BundleContext bc = FrameworkUtil.getBundle(this.getClass()).getBundleContext();
 
-	private UIAppController dataController;
+	@Reference
+	private EIMService eclService;
+
+	@Reference
+	private DataController dataController;
+
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
+	private ManagementView managementView;
 
 	private Logger logger = LoggerFactory.getLogger(TrayApplication.class);
 	private LinkedHashMap<LocationCatalogEntry, LinkedList<LocationCatalogEntry>> installationGroupedMap;
@@ -42,15 +56,17 @@ public class TrayApplication {
 
 	@Activate
 	public void activate(BundleContext context) {
+		logger.debug("Activating TrayApplication component");
+		installationGroupedMap = dataController.getInstallationMap();
 		createDisplay();
 	}
 
 	/*
 	 * Creates the basis for the UI, including the TrayItem
 	 */
-	private void createDisplay() {
+	public void createDisplay() {
 		logger.debug("Starting to create UI");
-		Display display = new Display();
+		Display display = Display.getDefault();
 		Shell shell = new Shell(display);
 		Image image = new Image(display, 16, 16);
 		Bundle bundle = FrameworkUtil.getBundle(this.getClass());
@@ -114,6 +130,14 @@ public class TrayApplication {
 		image.dispose();
 		trayIcon.dispose();
 		display.dispose();
+
+		try {
+			logger.debug("Shutting down the OSGi framework");
+			bc.getBundle(0).stop();
+		} catch (BundleException e) {
+			logger.debug("Something went wrong shutting down the OSGi framework");
+			e.printStackTrace();
+		}
 	}
 
 	private void openManagementView() {
@@ -121,9 +145,10 @@ public class TrayApplication {
 
 			@Override
 			public void run() {
-				dataController.openManagementView();
+				managementView.showOverviewMenu();
+
 			}
-			
+
 		});
 	}
 
@@ -136,7 +161,7 @@ public class TrayApplication {
 		try {
 			if (PreferenceUtils.checkIfPreferenceKeyExists("eclipse.installer.path", eimPrefs)) {
 				Path installerPath = Paths.get(eimPrefs.get("eclipse.installer.path", null));
-				dataController.startProcess(installerPath.toString(), null, null);
+				eclService.startProcess(installerPath.toString(), null, null);
 			} else {
 				logger.error("The Eclipse Installer Path is no longer available. Please choose another one!");
 				spawnInstallerDialog(shell);
@@ -160,8 +185,12 @@ public class TrayApplication {
 		}
 		selectInstallerLocation.setFilterPath(null);
 		String result = selectInstallerLocation.open();
+		if (result == null) {
+			logger.debug("Choose dialog closed, not saving anything!");
+		} else {
+			PreferenceUtils.savePreference("eclipse.installer.path", result, eimPrefs);
+		}
 
-		PreferenceUtils.savePreference("eclipse.installer.path", result, eimPrefs);
 	}
 
 	/*
@@ -197,7 +226,7 @@ public class TrayApplication {
 				String itemLabel = launchNumber + " # " + installation.getInstallationFolderName() + " # "
 						+ workspaceCatalogEntry.getWorkspaceFolderName();
 				mi.setText(itemLabel);
-				mi.addListener(SWT.Selection, event -> dataController.startEntry(workspaceCatalogEntry));
+				mi.addListener(SWT.Selection, event -> eclService.startEntry(workspaceCatalogEntry));
 				// Create a SubMenu if more than 1 workspace is assigned to the installation
 			} else {
 				MenuItem mi = new MenuItem(menu, SWT.CASCADE);
@@ -210,7 +239,7 @@ public class TrayApplication {
 					Integer launchNumber = entry.getID();
 					subMenuItem.setToolTipText(entry.getInstallationPath().toString());
 					subMenuItem.setText(launchNumber + " # " + entry.getWorkspaceFolderName());
-					subMenuItem.addListener(SWT.Selection, event -> dataController.startEntry(entry));
+					subMenuItem.addListener(SWT.Selection, event -> eclService.startEntry(entry));
 				}
 				mi.addListener(SWT.MouseHover, event -> subMenu.setVisible(true));
 			}
@@ -230,10 +259,6 @@ public class TrayApplication {
 		dataController.refreshData();
 		display.dispose();
 		createDisplay();
-	}
-
-	public TrayApplication(UIAppController controller) {
-		this.dataController = controller;
 	}
 
 	public void setInstallationMap(

@@ -30,15 +30,25 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eim.api.EIMService;
 import eim.api.LocationCatalogEntry;
 
+@Component
 public class ManagementView {
 	private Logger logger = LoggerFactory.getLogger(ManagementView.class);
-	
+	private ServiceRegistration<ManagementView> serviceRegistration;
+
 	private Display display = Display.getDefault();
 	private Shell shell = new Shell(display);
 	private Bundle bundle = FrameworkUtil.getBundle(this.getClass());
@@ -56,17 +66,31 @@ public class ManagementView {
 	private Color white = new Color(new RGB(255, 255, 255));
 	private Color lightGray = new Color(new RGB(240, 240, 240));
 
-	private UIAppController controller;
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
+	private DataController dataController;
+
+	@Reference
+	private EIMService eclService;
+
+	@Activate
+	public void activate(BundleContext context) {
+		logger.debug("Activating ManagementView component");
+	}
+
+	@Deactivate
+	public void deactivate(BundleContext context) {
+		serviceRegistration.unregister();
+	}
 
 	public void showOverviewMenu() {
-		
-		if(controller.equals(null)) {
+
+		if (dataController.equals(null)) {
 			logger.error("Controller is null!");
 			throw new NullPointerException();
 		}
-		installations = controller.getInstallationMap();
-		uniqueInstallations = controller.getInstallations();
-		uniqueWorkspaces = controller.getWorkspaces();
+		installations = dataController.getInstallationMap();
+		uniqueInstallations = dataController.getInstallations();
+		uniqueWorkspaces = dataController.getWorkspaces();
 
 		shownFirstTabItems = new LinkedList<>();
 		shownFirstTabItems.addAll(uniqueInstallations);
@@ -82,7 +106,7 @@ public class ManagementView {
 			Image taskBarImage = new Image(display, bundle.getEntry("icons/EIM-Color_512x.png").openStream());
 			shell.setImage(taskBarImage);
 		} catch (Exception e) {
-			
+
 		}
 
 		// Create the search bar and add it to the shell's top position
@@ -91,7 +115,7 @@ public class ManagementView {
 		searchBar.setMessage("Search...");
 		searchBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
-		// Create a CTabFolder to hold the tabs
+		// Create a TabFolder to hold the tabs
 		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
@@ -153,9 +177,11 @@ public class ManagementView {
 			for (LocationCatalogEntry catalogEntry : originalList) {
 				if (catalogEntry.getName().toLowerCase().contains(searchQuery)) {
 					filteredList.add(catalogEntry);
-				} else if (tabNumber == 1 && catalogEntry.getInstallationFolderName().toLowerCase().contains(searchQuery)) {
+				} else if (tabNumber == 1
+						&& catalogEntry.getInstallationFolderName().toLowerCase().contains(searchQuery)) {
 					filteredList.add(catalogEntry);
-				} else if (tabNumber == 2 && catalogEntry.getWorkspaceFolderName().toLowerCase().contains(searchQuery)) {
+				} else if (tabNumber == 2
+						&& catalogEntry.getWorkspaceFolderName().toLowerCase().contains(searchQuery)) {
 					filteredList.add(catalogEntry);
 				}
 			}
@@ -227,20 +253,28 @@ public class ManagementView {
 
 			Label nameLabel = new Label(labelComposite, SWT.NULL);
 			nameLabel.setFont(new Font(display, "Roboto", 16, SWT.NORMAL));
-			
-			if(name.equals("installation")) {
+
+			if (name.equals("installation")) {
 				nameLabel.setText(entry.getInstallationFolderName());
 			} else {
 				nameLabel.setText(name);
 			}
-			
-			
+
 			nameLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 			// ToolBar for the Buttons on the right
 			ToolBar tools = new ToolBar(listItemComposite, SWT.FLAT);
 			tools.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false));
 			tools.setBackground(white);
+
+			ToolItem editItem = new ToolItem(tools, SWT.PUSH);
+			try {
+				Image editPen = new Image(display, bundle.getEntry("icons/edit.png").openStream());
+				editItem.setImage(editPen);
+			} catch (IOException e) {
+				logger.error("Failed loading edit.png");
+				e.printStackTrace();
+			}
 
 			ToolItem deleteItem = new ToolItem(tools, SWT.PUSH);
 			try {
@@ -250,7 +284,6 @@ public class ManagementView {
 				logger.error("Failed loading trashCan.png");
 				e.printStackTrace();
 			}
-			
 
 			Label descrLabel = new Label(labelComposite, SWT.NULL);
 			descrLabel.setFont(new Font(display, "Roboto", 10, SWT.NORMAL));
@@ -261,18 +294,19 @@ public class ManagementView {
 			listItemComposite.setBackground(white);
 			nameLabel.setBackground(white);
 			descrLabel.setBackground(white);
-			
-			Listener changeColorEnterListener = new Listener() {				
+
+			Listener changeColorEnterListener = new Listener() {
 				@Override
 				public void handleEvent(Event event) {
 					try {
-						Image trashCanLightBlue = new Image(display, bundle.getEntry("icons/trashCanLightBlue.png").openStream());
+						Image trashCanLightBlue = new Image(display,
+								bundle.getEntry("icons/trashCanLightBlue.png").openStream());
 						deleteItem.setImage(trashCanLightBlue);
 					} catch (IOException e) {
 						logger.error("Failed loading trashCanLightBlue.png");
 						e.printStackTrace();
 					}
-					
+
 					listItemComposite.setBackground(lightBlue);
 					labelComposite.setBackground(lightBlue);
 					nameLabel.setBackground(lightBlue);
@@ -293,7 +327,7 @@ public class ManagementView {
 						logger.error("Failed loading trashCan.png");
 						e.printStackTrace();
 					}
-					
+
 					listItemComposite.setBackground(white);
 					labelComposite.setBackground(white);
 					tools.setBackground(white);
@@ -302,8 +336,7 @@ public class ManagementView {
 				}
 			};
 			Listener changeColorDeleteEnterListener = new Listener() {
-				
-				
+
 				@Override
 				public void handleEvent(Event event) {
 					try {
@@ -419,13 +452,13 @@ public class ManagementView {
 
 				Label contentNameLabel = new Label(contentLabelComposite, SWT.NULL);
 				contentNameLabel.setFont(new Font(display, "Roboto", 16, SWT.NORMAL));
-				
+
 				if (workspaceName.equals("ws")) {
 					contentNameLabel.setText(workspace.getWorkspaceFolderName());
 				} else {
 					contentNameLabel.setText(workspaceName);
 				}
-				
+
 				contentNameLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 				contentNameLabel.setBackground(lightGray);
 
@@ -436,14 +469,13 @@ public class ManagementView {
 
 				ToolItem contentDeleteItem = new ToolItem(contentTools, SWT.PUSH);
 				try {
-					Image trashCanLightGray = new Image(display, bundle.getEntry("icons/trashCanLightGray.png").openStream());
+					Image trashCanLightGray = new Image(display,
+							bundle.getEntry("icons/trashCanLightGray.png").openStream());
 					contentDeleteItem.setImage(trashCanLightGray);
 				} catch (IOException e1) {
 					logger.error("Failed loading trashCanLightGray.png");
 					e1.printStackTrace();
 				}
-				
-				
 
 				Label contentDescriptionLabel = new Label(contentLabelComposite, SWT.NULL);
 				contentDescriptionLabel.setFont(new Font(display, "Roboto", 10, SWT.NORMAL));
@@ -461,13 +493,14 @@ public class ManagementView {
 						contentNameLabel.setBackground(lightBlue);
 						contentTools.setBackground(lightBlue);
 						try {
-							Image trashCanLightBlue = new Image(display, bundle.getEntry("icons/trashCanLightBlue.png").openStream());
+							Image trashCanLightBlue = new Image(display,
+									bundle.getEntry("icons/trashCanLightBlue.png").openStream());
 							contentDeleteItem.setImage(trashCanLightBlue);
 						} catch (Exception e) {
 							logger.error("Failed loading trashCanLightBlue.png");
 							e.printStackTrace();
 						}
-						
+
 						contentDescriptionLabel.setBackground(lightBlue);
 						contentItemComposite.setCursor(new Cursor(display, SWT.CURSOR_HAND));
 					}
@@ -481,7 +514,8 @@ public class ManagementView {
 						contentLabelComposite.setBackground(lightGray);
 						contentTools.setBackground(lightGray);
 						try {
-							Image trashCanLightGray = new Image(display, bundle.getEntry("icons/trashCanLightGray.png").openStream());
+							Image trashCanLightGray = new Image(display,
+									bundle.getEntry("icons/trashCanLightGray.png").openStream());
 							contentDeleteItem.setImage(trashCanLightGray);
 						} catch (Exception e) {
 							logger.error("Failed loading trashCanLightGray.png");
@@ -500,7 +534,8 @@ public class ManagementView {
 						contentNameLabel.setBackground(lightBlue);
 						contentTools.setBackground(lightBlue);
 						try {
-							Image trashCanLightGray = new Image(display, bundle.getEntry("icons/trashCanLightGray.png").openStream());
+							Image trashCanLightGray = new Image(display,
+									bundle.getEntry("icons/trashCanLightGray.png").openStream());
 							contentDeleteItem.setImage(trashCanLightGray);
 						} catch (Exception e) {
 							logger.error("Failed loading trashCanLightGray.png");
@@ -541,7 +576,7 @@ public class ManagementView {
 									if (e.button == 3) {
 										System.out.println("Single Right Click Event SUB MENU wubwub!");
 									} else {
-										controller.startEntry(entry);
+										eclService.startEntry(entry);
 									}
 
 								}
@@ -601,14 +636,13 @@ public class ManagementView {
 
 			Label nameLabel = new Label(labelComposite, SWT.NULL);
 			nameLabel.setFont(new Font(display, "Roboto", 16, SWT.NORMAL));
-			
-			if(name.equals("workspace")) {
+
+			if (name.equals("workspace")) {
 				nameLabel.setText(entry.getWorkspaceFolderName());
 			} else {
 				nameLabel.setText(name);
 			}
-			
-			
+
 			nameLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 			// ToolBar for the Buttons on the right
@@ -643,7 +677,8 @@ public class ManagementView {
 					nameLabel.setBackground(lightBlue);
 					tools.setBackground(lightBlue);
 					try {
-						Image trashCanLightGray = new Image(display, bundle.getEntry("icons/trashCanLightBlue.png").openStream());
+						Image trashCanLightGray = new Image(display,
+								bundle.getEntry("icons/trashCanLightBlue.png").openStream());
 						deleteItem.setImage(trashCanLightGray);
 					} catch (Exception e) {
 						logger.error("Failed loading trashCanLightBlue.png");
@@ -651,7 +686,6 @@ public class ManagementView {
 					}
 					descrLabel.setBackground(lightBlue);
 					listItemComposite.setCursor(new Cursor(display, SWT.CURSOR_HAND));
-					// nameLabel.setCursor(new Cursor(display, SWT.CURSOR_HAND));
 				}
 			};
 
@@ -663,7 +697,8 @@ public class ManagementView {
 					labelComposite.setBackground(white);
 					tools.setBackground(white);
 					try {
-						Image trashCanLightGray = new Image(display, bundle.getEntry("icons/trashCan.png").openStream());
+						Image trashCanLightGray = new Image(display,
+								bundle.getEntry("icons/trashCan.png").openStream());
 						deleteItem.setImage(trashCanLightGray);
 					} catch (Exception e) {
 						logger.error("Failed loading trashCan.png");
@@ -682,7 +717,8 @@ public class ManagementView {
 					nameLabel.setBackground(lightBlue);
 					tools.setBackground(lightBlue);
 					try {
-						Image trashCanLightGray = new Image(display, bundle.getEntry("icons/trashCan.png").openStream());
+						Image trashCanLightGray = new Image(display,
+								bundle.getEntry("icons/trashCan.png").openStream());
 						deleteItem.setImage(trashCanLightGray);
 					} catch (Exception e) {
 						logger.error("Failed loading trashCan.png");
@@ -703,201 +739,7 @@ public class ManagementView {
 			descrLabel.addListener(SWT.MouseExit, changeColorExitListener);
 			tools.addListener(SWT.MouseEnter, changeColorDeleteEnterListener);
 
-//			// Begin Content
-//			Composite content = new Composite(listItemComposite, SWT.BORDER | SWT.CENTER);
-//			content.setLayout(new GridLayout(1, false));
-//			GridData data = new GridData(SWT.FILL, SWT.FILL, false, false);
-//			content.setLayoutData(data);
-//			content.setBackground(lightGray);
-//
-//			MouseListener mouseClickListener = new MouseListener() {
-//				private boolean doubleClick;
-//
-//				@Override
-//				public void mouseUp(MouseEvent e) {
-//					// TODO Auto-generated method stub
-//
-//				}
-//
-//				@Override
-//				public void mouseDown(MouseEvent e) {
-//					doubleClick = false;
-//
-//					// Set doubleclick time to 150ms
-//					int time = Display.getDefault().getDoubleClickTime() - 350;
-//					Display.getDefault().timerExec(time, new Runnable() {
-//						public void run() {
-//							if (!doubleClick) {
-//								if (e.button == 3) {
-//									System.out.println("Single Right Click Event wubwub!");
-//								} else {
-//									System.out.println("Single Left Click Event woooooo!");
-//									data.exclude = !data.exclude;
-//									content.setVisible(!data.exclude);
-//									content.getParent().pack();
-//									content.layout();
-//									content.getParent().requestLayout();
-//									int width = scrolledCompositeSecondTab.getClientArea().width;
-//									scrolledCompositeSecondTab.setMinSize(
-//											scrolledCompositeSecondTab.getContent().computeSize(width, SWT.DEFAULT));
-//									scrolledCompositeSecondTab.layout(true, true);
-//									scrolledCompositeSecondTab.requestLayout();
-//								}
-//
-//							}
-//						}
-//					});
-//
-//				}
-//
-//				@Override
-//				public void mouseDoubleClick(MouseEvent e) {
-//					doubleClick = true;
-//					System.out.println("DOUBLE CLICK YEAH!");
-//
-//				}
-//			};
-//			listItemComposite.addMouseListener(mouseClickListener);
-//			nameLabel.addMouseListener(mouseClickListener);
-//			descrLabel.addMouseListener(mouseClickListener);
-
-//			for (String string : entry.getAssignedStrings()) {
-//				Composite contentItemComposite = new Composite(content, SWT.NONE);
-//				GridLayout contentItemLayout = new GridLayout(2, false); // Set GridLayout with 2 columns
-//				contentItemLayout.marginWidth = 5; // Remove the default margin
-//				contentItemLayout.horizontalSpacing = 10; // Add spacing between the items
-//				contentItemComposite.setLayout(contentItemLayout);
-//				GridData contentGridData = new GridData(GridData.FILL_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL);
-//				gridData.grabExcessHorizontalSpace = true;
-//				contentItemComposite.setLayoutData(contentGridData); // Set to fill horizontally
-//				contentItemComposite.setBackground(lightGray);
-//
-//				Composite contentLabelComposite = new Composite(contentItemComposite, SWT.NONE);
-//				contentLabelComposite.setLayout(new GridLayout(1, false));
-//				contentLabelComposite.setLayoutData(new GridData(SWT.LEFT, SWT.BEGINNING, true, false));
-//				contentLabelComposite.setBackground(lightGray);
-//
-//				Label contentNameLabel = new Label(contentLabelComposite, SWT.NULL);
-//				contentNameLabel.setFont(new Font(display, "Roboto", 16, SWT.NORMAL));
-//				contentNameLabel.setText(string);
-//				contentNameLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-//				contentNameLabel.setBackground(lightGray);
-//
-//				// ToolBar for the Buttons on the right
-//				ToolBar contentTools = new ToolBar(contentItemComposite, SWT.FLAT);
-//				contentTools.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false));
-//				contentTools.setBackground(lightGray);
-//
-//				ToolItem contentDeleteItem = new ToolItem(contentTools, SWT.PUSH);
-//				contentDeleteItem.setImage(new Image(display, "icons/trashCanLightGray.png"));
-//
-//				Label contentDescriptionLabel = new Label(contentLabelComposite, SWT.NULL);
-//				contentDescriptionLabel.setFont(new Font(display, "Roboto", 10, SWT.NORMAL));
-//				contentDescriptionLabel.setText(entry.getDescription());
-//				contentDescriptionLabel.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, true, false));
-//				contentDescriptionLabel.setForeground(new Color(new RGB(112, 115, 125)));
-//				contentDescriptionLabel.setBackground(lightGray);
-//				
-//				Listener changeColorEnterSubListener = new Listener() {
-//
-//					@Override
-//					public void handleEvent(Event event) {
-//						contentItemComposite.setBackground(lightBlue);
-//						contentLabelComposite.setBackground(lightBlue);
-//						contentNameLabel.setBackground(lightBlue);
-//						contentTools.setBackground(lightBlue);
-//						contentDeleteItem.setImage(new Image(display, "icons/trashCanLightBlue.png"));
-//						contentDescriptionLabel.setBackground(lightBlue);
-//						contentItemComposite.setCursor(new Cursor(display, SWT.CURSOR_HAND));
-//					}
-//				};
-//
-//				Listener changeColorExitSubListener = new Listener() {
-//
-//					@Override
-//					public void handleEvent(Event event) {
-//						contentItemComposite.setBackground(lightGray);
-//						contentLabelComposite.setBackground(lightGray);
-//						contentTools.setBackground(lightGray);
-//						contentDeleteItem.setImage(new Image(display, "icons/trashCanLightGray.png"));
-//						contentNameLabel.setBackground(lightGray);
-//						contentDescriptionLabel.setBackground(lightGray);
-//					}
-//				};
-//				Listener changeColorDeleteEnterSubListener = new Listener() {
-//
-//					@Override
-//					public void handleEvent(Event event) {
-//						contentItemComposite.setBackground(lightBlue);
-//						contentLabelComposite.setBackground(lightBlue);
-//						contentNameLabel.setBackground(lightBlue);
-//						contentTools.setBackground(lightBlue);
-//						contentDeleteItem.setImage(new Image(display, "icons/trashCanLightGray.png"));
-//						contentDescriptionLabel.setBackground(lightBlue);
-//						contentItemComposite.setCursor(new Cursor(display, SWT.CURSOR_HAND));
-//					}
-//				};
-//				
-//				contentItemComposite.addListener(SWT.MouseEnter, changeColorEnterSubListener);
-//				contentItemComposite.addListener(SWT.MouseExit, changeColorExitSubListener);
-//				contentNameLabel.addListener(SWT.MouseEnter, changeColorEnterSubListener);
-//				contentNameLabel.addListener(SWT.MouseExit, changeColorExitSubListener);
-//				contentDeleteItem.addListener(SWT.MouseEnter, changeColorEnterSubListener);
-//				contentDeleteItem.addListener(SWT.MouseExit, changeColorExitSubListener);
-//				contentDescriptionLabel.addListener(SWT.MouseEnter, changeColorEnterSubListener);
-//				contentDescriptionLabel.addListener(SWT.MouseExit, changeColorExitSubListener);
-//				contentTools.addListener(SWT.MouseEnter, changeColorDeleteEnterSubListener);
-//				MouseListener mouseSubClickListener = new MouseListener() {
-//					private boolean doubleClick;
-//
-//					@Override
-//					public void mouseUp(MouseEvent e) {
-//						// TODO Auto-generated method stub
-//
-//					}
-//
-//					@Override
-//					public void mouseDown(MouseEvent e) {
-//						doubleClick = false;
-//
-//						// Set doubleclick time to 150ms
-//						int time = Display.getDefault().getDoubleClickTime() - 350;
-//						Display.getDefault().timerExec(time, new Runnable() {
-//							public void run() {
-//								if (!doubleClick) {
-//									if (e.button == 3) {
-//										System.out.println("Single Right Click Event SUB MENU wubwub!");
-//									} else {
-//										System.out.println("Single Left Click Event SUB MENU woooooo!");
-//										
-//									}
-//
-//								}
-//							}
-//						});
-//
-//					}
-//
-//					@Override
-//					public void mouseDoubleClick(MouseEvent e) {
-//						doubleClick = true;
-//						System.out.println("SUB MENU DOUBLE CLICK YEAH!");
-//
-//					}
-//				};
-//				contentItemComposite.addMouseListener(mouseSubClickListener);
-//				contentNameLabel.addMouseListener(mouseSubClickListener);
-//				contentDescriptionLabel.addMouseListener(mouseSubClickListener);
-//			}
-//			data.exclude = !data.exclude;
-//			content.setVisible(!data.exclude);
-//			content.getParent().pack();
-//			content.layout();
-//			content.getParent().requestLayout();
 		}
 	}
-	
-	public ManagementView(UIAppController controller) {
-		this.controller = controller;
-	}
+
 }

@@ -14,11 +14,12 @@
 	org.eclipse.oomph.base,\
 	org.eclipse.emf.ecore,\
 	org.eclipse.emf.common,\
-	eim.api;version='1.2',\
+	eim.api;version=latest,\
 	org.eclipse.equinox.preferences,\
 	org.osgi.service.prefs,\
 	eim.util;version=latest,\
-	org.osgi.service.component.annotations
+	org.osgi.service.component.annotations,\
+	org.eclipse.jface
 	
 Bundle-SymbolicName: ${project.name};singleton:=true
 Bundle-Version: 0.4.1
@@ -27,5 +28,5 @@ Bundle-Version: 0.4.1
     @${repo;com.github.kwhat:jnativehook;2.2.2}!/!(META-INF/*),\
 
 -dependson: eim
--privatepackage: \
-    tray.impl
+
+Export-Package: tray.impl

@@ -7,7 +7,11 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.oomph.setup.Installation;
 import org.eclipse.oomph.setup.Workspace;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.prefs.Preferences;
 import org.slf4j.Logger;
@@ -17,54 +21,37 @@ import eim.api.EIMService;
 import eim.api.LocationCatalogEntry;
 import eim.util.FileUtils;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
-import org.osgi.service.component.annotations.Activate;
-
-@Component(immediate=true)
-public class UIAppController {
+@Component
+public class DataController {
 
 	private LinkedList<LocationCatalogEntry> locationEntries;
-	private Logger logger = LoggerFactory.getLogger(UIAppController.class);
+	private Logger logger = LoggerFactory.getLogger(DataController.class);
 	private LinkedHashMap<LocationCatalogEntry, LinkedList<LocationCatalogEntry>> installationGroupedMap = new LinkedHashMap<>();
 	private LinkedList<LocationCatalogEntry> uniqueInstallations = new LinkedList<>();
 	private LinkedList<LocationCatalogEntry> uniqueWorkspaces = new LinkedList<>();
 
 	IEclipsePreferences properties = InstanceScope.INSTANCE.getNode("tray.impl");
 	Preferences eimPrefs = properties.node("eim.prefs");
-
+	ServiceRegistration<DataController> serviceRegistration;
+	
 	@Reference
 	private EIMService eclService;
-	
-	private TrayApplication trayApplication = new TrayApplication(this);
-	
+
 	@Activate
 	public void activate(BundleContext context) {
+		serviceRegistration = context.registerService(DataController.class, new DataController(), null);
+
 		dataInitialization();
-		
+
 		identifyUniqueInstallations();
 		identifyUniqueWorkspaces();
 
 		createMappedInstallationEntries();
-		
-		startTrayApplication(context);
-		
-		try {
-			logger.debug("Shutting down the OSGi framework");
-			context.getBundle(0).stop();
-		} catch (BundleException e) {
-			logger.debug("Something went wrong shutting down the OSGi framework");
-			e.printStackTrace();
-		}
 	}
-	
-	private void startTrayApplication(BundleContext context) {
-		trayApplication.setInstallationMap(installationGroupedMap);
-		trayApplication.activate(context);
-	}
-	
-	public void openManagementView() {
-		new ManagementView(this).showOverviewMenu();
+
+	@Deactivate
+	public void deactivate() {
+		serviceRegistration.unregister();
 	}
 
 	private void identifyUniqueInstallations() {
@@ -183,23 +170,5 @@ public class UIAppController {
 		this.locationEntries = eclService.getLocationEntries();
 		createMappedInstallationEntries();
 	}
-	
-	/**
-	 * Method from the UI which starts an LocationCatalogEntry, passed to the Service through the Controller
-	 * @param entryToExecute
-	 */
-	public void startEntry(LocationCatalogEntry entryToExecute) {
-		eclService.startEntry(entryToExecute);
-	}
-	
-	/**
-	 * Method from the UI which starts a Command, passed to the Service through the Controller
-	 * @param command Command to execute
-	 * @param workingDir Working directory for the command
-	 * @param args Command arguments
-	 */
-	public void startProcess(String command, String workingDir, String[] args) {
-		eclService.startProcess(command, workingDir, args);
-	}
-	
+
 }

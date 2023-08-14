@@ -21,6 +21,14 @@
         pretty = true; \
         local = ${build}/release
 
+-plugin.4.R7.Impl: \
+    aQute.bnd.repository.maven.pom.provider.BndPomRepository; \
+        snapshotUrls=https://oss.sonatype.org/content/repositories/osgi/; \
+        releaseUrls=https://repo.maven.apache.org/maven2/; \
+        revision=org.osgi.enroute:impl-index:7.0.0; \
+        readOnly=true; \
+        name="OSGi R7 Reference Implementations"
+
 -plugin.6.Central: \
     aQute.bnd.repository.maven.provider.MavenBndRepository; \
         releaseUrl=https://repo.maven.apache.org/maven2/; \

@@ -263,4 +263,16 @@ public class EIMServiceImpl implements EIMService {
 		return result;
 	}
 
+	@Override
+	public void renameWorkspace(Workspace workspace, String name) {
+		logger.debug("Renaming workspace " + workspace.getName() + " to " + name);
+		workspace.setName(name);		
+	}
+	
+	@Override
+	public void renameInstallation(Installation installation, String name) {
+		logger.debug("Renaming installation " + installation.getName() + " to " + name);
+		installation.setName(name);
+	}
+
 }
