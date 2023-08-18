@@ -13,7 +13,8 @@ abstract public class LocationCatalogEntry implements Comparable<LocationCatalog
 	Path workspacePath;
 	String installationFolderName;
 	String workspaceFolderName;
-	String name;
+	String installationName;
+	String workspaceName;
 
 	String[] tags;
 
@@ -40,9 +41,13 @@ abstract public class LocationCatalogEntry implements Comparable<LocationCatalog
 
 	public abstract Path getWorkspacePath();
 	
-	public abstract String getName();
+	public abstract String getInstallationName();
+	
+	public abstract String getWorkspaceName();
 
-	public abstract void setName(String name);
+	public abstract void setInstallationName(String name);
+	
+	public abstract void setWorkspaceName(String name);
 
 	@Override
 	public int compareTo(LocationCatalogEntry anotherInstance) {

@@ -7,6 +7,7 @@ import org.eclipse.oomph.setup.Installation;
 import org.eclipse.oomph.setup.Workspace;
 
 import eim.api.LocationCatalogEntry;
+import eim.util.SystemUtils;
 
 public class LocationCatalogEntryImpl extends LocationCatalogEntry {
 
@@ -18,19 +19,20 @@ public class LocationCatalogEntryImpl extends LocationCatalogEntry {
 	private Path workspacePath;
 	private String installationFolderName;
 	private String workspaceFolderName;
-	private String name;
+	private String installationName;
+	private String workspaceName;
 
-	public LocationCatalogEntryImpl(Integer id, Installation installation, Workspace workspace, String[] tags, String name) {
+	public LocationCatalogEntryImpl(Integer id, Installation installation, Workspace workspace, String[] tags) {
 		super(id, installation, workspace, tags);
 		this.id = id;
 		this.installation = installation;
 		this.workspace = workspace;
 		this.tags = tags;
-		this.name = name;
+		this.installationName = installation.getName();
+		this.workspaceName = workspace.getName();
 		Path fullInstallationPath = Paths.get(installation.eResource().getURI().toFileString());
 		Path fullWorkspacePath = Paths.get(workspace.eResource().getURI().toFileString());
-		String osProp = System.getProperty("os.name");
-		if (osProp.matches(".*Mac.*")) {
+		if (SystemUtils.IS_OS_MAC) {
 			Path installPath = fullInstallationPath.getParent().getParent().getParent().getParent().getParent();
 			this.installationPath = installPath;
 		} else {
@@ -42,12 +44,21 @@ public class LocationCatalogEntryImpl extends LocationCatalogEntry {
 	}
 	
 	@Override
-	public String getName() {
-		return name;
+	public String getInstallationName() {
+		return installationName;
 	}
 	@Override
-	public void setName(String name) {
-		this.name = name;
+	public void setInstallationName(String name) {
+		this.installationName = name;
+	}
+	
+	@Override
+	public String getWorkspaceName() {
+		return workspaceName;
+	}
+	@Override
+	public void setWorkspaceName(String name) {
+		this.workspaceName = name;
 	}
 
 	@Override

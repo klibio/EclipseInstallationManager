@@ -175,18 +175,22 @@ public class EIMServiceImpl implements EIMService {
 						Entry<Installation, EList<Workspace>> instEntry = instIterator.next();
 						Installation inst = instEntry.getKey();
 						Resource eResource = inst.eResource();
-						String name = inst.getName();
 						if (eResource != null) {
 							EList<Workspace> wrkspcList = instEntry.getValue();
 							for (Workspace wrkspc : wrkspcList) {
-								LocationCatalogEntry entry = new LocationCatalogEntryImpl(i, inst, wrkspc, null, name);
-								logger.debug("Added entry " + entry.getInstallationFolderName() + " with workspace "
-										+ entry.getWorkspaceFolderName());
-								entryListTemp.add(entry);
-								i++;
+								Resource workspaceResource = wrkspc.eResource();
+								if (workspaceResource != null) {
+									LocationCatalogEntry entry = new LocationCatalogEntryImpl(i, inst, wrkspc, null);
+									logger.debug("Added entry " + entry.getInstallationFolderName() + " with workspace "
+											+ entry.getWorkspaceFolderName());
+									entryListTemp.add(entry);
+									i++;
+								} else {
+									logger.info("A workspace entry in the catalog seems to have been deleted...");
+								}
 							}
 						} else {
-							System.out.format("## installation <%s>\n", inst.getName());
+							logger.info("An installation in the catalog seems to have been deleted...");
 						}
 					}
 					locationEntries = entryListTemp;
@@ -232,7 +236,7 @@ public class EIMServiceImpl implements EIMService {
 		} else {
 			executablePath = executablePath.resolve(executableName);
 		}
-		
+
 		return executablePath;
 	}
 
@@ -264,15 +268,39 @@ public class EIMServiceImpl implements EIMService {
 	}
 
 	@Override
-	public void renameWorkspace(Workspace workspace, String name) {
-		logger.debug("Renaming workspace " + workspace.getName() + " to " + name);
-		workspace.setName(name);		
+	public void renameWorkspace(LocationCatalogEntry entry, String name) {
+		logger.debug("Renaming workspace " + entry.getWorkspace().getName() + " to " + name);
+		Workspace workspace = entry.getWorkspace();
+		workspace.setName(name);
+		URI uri = URI.createFileURI(entry.getWorkspacePath()
+				.resolve(".metadata\\.plugins\\org.eclipse.oomph.setup\\workspace.setup").toString());
+		Resource workspaceResource = workspace.eResource();
+		workspaceResource.setURI(uri);
+
+		try {
+			workspaceResource.save(null);
+		} catch (IOException e) {
+			logger.error("Saving the new workspace setup file failed!");
+			e.printStackTrace();
+		}
 	}
-	
+
 	@Override
-	public void renameInstallation(Installation installation, String name) {
-		logger.debug("Renaming installation " + installation.getName() + " to " + name);
+	public void renameInstallation(LocationCatalogEntry entry, String name) {
+		Installation installation = entry.getInstallation();
 		installation.setName(name);
+		logger.debug("Renaming installation " + installation.getName() + " to " + name);
+		URI uri = URI.createFileURI(entry.getInstallationPath()
+				.resolve("configuration\\org.eclipse.oomph.setup\\installation.setup").toString());
+		Resource installationResource = installation.eResource();
+		installationResource.setURI(uri);
+
+		try {
+			installationResource.save(null);
+		} catch (IOException e) {
+			logger.error("Saving the new installation setup file failed!");
+			e.printStackTrace();
+		}
 	}
 
 }

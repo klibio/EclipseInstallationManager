@@ -7,11 +7,8 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.oomph.setup.Installation;
 import org.eclipse.oomph.setup.Workspace;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.prefs.Preferences;
 import org.slf4j.Logger;
@@ -21,37 +18,29 @@ import eim.api.EIMService;
 import eim.api.LocationCatalogEntry;
 import eim.util.FileUtils;
 
-@Component
-public class DataController {
+@Component(service=DataProvider.class)
+public class DataProvider {
 
 	private LinkedList<LocationCatalogEntry> locationEntries;
-	private Logger logger = LoggerFactory.getLogger(DataController.class);
+	private Logger logger = LoggerFactory.getLogger(DataProvider.class);
 	private LinkedHashMap<LocationCatalogEntry, LinkedList<LocationCatalogEntry>> installationGroupedMap = new LinkedHashMap<>();
 	private LinkedList<LocationCatalogEntry> uniqueInstallations = new LinkedList<>();
 	private LinkedList<LocationCatalogEntry> uniqueWorkspaces = new LinkedList<>();
 
 	IEclipsePreferences properties = InstanceScope.INSTANCE.getNode("tray.impl");
 	Preferences eimPrefs = properties.node("eim.prefs");
-	ServiceRegistration<DataController> serviceRegistration;
-	
+
 	@Reference
 	private EIMService eclService;
 
 	@Activate
-	public void activate(BundleContext context) {
-		serviceRegistration = context.registerService(DataController.class, new DataController(), null);
-
+	public void activate() {
 		dataInitialization();
 
 		identifyUniqueInstallations();
 		identifyUniqueWorkspaces();
 
 		createMappedInstallationEntries();
-	}
-
-	@Deactivate
-	public void deactivate() {
-		serviceRegistration.unregister();
 	}
 
 	private void identifyUniqueInstallations() {

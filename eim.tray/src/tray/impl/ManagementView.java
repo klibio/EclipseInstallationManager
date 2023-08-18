@@ -32,10 +32,8 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.slf4j.Logger;
@@ -44,13 +42,12 @@ import org.slf4j.LoggerFactory;
 import eim.api.EIMService;
 import eim.api.LocationCatalogEntry;
 
-@Component
+@Component(service = ManagementView.class)
 public class ManagementView {
 	private Logger logger = LoggerFactory.getLogger(ManagementView.class);
-	private ServiceRegistration<ManagementView> serviceRegistration;
 
 	private Display display = Display.getDefault();
-	private Shell shell = new Shell(display);
+	private Shell shell;
 	private Bundle bundle = FrameworkUtil.getBundle(this.getClass());
 	private Text searchBar;
 	private ScrolledComposite scrolledCompositeFirstTab;
@@ -67,19 +64,17 @@ public class ManagementView {
 	private Color lightGray = new Color(new RGB(240, 240, 240));
 
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
-	private DataController dataController;
+	private DataProvider dataController;
 
 	@Reference
 	private EIMService eclService;
 
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
+	private EditCatalogEntryView editInstallationView;
+
 	@Activate
 	public void activate(BundleContext context) {
 		logger.debug("Activating ManagementView component");
-	}
-
-	@Deactivate
-	public void deactivate(BundleContext context) {
-		serviceRegistration.unregister();
 	}
 
 	public void showOverviewMenu() {
@@ -99,6 +94,7 @@ public class ManagementView {
 		shownSecondTabItems.addAll(uniqueWorkspaces);
 
 		// Create the Display and Shell
+		shell = new Shell(display);
 		shell.setText("Eclipse Installation Manager");
 		shell.setSize(800, 500);
 		shell.setLayout(new GridLayout(1, false)); // Single column layout
@@ -106,7 +102,8 @@ public class ManagementView {
 			Image taskBarImage = new Image(display, bundle.getEntry("icons/EIM-Color_512x.png").openStream());
 			shell.setImage(taskBarImage);
 		} catch (Exception e) {
-
+			logger.error("Error loading the EIM icon!");
+			e.printStackTrace();
 		}
 
 		// Create the search bar and add it to the shell's top position
@@ -175,13 +172,13 @@ public class ManagementView {
 			filteredList.addAll(originalList);
 		} else {
 			for (LocationCatalogEntry catalogEntry : originalList) {
-				if (catalogEntry.getName().toLowerCase().contains(searchQuery)) {
-					filteredList.add(catalogEntry);
-				} else if (tabNumber == 1
-						&& catalogEntry.getInstallationFolderName().toLowerCase().contains(searchQuery)) {
+				if (tabNumber == 1
+						&& (catalogEntry.getInstallationFolderName().toLowerCase().contains(searchQuery)
+						|| catalogEntry.getInstallationName().toLowerCase().contains(searchQuery))) {
 					filteredList.add(catalogEntry);
 				} else if (tabNumber == 2
-						&& catalogEntry.getWorkspaceFolderName().toLowerCase().contains(searchQuery)) {
+						&& (catalogEntry.getWorkspaceFolderName().toLowerCase().contains(searchQuery)
+						|| catalogEntry.getWorkspaceName().toLowerCase().contains(searchQuery))) {
 					filteredList.add(catalogEntry);
 				}
 			}
@@ -234,7 +231,7 @@ public class ManagementView {
 		scrolledCompositeFirstTab.setContent(installationTabComposite);
 
 		for (LocationCatalogEntry entry : shownFirstTabItems) {
-			String name = entry.getName();
+			String name = entry.getInstallationName();
 			String path = entry.getInstallationPath().toAbsolutePath().toString();
 
 			Composite listItemComposite = new Composite(installationTabComposite, SWT.NONE);
@@ -275,6 +272,14 @@ public class ManagementView {
 				logger.error("Failed loading edit.png");
 				e.printStackTrace();
 			}
+			editItem.addListener(SWT.Selection, new Listener() {
+
+				@Override
+				public void handleEvent(Event event) {
+					editInstallationView.showModifyEntryView(entry, "installation");
+				}
+
+			});
 
 			ToolItem deleteItem = new ToolItem(tools, SWT.PUSH);
 			try {
@@ -298,15 +303,6 @@ public class ManagementView {
 			Listener changeColorEnterListener = new Listener() {
 				@Override
 				public void handleEvent(Event event) {
-					try {
-						Image trashCanLightBlue = new Image(display,
-								bundle.getEntry("icons/trashCanLightBlue.png").openStream());
-						deleteItem.setImage(trashCanLightBlue);
-					} catch (IOException e) {
-						logger.error("Failed loading trashCanLightBlue.png");
-						e.printStackTrace();
-					}
-
 					listItemComposite.setBackground(lightBlue);
 					labelComposite.setBackground(lightBlue);
 					nameLabel.setBackground(lightBlue);
@@ -320,14 +316,6 @@ public class ManagementView {
 			Listener changeColorExitListener = new Listener() {
 				@Override
 				public void handleEvent(Event event) {
-					try {
-						Image trashCan = new Image(display, bundle.getEntry("icons/trashCan.png").openStream());
-						deleteItem.setImage(trashCan);
-					} catch (Exception e) {
-						logger.error("Failed loading trashCan.png");
-						e.printStackTrace();
-					}
-
 					listItemComposite.setBackground(white);
 					labelComposite.setBackground(white);
 					tools.setBackground(white);
@@ -432,7 +420,10 @@ public class ManagementView {
 			}
 
 			for (LocationCatalogEntry workspace : mappedWorkspaces) {
-				String workspaceName = workspace.getWorkspace().getName();
+				String workspaceName = workspace.getWorkspaceName();
+				if(workspaceName.equals("workspace")) {
+					workspaceName = workspace.getWorkspaceFolderName();
+				}
 				String workspacePath = workspace.getWorkspacePath().toAbsolutePath().toString();
 
 				Composite contentItemComposite = new Composite(content, SWT.NONE);
@@ -466,14 +457,30 @@ public class ManagementView {
 				ToolBar contentTools = new ToolBar(contentItemComposite, SWT.FLAT);
 				contentTools.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false));
 				contentTools.setBackground(lightGray);
+				
+				ToolItem editWorkspaceItem = new ToolItem(contentTools, SWT.PUSH);
+				try {
+					Image editPen = new Image(display, bundle.getEntry("icons/edit.png").openStream());
+					editWorkspaceItem.setImage(editPen);
+				} catch (IOException e) {
+					logger.error("Failed loading edit.png");
+					e.printStackTrace();
+				}
+				editWorkspaceItem.addListener(SWT.Selection, new Listener() {
 
+					@Override
+					public void handleEvent(Event event) {
+						editInstallationView.showModifyEntryView(entry, "workspace");
+					}
+
+				});
+				
 				ToolItem contentDeleteItem = new ToolItem(contentTools, SWT.PUSH);
 				try {
-					Image trashCanLightGray = new Image(display,
-							bundle.getEntry("icons/trashCanLightGray.png").openStream());
-					contentDeleteItem.setImage(trashCanLightGray);
+					Image trashCan = new Image(display, bundle.getEntry("icons/trashCan.png").openStream());
+					contentDeleteItem.setImage(trashCan);
 				} catch (IOException e1) {
-					logger.error("Failed loading trashCanLightGray.png");
+					logger.error("Failed loading trashCan.png");
 					e1.printStackTrace();
 				}
 
@@ -492,15 +499,6 @@ public class ManagementView {
 						contentLabelComposite.setBackground(lightBlue);
 						contentNameLabel.setBackground(lightBlue);
 						contentTools.setBackground(lightBlue);
-						try {
-							Image trashCanLightBlue = new Image(display,
-									bundle.getEntry("icons/trashCanLightBlue.png").openStream());
-							contentDeleteItem.setImage(trashCanLightBlue);
-						} catch (Exception e) {
-							logger.error("Failed loading trashCanLightBlue.png");
-							e.printStackTrace();
-						}
-
 						contentDescriptionLabel.setBackground(lightBlue);
 						contentItemComposite.setCursor(new Cursor(display, SWT.CURSOR_HAND));
 					}
@@ -513,14 +511,6 @@ public class ManagementView {
 						contentItemComposite.setBackground(lightGray);
 						contentLabelComposite.setBackground(lightGray);
 						contentTools.setBackground(lightGray);
-						try {
-							Image trashCanLightGray = new Image(display,
-									bundle.getEntry("icons/trashCanLightGray.png").openStream());
-							contentDeleteItem.setImage(trashCanLightGray);
-						} catch (Exception e) {
-							logger.error("Failed loading trashCanLightGray.png");
-							e.printStackTrace();
-						}
 						contentNameLabel.setBackground(lightGray);
 						contentDescriptionLabel.setBackground(lightGray);
 					}
@@ -533,14 +523,6 @@ public class ManagementView {
 						contentLabelComposite.setBackground(lightBlue);
 						contentNameLabel.setBackground(lightBlue);
 						contentTools.setBackground(lightBlue);
-						try {
-							Image trashCanLightGray = new Image(display,
-									bundle.getEntry("icons/trashCanLightGray.png").openStream());
-							contentDeleteItem.setImage(trashCanLightGray);
-						} catch (Exception e) {
-							logger.error("Failed loading trashCanLightGray.png");
-							e.printStackTrace();
-						}
 						contentDescriptionLabel.setBackground(lightBlue);
 						contentItemComposite.setCursor(new Cursor(display, SWT.CURSOR_HAND));
 					}
@@ -617,7 +599,10 @@ public class ManagementView {
 		scrolledCompositeSecondTab.setContent(secondTabComposite);
 
 		for (LocationCatalogEntry entry : shownSecondTabItems) {
-			String name = entry.getWorkspace().getName();
+			String workspaceName = entry.getWorkspaceName();
+			if(workspaceName.equals("workspace")) {
+				workspaceName = entry.getWorkspaceFolderName();
+			}
 			String path = entry.getWorkspacePath().toAbsolutePath().toString();
 
 			Composite listItemComposite = new Composite(secondTabComposite, SWT.NONE);
@@ -636,20 +621,31 @@ public class ManagementView {
 
 			Label nameLabel = new Label(labelComposite, SWT.NULL);
 			nameLabel.setFont(new Font(display, "Roboto", 16, SWT.NORMAL));
-
-			if (name.equals("workspace")) {
-				nameLabel.setText(entry.getWorkspaceFolderName());
-			} else {
-				nameLabel.setText(name);
-			}
-
+			nameLabel.setText(workspaceName);
 			nameLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 			// ToolBar for the Buttons on the right
 			ToolBar tools = new ToolBar(listItemComposite, SWT.FLAT);
 			tools.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false));
 			tools.setBackground(white);
+			
+			ToolItem editWorkspaceItem = new ToolItem(tools, SWT.PUSH);
+			try {
+				Image editPen = new Image(display, bundle.getEntry("icons/edit.png").openStream());
+				editWorkspaceItem.setImage(editPen);
+			} catch (IOException e) {
+				logger.error("Failed loading edit.png");
+				e.printStackTrace();
+			}
+			editWorkspaceItem.addListener(SWT.Selection, new Listener() {
 
+				@Override
+				public void handleEvent(Event event) {
+					editInstallationView.showModifyEntryView(entry, "workspace");
+				}
+
+			});
+			
 			ToolItem deleteItem = new ToolItem(tools, SWT.PUSH);
 			try {
 				Image trashCanLightGray = new Image(display, bundle.getEntry("icons/trashCan.png").openStream());
@@ -676,14 +672,6 @@ public class ManagementView {
 					labelComposite.setBackground(lightBlue);
 					nameLabel.setBackground(lightBlue);
 					tools.setBackground(lightBlue);
-					try {
-						Image trashCanLightGray = new Image(display,
-								bundle.getEntry("icons/trashCanLightBlue.png").openStream());
-						deleteItem.setImage(trashCanLightGray);
-					} catch (Exception e) {
-						logger.error("Failed loading trashCanLightBlue.png");
-						e.printStackTrace();
-					}
 					descrLabel.setBackground(lightBlue);
 					listItemComposite.setCursor(new Cursor(display, SWT.CURSOR_HAND));
 				}
@@ -696,14 +684,6 @@ public class ManagementView {
 					listItemComposite.setBackground(white);
 					labelComposite.setBackground(white);
 					tools.setBackground(white);
-					try {
-						Image trashCanLightGray = new Image(display,
-								bundle.getEntry("icons/trashCan.png").openStream());
-						deleteItem.setImage(trashCanLightGray);
-					} catch (Exception e) {
-						logger.error("Failed loading trashCan.png");
-						e.printStackTrace();
-					}
 					nameLabel.setBackground(white);
 					descrLabel.setBackground(white);
 				}
@@ -716,14 +696,6 @@ public class ManagementView {
 					labelComposite.setBackground(lightBlue);
 					nameLabel.setBackground(lightBlue);
 					tools.setBackground(lightBlue);
-					try {
-						Image trashCanLightGray = new Image(display,
-								bundle.getEntry("icons/trashCan.png").openStream());
-						deleteItem.setImage(trashCanLightGray);
-					} catch (Exception e) {
-						logger.error("Failed loading trashCan.png");
-						e.printStackTrace();
-					}
 					descrLabel.setBackground(lightBlue);
 					listItemComposite.setCursor(new Cursor(display, SWT.CURSOR_HAND));
 				}

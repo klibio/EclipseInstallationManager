@@ -40,12 +40,11 @@ public class TrayApplication {
 	private IEclipsePreferences properties = InstanceScope.INSTANCE.getNode("tray.impl");
 	private Preferences eimPrefs = properties.node("eim.prefs");
 	private BundleContext bc = FrameworkUtil.getBundle(this.getClass()).getBundleContext();
-
 	@Reference
 	private EIMService eclService;
 
 	@Reference
-	private DataController dataController;
+	private DataProvider dataController;
 
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
 	private ManagementView managementView;
@@ -53,12 +52,22 @@ public class TrayApplication {
 	private Logger logger = LoggerFactory.getLogger(TrayApplication.class);
 	private LinkedHashMap<LocationCatalogEntry, LinkedList<LocationCatalogEntry>> installationGroupedMap;
 	public boolean dispose = false;
+	private Display display;
+	private Tray tray;
 
 	@Activate
 	public void activate(BundleContext context) {
 		logger.debug("Activating TrayApplication component");
 		installationGroupedMap = dataController.getInstallationMap();
-		createDisplay();
+		
+		Display.getDefault().syncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				createDisplay();	
+			}
+			
+		});
 	}
 
 	/*
@@ -66,9 +75,8 @@ public class TrayApplication {
 	 */
 	public void createDisplay() {
 		logger.debug("Starting to create UI");
-		Display display = Display.getDefault();
+		display = Display.getDefault();
 		Shell shell = new Shell(display);
-		Image image = new Image(display, 16, 16);
 		Bundle bundle = FrameworkUtil.getBundle(this.getClass());
 		Image trayIcon = null;
 		try {
@@ -78,7 +86,7 @@ public class TrayApplication {
 			e.printStackTrace();
 		}
 
-		final Tray tray = display.getSystemTray();
+		tray = display.getSystemTray();
 		if (tray == null) {
 			logger.error("The system tray is not available!");
 		} else {
@@ -119,7 +127,6 @@ public class TrayApplication {
 
 			item.setImage(trayIcon);
 			item.setHighlightImage(trayIcon);
-			item.setHighlightImage(image);
 		}
 		logger.debug("Waiting for disposal");
 		while (!dispose) {
@@ -127,7 +134,6 @@ public class TrayApplication {
 				display.sleep();
 		}
 		logger.debug("Disposing and exiting");
-		image.dispose();
 		trayIcon.dispose();
 		display.dispose();
 
@@ -146,7 +152,6 @@ public class TrayApplication {
 			@Override
 			public void run() {
 				managementView.showOverviewMenu();
-
 			}
 
 		});
@@ -167,7 +172,6 @@ public class TrayApplication {
 				spawnInstallerDialog(shell);
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -223,7 +227,11 @@ public class TrayApplication {
 				MenuItem mi = new MenuItem(menu, SWT.WRAP | SWT.PUSH);
 				LocationCatalogEntry workspaceCatalogEntry = workspaceList.get(0);
 				Integer launchNumber = workspaceCatalogEntry.getID();
-				String itemLabel = launchNumber + " # " + installation.getInstallationFolderName() + " # "
+				String installationName = installation.getInstallationName();
+				if (installationName.equals("installation")) {
+					installationName = installation.getInstallationFolderName();
+				}
+				String itemLabel = launchNumber + " # " + installationName + " # "
 						+ workspaceCatalogEntry.getWorkspaceFolderName();
 				mi.setText(itemLabel);
 				mi.addListener(SWT.Selection, event -> eclService.startEntry(workspaceCatalogEntry));
@@ -254,10 +262,10 @@ public class TrayApplication {
 	 * @param shell
 	 */
 	private void refresh(Shell shell) {
-		Display display = shell.getDisplay();
 		logger.debug("Refreshing location catalog entries!");
 		dataController.refreshData();
-		display.dispose();
+		shell.dispose();
+		tray.dispose();
 		createDisplay();
 	}
 
