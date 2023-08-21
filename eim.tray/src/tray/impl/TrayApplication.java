@@ -246,7 +246,12 @@ public class TrayApplication {
 					MenuItem subMenuItem = new MenuItem(subMenu, SWT.PUSH);
 					Integer launchNumber = entry.getID();
 					subMenuItem.setToolTipText(entry.getInstallationPath().toString());
-					subMenuItem.setText(launchNumber + " # " + entry.getWorkspaceFolderName());
+					if(entry.getWorkspaceName().equals("ws")) {
+						subMenuItem.setText(launchNumber + " # " + entry.getWorkspaceFolderName());
+					} else {
+						subMenuItem.setText(launchNumber + " # " + entry.getWorkspaceName());
+					}
+					
 					subMenuItem.addListener(SWT.Selection, event -> eclService.startEntry(entry));
 				}
 				mi.addListener(SWT.MouseHover, event -> subMenu.setVisible(true));

@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -299,6 +300,32 @@ public class EIMServiceImpl implements EIMService {
 			installationResource.save(null);
 		} catch (IOException e) {
 			logger.error("Saving the new installation setup file failed!");
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void deleteInstallation(Path installationPath) {
+		try {
+			Files.walk(installationPath)
+				.map(Path::toFile)
+				.sorted(Comparator.reverseOrder())
+				.forEach(File::delete);
+		} catch (IOException e) {
+			logger.error("Failed deleting the contents of " + installationPath.toString() + ". Please make sure there are no files left over!");
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void deleteWorkspace(Path workspacePath) {
+		try {
+			Files.walk(workspacePath)
+				.map(Path::toFile)
+				.sorted(Comparator.reverseOrder())
+				.forEach(File::delete);
+		} catch (IOException e) {
+			logger.error("Failed deleting the contents of " + workspacePath.toString() + ". Please make sure there are no files left over!");
 			e.printStackTrace();
 		}
 	}

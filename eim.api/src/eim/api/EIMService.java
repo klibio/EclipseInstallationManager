@@ -1,5 +1,6 @@
 package eim.api;
 
+import java.nio.file.Path;
 import java.util.LinkedList;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -19,4 +20,8 @@ public interface EIMService {
 	public void renameWorkspace(LocationCatalogEntry entry, String name);
 
 	public void renameInstallation(LocationCatalogEntry entry, String name);
+	
+	public void deleteWorkspace(Path workspacePath);
+	
+	public void deleteInstallation(Path installationPath);
 }
