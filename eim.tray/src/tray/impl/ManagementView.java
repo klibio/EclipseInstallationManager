@@ -76,7 +76,10 @@ public class ManagementView {
 	public void activate(BundleContext context) {
 		logger.debug("Activating ManagementView component");
 	}
-
+	
+	/**
+	 * Sets up the data and UI elements for the displayed data.
+	 */
 	public void showOverviewMenu() {
 
 		if (dataController.equals(null)) {
@@ -144,7 +147,13 @@ public class ManagementView {
 
 		shell.open();
 	}
-
+	
+	/**
+	 * Creates a scrolled Composite for a parent composite which follows resize events.
+	 * 
+	 * @param parent 		The parent composite of the ScrolledComposite.
+	 * @return 				the newly created ScrolledComposite
+	 */
 	private static ScrolledComposite createScrolledComposites(Composite parent) {
 		ScrolledComposite scrolled = new ScrolledComposite(parent, SWT.V_SCROLL);
 		scrolled.setExpandHorizontal(true);
@@ -159,13 +168,22 @@ public class ManagementView {
 
 		return scrolled;
 	}
-
+	
+	/**
+	 * Starts the filtering of both tabs
+	 */
 	private void filterLists() {
 		String searchQuery = searchBar.getText().toLowerCase();
 		filterList(uniqueInstallations, searchQuery.isEmpty() ? null : searchQuery, 1);
 		filterList(uniqueWorkspaces, searchQuery.isEmpty() ? null : searchQuery, 2);
 	}
-
+	
+	/**
+	 * Filters the specified list based on a given search query. The tabNumber specifies which resource is to be filtered.
+	 * @param originalList		The list data structure that is to be filtered.
+	 * @param searchQuery		The search query with which to filter
+	 * @param tabNumber			This number indicates which resource to filter.
+	 */
 	private void filterList(LinkedList<LocationCatalogEntry> originalList, String searchQuery, int tabNumber) {
 		LinkedList<LocationCatalogEntry> filteredList = new LinkedList<>();
 		if (searchQuery == null) {
@@ -303,43 +321,21 @@ public class ManagementView {
 			Listener changeColorEnterListener = new Listener() {
 				@Override
 				public void handleEvent(Event event) {
-					listItemComposite.setBackground(lightBlue);
-					labelComposite.setBackground(lightBlue);
-					nameLabel.setBackground(lightBlue);
-					tools.setBackground(lightBlue);
-					descrLabel.setBackground(lightBlue);
-					listItemComposite.setCursor(new Cursor(display, SWT.CURSOR_HAND));
-					// nameLabel.setCursor(new Cursor(display, SWT.CURSOR_HAND));
+					setCompositesLightBlue(listItemComposite, labelComposite, nameLabel, tools, descrLabel);
 				}
 			};
 
 			Listener changeColorExitListener = new Listener() {
 				@Override
 				public void handleEvent(Event event) {
-					listItemComposite.setBackground(white);
-					labelComposite.setBackground(white);
-					tools.setBackground(white);
-					nameLabel.setBackground(white);
-					descrLabel.setBackground(white);
+					setCompositesWhite(listItemComposite, labelComposite, nameLabel, tools, descrLabel);
 				}
 			};
 			Listener changeColorDeleteEnterListener = new Listener() {
 
 				@Override
 				public void handleEvent(Event event) {
-					try {
-						Image trashCan = new Image(display, bundle.getEntry("icons/trashCan.png").openStream());
-						deleteItem.setImage(trashCan);
-					} catch (Exception e) {
-						logger.error("Failed loading trashCan.png");
-						e.printStackTrace();
-					}
-					listItemComposite.setBackground(lightBlue);
-					labelComposite.setBackground(lightBlue);
-					nameLabel.setBackground(lightBlue);
-					tools.setBackground(lightBlue);
-					descrLabel.setBackground(lightBlue);
-					listItemComposite.setCursor(new Cursor(display, SWT.CURSOR_HAND));
+					setCompositesLightBlue(listItemComposite, labelComposite, nameLabel, tools, descrLabel);
 				}
 			};
 
@@ -495,12 +491,7 @@ public class ManagementView {
 
 					@Override
 					public void handleEvent(Event event) {
-						contentItemComposite.setBackground(lightBlue);
-						contentLabelComposite.setBackground(lightBlue);
-						contentNameLabel.setBackground(lightBlue);
-						contentTools.setBackground(lightBlue);
-						contentDescriptionLabel.setBackground(lightBlue);
-						contentItemComposite.setCursor(new Cursor(display, SWT.CURSOR_HAND));
+						setCompositesLightBlue(contentItemComposite, contentLabelComposite, contentNameLabel, contentTools, contentDescriptionLabel);
 					}
 				};
 
@@ -508,23 +499,14 @@ public class ManagementView {
 
 					@Override
 					public void handleEvent(Event event) {
-						contentItemComposite.setBackground(lightGray);
-						contentLabelComposite.setBackground(lightGray);
-						contentTools.setBackground(lightGray);
-						contentNameLabel.setBackground(lightGray);
-						contentDescriptionLabel.setBackground(lightGray);
+						setCompositesLightGray(contentItemComposite, contentLabelComposite, contentNameLabel, contentTools, contentDescriptionLabel);
 					}
 				};
 				Listener changeColorDeleteEnterSubListener = new Listener() {
 
 					@Override
 					public void handleEvent(Event event) {
-						contentItemComposite.setBackground(lightBlue);
-						contentLabelComposite.setBackground(lightBlue);
-						contentNameLabel.setBackground(lightBlue);
-						contentTools.setBackground(lightBlue);
-						contentDescriptionLabel.setBackground(lightBlue);
-						contentItemComposite.setCursor(new Cursor(display, SWT.CURSOR_HAND));
+						setCompositesLightBlue(contentItemComposite, contentLabelComposite, contentNameLabel, contentTools, contentDescriptionLabel);
 					}
 				};
 
@@ -586,7 +568,10 @@ public class ManagementView {
 			content.getParent().requestLayout();
 		}
 	}
-
+	
+	/**
+	 * Generates the contents for the workspace list tab.
+	 */
 	private void generateSecondTabContents() {
 		Composite secondTabComposite = new Composite(scrolledCompositeSecondTab, SWT.NONE);
 		secondTabComposite.setLayout(new GridLayout(1, false));
@@ -668,12 +653,7 @@ public class ManagementView {
 
 				@Override
 				public void handleEvent(Event event) {
-					listItemComposite.setBackground(lightBlue);
-					labelComposite.setBackground(lightBlue);
-					nameLabel.setBackground(lightBlue);
-					tools.setBackground(lightBlue);
-					descrLabel.setBackground(lightBlue);
-					listItemComposite.setCursor(new Cursor(display, SWT.CURSOR_HAND));
+					setCompositesLightBlue(listItemComposite, labelComposite, nameLabel, tools, descrLabel);
 				}
 			};
 
@@ -681,23 +661,14 @@ public class ManagementView {
 
 				@Override
 				public void handleEvent(Event event) {
-					listItemComposite.setBackground(white);
-					labelComposite.setBackground(white);
-					tools.setBackground(white);
-					nameLabel.setBackground(white);
-					descrLabel.setBackground(white);
+					setCompositesWhite(listItemComposite, labelComposite, nameLabel, tools, descrLabel);
 				}
 			};
 			Listener changeColorDeleteEnterListener = new Listener() {
 
 				@Override
 				public void handleEvent(Event event) {
-					listItemComposite.setBackground(lightBlue);
-					labelComposite.setBackground(lightBlue);
-					nameLabel.setBackground(lightBlue);
-					tools.setBackground(lightBlue);
-					descrLabel.setBackground(lightBlue);
-					listItemComposite.setCursor(new Cursor(display, SWT.CURSOR_HAND));
+					setCompositesLightBlue(listItemComposite, labelComposite, nameLabel, tools, descrLabel);
 				}
 			};
 
@@ -712,6 +683,33 @@ public class ManagementView {
 			tools.addListener(SWT.MouseEnter, changeColorDeleteEnterListener);
 
 		}
+	}
+	private void setCompositesLightBlue(Composite listItemComposite, Composite labelComposite,
+			Label nameLabel, ToolBar tools, Label descrLabel) {
+		listItemComposite.setBackground(lightBlue);
+		labelComposite.setBackground(lightBlue);
+		nameLabel.setBackground(lightBlue);
+		tools.setBackground(lightBlue);
+		descrLabel.setBackground(lightBlue);
+		listItemComposite.setCursor(new Cursor(display, SWT.CURSOR_HAND));
+	}
+	
+	private void setCompositesWhite(Composite listItemComposite, Composite labelComposite,
+			Label nameLabel, ToolBar tools, Label descrLabel) {
+		listItemComposite.setBackground(white);
+		labelComposite.setBackground(white);
+		tools.setBackground(white);
+		nameLabel.setBackground(white);
+		descrLabel.setBackground(white);
+	}
+	
+	private void setCompositesLightGray(Composite listItemComposite, Composite labelComposite,
+			Label nameLabel, ToolBar tools, Label descrLabel) {
+		listItemComposite.setBackground(lightGray);
+		labelComposite.setBackground(lightGray);
+		nameLabel.setBackground(lightGray);
+		tools.setBackground(lightGray);
+		descrLabel.setBackground(lightGray);
 	}
 
 }

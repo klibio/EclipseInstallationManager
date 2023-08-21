@@ -42,7 +42,10 @@ public class DataProvider {
 
 		createMappedInstallationEntries();
 	}
-
+	
+	/**
+	 * Puts unique installations into a separate List
+	 */
 	private void identifyUniqueInstallations() {
 		logger.debug("Filling unique installations list.");
 
@@ -52,7 +55,9 @@ public class DataProvider {
 			}
 		});
 	}
-
+	/**
+	 * Puts unique workspaces into a separate List
+	 */
 	private void identifyUniqueWorkspaces() {
 		logger.debug("Filling unique workspaces list.");
 
@@ -153,7 +158,10 @@ public class DataProvider {
 	public LinkedList<LocationCatalogEntry> getWorkspaces() {
 		return uniqueWorkspaces;
 	}
-
+	
+	/**
+	 * Reloads and refreshes the data structures.
+	 */
 	public void refreshData() {
 		eclService.refreshLocations();
 		this.locationEntries = eclService.getLocationEntries();

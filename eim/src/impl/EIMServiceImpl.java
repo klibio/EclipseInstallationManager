@@ -42,7 +42,15 @@ public class EIMServiceImpl implements EIMService {
 	private static final Logger logger = LoggerFactory.getLogger(EIMServiceImpl.class);
 	private LinkedList<LocationCatalogEntry> locationEntries = new LinkedList<>();
 	private String locationFile;
-
+	
+	/**
+	 * Tries to start a process with the Java ProcessBuilder with a specified command and working directory.
+	 * Arguments are passed in key=value form.
+	 * 
+	 * @param command      Command that is passed to the ProcessBuilder
+	 * @param workingDir   Directory which is designated as the working directory for the started process
+	 * @param args 		   Additional arguments in key=value style
+	 */
 	@Override
 	public Process startProcess(String command, String workingDir, String[] args) {
 		Map<String, String> arguments = new HashMap<String, String>();
@@ -80,7 +88,12 @@ public class EIMServiceImpl implements EIMService {
 		}
 
 	}
-
+	
+	/**
+	 * Starts a specific LocationCatalogEntry with the startProcess method.
+	 * 
+	 * @param entryToExecute   The LocationCatalogEntry which is supposed to be started.
+	 */
 	@Override
 	public void startEntry(LocationCatalogEntry entryToExecute) {
 		if (entryToExecute == null) {
@@ -111,7 +124,13 @@ public class EIMServiceImpl implements EIMService {
 			startProcess(executablePath.toString(), installationPath.toString(), simpleArray);
 		}
 	}
-
+	
+	/**
+	 * Lists all LocationCatalog entries in the log, after refreshing the data structure used to store the entries.
+	 * 
+	 * @param locationFile    Path to a Location Catalog from the Oomph Setup model. If null, the standard Eclipse Installer
+	 * 						  path will be used.
+	 */
 	@Override
 	public void listLocations(String locationFile) {
 		this.locationFile = locationFile;
@@ -130,9 +149,9 @@ public class EIMServiceImpl implements EIMService {
 		// refresh map entries
 		try {
 			fetchEntries(file);
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			logger.error("The given file " + locationFile
-					+ " is not a valid locationCatalog.\n Please check if that is the correct file!");
+					+ " could not be loaded!");
 			e.printStackTrace();
 		}
 
@@ -146,7 +165,13 @@ public class EIMServiceImpl implements EIMService {
 		}
 
 	}
-
+	
+	/**
+	 * Loads the given Resource into an EMF Resource.
+	 * @param file				  The path to the resource that is loaded. Needs to be compliant with the Oomph Setup Model.
+	 * @return 					  The resource that has been loaded.
+	 * @throws RuntimeException   If the resource could not be loaded properly.
+	 */
 	private Resource loadLocationResource(File file) throws RuntimeException {
 		URI uri = URI.createFileURI(file.getAbsolutePath());
 		logger.debug("Loading locations catalog from " + uri);
@@ -158,8 +183,14 @@ public class EIMServiceImpl implements EIMService {
 
 		return resource;
 	}
-
-	public void fetchEntries(File file) throws Exception {
+	
+	/**
+	 * Given a Location Catalog resource, all installation entries are fetched and for each mapped workspace a LocationCatalogEntry
+	 * is created. All entries are stored in the locationEntries LinekdList
+	 * @param file				  Path to the LocationCatalog that the entries are needed from.
+	 * @throws RuntimeException	  If loading the resource fails.
+	 */
+	public void fetchEntries(File file) throws RuntimeException {
 		LinkedList<LocationCatalogEntry> entryListTemp = new LinkedList<>();
 		try {
 			Resource resource = loadLocationResource(file);
@@ -196,7 +227,7 @@ public class EIMServiceImpl implements EIMService {
 					}
 					locationEntries = entryListTemp;
 				} else {
-					throw new Exception("The given file is not a LocationCatalog!");
+					logger.error("The given file is not a LocationCatalog!");
 				}
 			}
 
@@ -209,12 +240,22 @@ public class EIMServiceImpl implements EIMService {
 	public LinkedList<LocationCatalogEntry> getLocationEntries() {
 		return locationEntries;
 	}
-
+	
+	/**
+	 * Reloads the LocationCatalog and refetched all its entries. Alos updates the data structure.
+	 */
 	@Override
 	public void refreshLocations() {
 		listLocations(this.locationFile);
 	}
-
+	
+	/**
+	 * Determines the name of the executable file, based on the name if the ini file.
+	 * Differentiates the ini files path based on the operating system
+	 * @param installationPath		The path of the Eclipse product installation.
+	 * @return						The path of the executable
+	 * @throws IOException			if the search fr the ini failed.
+	 */
 	private Path determineExecutable(Path installationPath) throws IOException {
 		// Default values for paths work with Windows and Linux
 		Path executablePath = installationPath;
@@ -240,7 +281,14 @@ public class EIMServiceImpl implements EIMService {
 
 		return executablePath;
 	}
-
+	
+	/**
+	 * Resolves the name of the ini file in this directory. If multiple are found an error message is shot.
+	 * Result will be null in that case.
+	 * @param path				Path in which to search for the ini file
+	 * @return					The name of the ini filae without the file ending.
+	 * @throws IOException		If path is not a directory, or the FileStream fails.
+	 */
 	private String getIniName(Path path) throws IOException {
 		String result = null;
 		if (!Files.isDirectory(path)) {
@@ -267,7 +315,13 @@ public class EIMServiceImpl implements EIMService {
 
 		return result;
 	}
-
+	
+	/**
+	 * Rename a workspace Resource inside the data structure and inside the resource xml file.
+	 * 
+	 * @param entry 	The LocationCatalogEntry for which the installation is to be renamed
+	 * @param name		The new name
+	 */
 	@Override
 	public void renameWorkspace(LocationCatalogEntry entry, String name) {
 		logger.debug("Renaming workspace " + entry.getWorkspace().getName() + " to " + name);
@@ -285,7 +339,12 @@ public class EIMServiceImpl implements EIMService {
 			e.printStackTrace();
 		}
 	}
-
+	/**
+	 * Rename an installation Resource inside the data structure and inside the resources xml file.
+	 * 
+	 * @param entry 	The LocationCatalogEntry for which the workspace is to be renamed
+	 * @param name		The new name
+	 */
 	@Override
 	public void renameInstallation(LocationCatalogEntry entry, String name) {
 		Installation installation = entry.getInstallation();
@@ -304,6 +363,11 @@ public class EIMServiceImpl implements EIMService {
 		}
 	}
 	
+	/**
+	 * Deletes a specified Path recursively, including all files and directories.
+	 * 
+	 * @param installationPath		The path of the installation to be deleted.
+	 */
 	@Override
 	public void deleteInstallation(Path installationPath) {
 		try {
@@ -317,6 +381,11 @@ public class EIMServiceImpl implements EIMService {
 		}
 	}
 	
+	/**
+	 * Deletes a specified Path recursively, including all files and directories.
+	 * 
+	 * @param workspacePath		The path of the workspace to be deleted.
+	 */
 	@Override
 	public void deleteWorkspace(Path workspacePath) {
 		try {

@@ -43,7 +43,11 @@ public class EditCatalogEntryView {
 	@Reference
 	private EIMService eimService;
 	
-
+	/**
+	 * Shows the Edit View, for either a installation or workspace.
+	 * @param entry			The LocationCatalogEntry that is to be edited.
+	 * @param modifyTarget	Either "workspace" or "installation", defines the target variables to modify.
+	 */
 	public void showModifyEntryView(LocationCatalogEntry entry, String modifyTarget) {
 		entryToModify = entry;
 		String name = null;
@@ -162,7 +166,10 @@ public class EditCatalogEntryView {
 		shell.open();
 
 	}
-
+	
+	/**
+	 * Saves changes to the data entry and the resources xml file
+	 */
 	private void saveChanges(LocationCatalogEntry entry, String newName, String modifyTarget) {
 		if(modifyTarget.equals("installation")) {
 			eimService.renameInstallation(entry, newName);
