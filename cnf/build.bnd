@@ -28,6 +28,6 @@ bin         ${target-dir}/classes
 testbin     ${target-dir}/test-classes
 
 -snapshot: ${tstamp}
-Bundle-Version: 1.0.3.SNAPSHOT
+Bundle-Version: 1.1.0.SNAPSHOT
 
 Automatic-Module-Name: ${project.name}
