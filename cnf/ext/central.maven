@@ -1,6 +1,4 @@
 # List repository contents using GAV coordinates
-org.apache.commons:commons-lang3:3.12.0
-commons-io:commons-io:2.13.0
 com.github.kwhat:jnativehook:2.2.2
 
 # Testing
@@ -25,3 +23,17 @@ org.mockito:mockito-core:5.3.1
 # Logging
 ch.qos.logback:logback-classic:1.2.12
 ch.qos.logback:logback-core:1.2.12
+org.slf4j:osgi-over-slf4j:1.7.25
+
+#webconsole
+org.apache.felix:org.apache.felix.webconsole:4.8.12
+org.apache.felix:org.apache.felix.webconsole.plugins.ds:2.2.0
+org.apache.felix:org.apache.felix.webconsole.plugins.memoryusage:1.0.10
+org.apache.felix:org.apache.felix.webconsole.plugins.packageadmin:1.0.4
+org.apache.aries.jax.rs:org.apache.aries.jax.rs.whiteboard:2.0.2
+org.apache.felix:org.apache.felix.inventory:1.1.0
+com.fasterxml.woodstox:woodstox-core:6.5.1
+org.apache.felix:org.apache.felix.bundlerepository:2.0.10
+org.apache.felix:org.osgi.service.obr:1.0.2
+org.apache.felix:org.apache.felix.framework:7.0.5
+org.osgi:org.osgi.service.http.whiteboard:1.1.1

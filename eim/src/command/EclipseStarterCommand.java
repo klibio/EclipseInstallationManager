@@ -51,7 +51,7 @@ public class EclipseStarterCommand {
 			}
 		}
 
-		eclService.startEntry(entry);
+		eclService.startEntry(entry, true);
 	}
 	
 		

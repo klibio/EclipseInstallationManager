@@ -3,13 +3,11 @@ package tray.impl;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.oomph.setup.Installation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -26,71 +24,69 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.prefs.BackingStoreException;
+import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.prefs.Preferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eim.api.EIMService;
 import eim.api.LocationCatalogEntry;
+import eim.util.PreferenceUtils;
 import eim.util.SystemUtils;
 
 @Component(immediate = true)
 public class TrayApplication {
 
-	IEclipsePreferences properties = InstanceScope.INSTANCE.getNode("tray.impl");
-	Preferences eimPrefs = properties.node("eim.prefs");
-
+	private IEclipsePreferences properties = InstanceScope.INSTANCE.getNode("tray.impl");
+	private Preferences eimPrefs = properties.node("eim.prefs");
+	private BundleContext bc = FrameworkUtil.getBundle(this.getClass()).getBundleContext();
 	@Reference
 	private EIMService eclService;
 
-	private LinkedList<LocationCatalogEntry> locationEntries;
+	@Reference
+	private DataProvider dataController;
+
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
+	private ManagementView managementView;
+
 	private Logger logger = LoggerFactory.getLogger(TrayApplication.class);
-	private LinkedHashMap<LocationCatalogEntry, LinkedList<LocationCatalogEntry>> installationGroupedMap = new LinkedHashMap<>();;
+	private LinkedHashMap<LocationCatalogEntry, LinkedList<LocationCatalogEntry>> installationGroupedMap;
 	public boolean dispose = false;
+	private Display display;
+	private Tray tray;
 
 	@Activate
 	public void activate(BundleContext context) {
-		dataInitialization();
-		createMappedInstallationEntries();
-		createDisplay();
+		logger.debug("Activating TrayApplication component");
+		installationGroupedMap = dataController.getInstallationMap();
+		
+		Display.getDefault().syncExec(new Runnable() {
 
-		try {
-			logger.debug("Shutting down the OSGi framework");
-			context.getBundle(0).stop();
-		} catch (BundleException e) {
-			logger.debug("Something went wrong shutting down the OSGi framework");
-			e.printStackTrace();
-		}
-	}
-
-	/*
-	 * Loads data into the services and fetches it
-	 */
-	private void dataInitialization() {
-		logger.debug("Loading data");
-		eclService.listLocations(null);
-		locationEntries = eclService.getLocationEntries();
+			@Override
+			public void run() {
+				createDisplay();	
+			}
+			
+		});
 	}
 
 	/*
 	 * Creates the basis for the UI, including the TrayItem
 	 */
-	private void createDisplay() {
+	public void createDisplay() {
 		logger.debug("Starting to create UI");
-		Display display = new Display();
+		display = Display.getDefault();
 		Shell shell = new Shell(display);
-		Image image = new Image(display, 16, 16);
 		Bundle bundle = FrameworkUtil.getBundle(this.getClass());
 		Image trayIcon = null;
 		try {
-			trayIcon = new Image(display, bundle.getEntry("/icon/EIM-Color_512x.png").openStream());
+			trayIcon = new Image(display, bundle.getEntry("/icons/EIM-Color_512x.png").openStream());
 		} catch (IOException e) {
 			logger.error("Something went wrong loading the Icon from the Bundle.");
 			e.printStackTrace();
 		}
 
-		final Tray tray = display.getSystemTray();
+		tray = display.getSystemTray();
 		if (tray == null) {
 			logger.error("The system tray is not available!");
 		} else {
@@ -130,7 +126,7 @@ public class TrayApplication {
 			item.addListener(SWT.MenuDetect, event -> subMenu.setVisible(true));
 
 			item.setImage(trayIcon);
-			item.setHighlightImage(image);
+			item.setHighlightImage(trayIcon);
 		}
 		logger.debug("Waiting for disposal");
 		while (!dispose) {
@@ -138,47 +134,53 @@ public class TrayApplication {
 				display.sleep();
 		}
 		logger.debug("Disposing and exiting");
-		image.dispose();
 		trayIcon.dispose();
 		display.dispose();
+
+		try {
+			logger.debug("Shutting down the OSGi framework");
+			bc.getBundle(0).stop();
+			bundle.stop();
+		} catch (BundleException e) {
+			logger.debug("Something went wrong shutting down the OSGi framework");
+			e.printStackTrace();
+		}
 	}
-	
+
+	private void openManagementView() {
+		Display.getDefault().asyncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				managementView.showOverviewMenu();
+			}
+
+		});
+	}
+
 	/**
 	 * Fetches preference and executes if that preference exists
+	 * 
 	 * @param shell Shell to attach the UI to
 	 */
 	private void startEclipseInstaller(Shell shell) {
-		if (checkIfPreferenceKeyExists("eclipse.installer.path")) {
-			Path installerPath = Paths.get(eimPrefs.get("eclipse.installer.path", null));
-			eclService.startProcess(installerPath.toString(), null, null);
-		} else {
-			logger.error("The Eclipse Installer Path is no longer available. Please choose another one!");
-			spawnInstallerDialog(shell);
-		}
-
-	}
-	
-	/**
-	 * Checks if a preference in the eimPrefs preferences already exists
-	 * @param key 
-	 * @return True or False
-	 */
-	private boolean checkIfPreferenceKeyExists(String key) {
-		boolean result = false;
 		try {
-			String[] keys = eimPrefs.keys();
-			if (Arrays.asList(keys).contains(key)) {
-				result = true;
+			if (PreferenceUtils.checkIfPreferenceKeyExists("eclipse.installer.path", eimPrefs)) {
+				Path installerPath = Paths.get(eimPrefs.get("eclipse.installer.path", null));
+				eclService.startProcess(installerPath.toString(), null, null);
+			} else {
+				logger.error("The Eclipse Installer Path is no longer available. Please choose another one!");
+				spawnInstallerDialog(shell);
 			}
-		} catch (BackingStoreException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return result;
 	}
-	
+
 	/**
 	 * Starts the FileDialog to set the Eclipse Installer preference
+	 * 
 	 * @param shell
 	 */
 	private void spawnInstallerDialog(Shell shell) {
@@ -188,24 +190,16 @@ public class TrayApplication {
 		}
 		selectInstallerLocation.setFilterPath(null);
 		String result = selectInstallerLocation.open();
-
-		savePreference("eclipse.installer.path", result);
-	}
-	
-	/**
-	 * Saves a preference to the EIM Preferences 
-	 * @param key for the new preference
-	 * @param pref preference value
-	 */
-	private void savePreference(String key, String pref) {
-		logger.debug("Saving preference " + pref + " to settings.");
-		eimPrefs.put(key, pref);
-		try {
-			eimPrefs.flush();
-		} catch (BackingStoreException e) {
-			logger.error("Something went wrong writing the setting " + key);
-			e.printStackTrace();
+		if(SystemUtils.IS_OS_MAC) {
+			Path macExecutable = Paths.get(result).resolve("Contents/MacOS/eclipse-inst");
+			result = macExecutable.toString();
 		}
+		if (result == null) {
+			logger.debug("Choose dialog closed, not saving anything!");
+		} else {
+			PreferenceUtils.savePreference("eclipse.installer.path", result, eimPrefs);
+		}
+
 	}
 
 	/*
@@ -213,81 +207,6 @@ public class TrayApplication {
 	 */
 	private void dispose() {
 		this.dispose = true;
-	}
-
-	/**
-	 * Creates a unique map, which maps unique installations to workspaces they were
-	 * used with Note: A InstallationEntry can simultaneously represent an
-	 * installation and a workspace Type of the Map is <LocationCatalogEntry,
-	 * List<LocationCatalogEntry>>
-	 */
-	private void createMappedInstallationEntries() {
-		logger.debug("creating installation - workspaces map");
-
-		LinkedHashMap<LocationCatalogEntry, LinkedList<LocationCatalogEntry>> installationMap = new LinkedHashMap<>();
-		LinkedList<LocationCatalogEntry> installations = new LinkedList<>();
-
-		locationEntries.forEach(locationCatalogEntry -> {
-			if (!checkIfListContainsInstallation(locationCatalogEntry, installations)) {
-				logger.debug("List does not contain locationCatalogEntry "
-						+ locationCatalogEntry.getInstallationFolderName());
-				installations.add(locationCatalogEntry);
-			}
-		});
-
-		for (LocationCatalogEntry installationEntry : installations) {
-			LinkedList<LocationCatalogEntry> mappedWorkspaces = new LinkedList<>();
-			locationEntries.forEach(locationCatalogEntry -> {
-				if (checkIfInstallationURIequals(installationEntry.getInstallation(),
-						locationCatalogEntry.getInstallation())) {
-					mappedWorkspaces.add(locationCatalogEntry);
-				}
-			});
-			installationMap.put(installationEntry, mappedWorkspaces);
-		}
-
-		installationGroupedMap = installationMap;
-
-	}
-
-	/**
-	 * Helper method which checks if an entry already exists in a given list,
-	 * compared by URI.
-	 * 
-	 * @param entry            A LocationCatalogEntry which is to be searched for in
-	 *                         the list
-	 * @param installationList the list that should be searched in
-	 * @return boolean, True if installationList contains entry, false otherwise
-	 */
-	private boolean checkIfListContainsInstallation(LocationCatalogEntry entry,
-			LinkedList<LocationCatalogEntry> installationList) {
-		Installation installation1 = entry.getInstallation();
-		boolean result = false;
-
-		for (LocationCatalogEntry listEntry : installationList) {
-			if (checkIfInstallationURIequals(installation1, listEntry.getInstallation())) {
-				result = true;
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Compares two installations by their path
-	 * 
-	 * @param inst1
-	 * @param inst2
-	 * @return boolean, true if they paths are equal, false otherwise
-	 */
-	private boolean checkIfInstallationURIequals(Installation inst1, Installation inst2) {
-		Path path1 = Paths.get(inst1.eResource().getURI().toFileString());
-		Path path2 = Paths.get(inst2.eResource().getURI().toFileString());
-
-		boolean result = false;
-		if (path1.compareTo(path2) == 0) {
-			result = true;
-		}
-		return result;
 	}
 
 	/**
@@ -299,6 +218,12 @@ public class TrayApplication {
 	private Menu createMainMenu(Shell shell) {
 		final Menu menu = new Menu(shell, SWT.POP_UP);
 
+		MenuItem openOverview = new MenuItem(menu, SWT.WRAP | SWT.PUSH | SWT.BOLD);
+		openOverview.setText("Open Management Overview");
+		openOverview.addListener(SWT.Selection, e -> openManagementView());
+
+		new MenuItem(menu, SWT.HORIZONTAL | SWT.SEPARATOR);
+
 		// Create a new MenuItem for each installation-workspace pair
 		installationGroupedMap.forEach((installation, workspaceList) -> {
 
@@ -307,14 +232,23 @@ public class TrayApplication {
 				MenuItem mi = new MenuItem(menu, SWT.WRAP | SWT.PUSH);
 				LocationCatalogEntry workspaceCatalogEntry = workspaceList.get(0);
 				Integer launchNumber = workspaceCatalogEntry.getID();
-				String itemLabel = launchNumber + " # " + installation.getInstallationFolderName() + " # "
+				String installationName = installation.getInstallationName();
+				if (installationName.equals("installation")) {
+					installationName = installation.getInstallationFolderName();
+				}
+				String itemLabel = launchNumber + " # " + installationName + " # "
 						+ workspaceCatalogEntry.getWorkspaceFolderName();
 				mi.setText(itemLabel);
-				mi.addListener(SWT.Selection, event -> eclService.startEntry(workspaceCatalogEntry));
+				mi.addListener(SWT.Selection, event -> eclService.startEntry(workspaceCatalogEntry, true));
 				// Create a SubMenu if more than 1 workspace is assigned to the installation
 			} else {
 				MenuItem mi = new MenuItem(menu, SWT.CASCADE);
-				mi.setText(installation.getInstallationFolderName());
+				String name = installation.getInstallationName();
+				if(name.equals("installation")) {
+					mi.setText(installation.getInstallationFolderName());
+				} else {
+					mi.setText(name);
+				}
 				Menu subMenu = new Menu(shell, SWT.DROP_DOWN);
 				mi.setMenu(subMenu);
 
@@ -322,9 +256,18 @@ public class TrayApplication {
 					MenuItem subMenuItem = new MenuItem(subMenu, SWT.PUSH);
 					Integer launchNumber = entry.getID();
 					subMenuItem.setToolTipText(entry.getInstallationPath().toString());
-					subMenuItem.setText(launchNumber + " # " + entry.getWorkspaceFolderName());
-					subMenuItem.addListener(SWT.Selection, event -> eclService.startEntry(entry));
+					if(entry.getWorkspaceName().equals("ws") || entry.getWorkspaceName().equals("workspace")) {
+						subMenuItem.setText(launchNumber + " # " + entry.getWorkspaceFolderName());
+					} else {
+						subMenuItem.setText(launchNumber + " # " + entry.getWorkspaceName());
+					}
+					
+					subMenuItem.addListener(SWT.Selection, event -> eclService.startEntry(entry, true));
 				}
+				new MenuItem(subMenu, SWT.HORIZONTAL | SWT.SEPARATOR);
+				MenuItem openWithoutWorkspace = new MenuItem(subMenu, SWT.PUSH);
+				openWithoutWorkspace.setText("Let me choose...");
+				openWithoutWorkspace.addListener(SWT.Selection, event -> eclService.startEntry(installation, false));
 				mi.addListener(SWT.MouseHover, event -> subMenu.setVisible(true));
 			}
 		});
@@ -338,14 +281,15 @@ public class TrayApplication {
 	 * @param shell
 	 */
 	private void refresh(Shell shell) {
-		Display display = shell.getDisplay();
 		logger.debug("Refreshing location catalog entries!");
-		eclService.refreshLocations();
-		this.locationEntries = eclService.getLocationEntries();
-		createMappedInstallationEntries();
-
-		// due to app not being in focus dispose and recreate
-		display.dispose();
+		dataController.refreshData();
+		shell.dispose();
+		tray.dispose();
 		createDisplay();
+	}
+
+	public void setInstallationMap(
+			LinkedHashMap<LocationCatalogEntry, LinkedList<LocationCatalogEntry>> installationMap) {
+		this.installationGroupedMap = installationMap;
 	}
 }

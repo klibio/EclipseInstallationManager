@@ -7,6 +7,7 @@ import org.eclipse.oomph.setup.Installation;
 import org.eclipse.oomph.setup.Workspace;
 
 import eim.api.LocationCatalogEntry;
+import eim.util.SystemUtils;
 
 public class LocationCatalogEntryImpl extends LocationCatalogEntry {
 
@@ -18,6 +19,8 @@ public class LocationCatalogEntryImpl extends LocationCatalogEntry {
 	private Path workspacePath;
 	private String installationFolderName;
 	private String workspaceFolderName;
+	private String installationName;
+	private String workspaceName;
 
 	public LocationCatalogEntryImpl(Integer id, Installation installation, Workspace workspace, String[] tags) {
 		super(id, installation, workspace, tags);
@@ -25,10 +28,11 @@ public class LocationCatalogEntryImpl extends LocationCatalogEntry {
 		this.installation = installation;
 		this.workspace = workspace;
 		this.tags = tags;
+		this.installationName = installation.getName();
+		this.workspaceName = workspace.getName();
 		Path fullInstallationPath = Paths.get(installation.eResource().getURI().toFileString());
 		Path fullWorkspacePath = Paths.get(workspace.eResource().getURI().toFileString());
-		String osProp = System.getProperty("os.name");
-		if (osProp.matches(".*Mac.*")) {
+		if (SystemUtils.IS_OS_MAC) {
 			Path installPath = fullInstallationPath.getParent().getParent().getParent().getParent().getParent();
 			this.installationPath = installPath;
 		} else {
@@ -37,6 +41,24 @@ public class LocationCatalogEntryImpl extends LocationCatalogEntry {
 		this.workspacePath = fullWorkspacePath.getParent().getParent().getParent().getParent();
 		this.installationFolderName = installationPath.getParent().toFile().getName();
 		this.workspaceFolderName = workspacePath.toFile().getName();
+	}
+	
+	@Override
+	public String getInstallationName() {
+		return installationName;
+	}
+	@Override
+	public void setInstallationName(String name) {
+		this.installationName = name;
+	}
+	
+	@Override
+	public String getWorkspaceName() {
+		return workspaceName;
+	}
+	@Override
+	public void setWorkspaceName(String name) {
+		this.workspaceName = name;
 	}
 
 	@Override

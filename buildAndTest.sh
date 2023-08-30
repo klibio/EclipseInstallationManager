@@ -16,7 +16,10 @@ echo $JAVA_HOME
     --console=plain \
     clean \
     testrun.1-integration-pop \
-    export \
+    export.eim.tray.win32.x86_64 \
+    export.eim.tray.linux.x86_64 \
+    export.eim.tray.cocoa.x86_64 \
+    export.eim.tray.cocoa.aarch64 \
     release
 
 echo '### create Coverage and PoP reports'
