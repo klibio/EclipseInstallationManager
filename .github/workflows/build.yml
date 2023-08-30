@@ -20,7 +20,7 @@ jobs:
       name: Build application, run tests and create coverage reports
       id: script
       run: |
-        /rm -rf ${{ github.workspace }}/cnf/release
+        rm -rf ${{ github.workspace }}/cnf/release
         /bin/bash ${{ github.workspace }}/buildAndTest.sh
      -
       name: Create release and upload artifacts to release
