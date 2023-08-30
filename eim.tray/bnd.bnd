@@ -19,7 +19,7 @@
 	org.osgi.service.prefs,\
 	eim.util;version=latest,\
 	org.osgi.service.component.annotations,\
-	org.eclipse.jface
+	org.eclipse.jface 
 	
 Bundle-SymbolicName: ${project.name};singleton:=true
 Bundle-Version: 0.4.1

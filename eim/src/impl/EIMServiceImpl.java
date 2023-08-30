@@ -92,10 +92,12 @@ public class EIMServiceImpl implements EIMService {
 	/**
 	 * Starts a specific LocationCatalogEntry with the startProcess method.
 	 * 
-	 * @param entryToExecute   The LocationCatalogEntry which is supposed to be started.
+	 * @param entryToExecute   		The LocationCatalogEntry which is supposed to be started.
+	 * @param startWithWorkspace	Sets a boolean if this entry should be started with the ws Parameter, or not.
+	 * 								False lets the user choose a workspace at installation startup
 	 */
 	@Override
-	public void startEntry(LocationCatalogEntry entryToExecute) {
+	public void startEntry(LocationCatalogEntry entryToExecute, boolean startWithWorkspace) {
 		if (entryToExecute == null) {
 			logger.error("The entry could not be found in the list.");
 		} else {
@@ -113,9 +115,11 @@ public class EIMServiceImpl implements EIMService {
 				logger.error("An error occurred during determination of the executable!");
 				e.printStackTrace();
 			}
-
+			
 			ArrayList<String> args = new ArrayList<String>();
-			args.add("ws=" + workspacePath.toString());
+			if(startWithWorkspace) {
+				args.add("ws=" + workspacePath.toString());
+			}
 			String[] simpleArray = new String[args.size()];
 			args.toArray(simpleArray);
 
@@ -348,8 +352,8 @@ public class EIMServiceImpl implements EIMService {
 	@Override
 	public void renameInstallation(LocationCatalogEntry entry, String name) {
 		Installation installation = entry.getInstallation();
-		installation.setName(name);
 		logger.debug("Renaming installation " + installation.getName() + " to " + name);
+		installation.setName(name);
 		URI uri = URI.createFileURI(entry.getInstallationPath()
 				.resolve("configuration\\org.eclipse.oomph.setup\\installation.setup").toString());
 		Resource installationResource = installation.eResource();
@@ -366,35 +370,17 @@ public class EIMServiceImpl implements EIMService {
 	/**
 	 * Deletes a specified Path recursively, including all files and directories.
 	 * 
-	 * @param installationPath		The path of the installation to be deleted.
+	 * @param path		The path to be deleted.
 	 */
 	@Override
-	public void deleteInstallation(Path installationPath) {
+	public void deletePath(Path path) {
 		try {
-			Files.walk(installationPath)
+			Files.walk(path)
 				.map(Path::toFile)
 				.sorted(Comparator.reverseOrder())
 				.forEach(File::delete);
 		} catch (IOException e) {
-			logger.error("Failed deleting the contents of " + installationPath.toString() + ". Please make sure there are no files left over!");
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Deletes a specified Path recursively, including all files and directories.
-	 * 
-	 * @param workspacePath		The path of the workspace to be deleted.
-	 */
-	@Override
-	public void deleteWorkspace(Path workspacePath) {
-		try {
-			Files.walk(workspacePath)
-				.map(Path::toFile)
-				.sorted(Comparator.reverseOrder())
-				.forEach(File::delete);
-		} catch (IOException e) {
-			logger.error("Failed deleting the contents of " + workspacePath.toString() + ". Please make sure there are no files left over!");
+			logger.error("Failed deleting the contents of " + path.toString() + ". Please make sure there are no files left over!");
 			e.printStackTrace();
 		}
 	}

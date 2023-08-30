@@ -140,6 +140,7 @@ public class TrayApplication {
 		try {
 			logger.debug("Shutting down the OSGi framework");
 			bc.getBundle(0).stop();
+			bundle.stop();
 		} catch (BundleException e) {
 			logger.debug("Something went wrong shutting down the OSGi framework");
 			e.printStackTrace();
@@ -189,6 +190,10 @@ public class TrayApplication {
 		}
 		selectInstallerLocation.setFilterPath(null);
 		String result = selectInstallerLocation.open();
+		if(SystemUtils.IS_OS_MAC) {
+			Path macExecutable = Paths.get(result).resolve("Contents/MacOS/eclipse-inst");
+			result = macExecutable.toString();
+		}
 		if (result == null) {
 			logger.debug("Choose dialog closed, not saving anything!");
 		} else {
@@ -234,11 +239,16 @@ public class TrayApplication {
 				String itemLabel = launchNumber + " # " + installationName + " # "
 						+ workspaceCatalogEntry.getWorkspaceFolderName();
 				mi.setText(itemLabel);
-				mi.addListener(SWT.Selection, event -> eclService.startEntry(workspaceCatalogEntry));
+				mi.addListener(SWT.Selection, event -> eclService.startEntry(workspaceCatalogEntry, true));
 				// Create a SubMenu if more than 1 workspace is assigned to the installation
 			} else {
 				MenuItem mi = new MenuItem(menu, SWT.CASCADE);
-				mi.setText(installation.getInstallationFolderName());
+				String name = installation.getInstallationName();
+				if(name.equals("installation")) {
+					mi.setText(installation.getInstallationFolderName());
+				} else {
+					mi.setText(name);
+				}
 				Menu subMenu = new Menu(shell, SWT.DROP_DOWN);
 				mi.setMenu(subMenu);
 
@@ -246,14 +256,18 @@ public class TrayApplication {
 					MenuItem subMenuItem = new MenuItem(subMenu, SWT.PUSH);
 					Integer launchNumber = entry.getID();
 					subMenuItem.setToolTipText(entry.getInstallationPath().toString());
-					if(entry.getWorkspaceName().equals("ws")) {
+					if(entry.getWorkspaceName().equals("ws") || entry.getWorkspaceName().equals("workspace")) {
 						subMenuItem.setText(launchNumber + " # " + entry.getWorkspaceFolderName());
 					} else {
 						subMenuItem.setText(launchNumber + " # " + entry.getWorkspaceName());
 					}
 					
-					subMenuItem.addListener(SWT.Selection, event -> eclService.startEntry(entry));
+					subMenuItem.addListener(SWT.Selection, event -> eclService.startEntry(entry, true));
 				}
+				new MenuItem(subMenu, SWT.HORIZONTAL | SWT.SEPARATOR);
+				MenuItem openWithoutWorkspace = new MenuItem(subMenu, SWT.PUSH);
+				openWithoutWorkspace.setText("Let me choose...");
+				openWithoutWorkspace.addListener(SWT.Selection, event -> eclService.startEntry(installation, false));
 				mi.addListener(SWT.MouseHover, event -> subMenu.setVisible(true));
 			}
 		});

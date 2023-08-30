@@ -9,7 +9,7 @@ import org.osgi.annotation.versioning.ProviderType;
 public interface EIMService {
 	Process startProcess(String command, String workingDir, String[] args);
 
-	void startEntry(LocationCatalogEntry entryToExecute);
+	void startEntry(LocationCatalogEntry entryToExecute, boolean startWithWorkspace);
 
 	public void listLocations(String locationFile);
 
@@ -21,7 +21,5 @@ public interface EIMService {
 
 	public void renameInstallation(LocationCatalogEntry entry, String name);
 	
-	public void deleteWorkspace(Path workspacePath);
-	
-	public void deleteInstallation(Path installationPath);
+	public void deletePath(Path path);
 }

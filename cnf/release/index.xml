@@ -1,0 +1,598 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<repository xmlns="http://www.osgi.org/xmlns/repository/v1.0.0" name="Release" increment="1693387189743">
+  <resource>
+    <capability namespace="osgi.identity">
+      <attribute name="license" value="EPL-2.0;description=&quot;This program and the accompanying materials are made avilable under the terms of the Eclipse Public License 2.0.&quot;;link=&quot;https://www.eclipse.org/legal/epl-2.0/&quot;"/>
+      <attribute name="osgi.identity" value="eim.api"/>
+      <attribute name="type" value="osgi.bundle"/>
+      <attribute name="version" value="1.3.0" type="Version"/>
+    </capability>
+    <capability namespace="osgi.wiring.package">
+      <directive name="uses" value="org.eclipse.oomph.setup"/>
+      <attribute name="bundle-symbolic-name" value="eim.api"/>
+      <attribute name="bundle-version" value="1.3.0" type="Version"/>
+      <attribute name="osgi.wiring.package" value="eim.api"/>
+      <attribute name="version" value="1.2.0" type="Version"/>
+      <attribute name="bnd.hashes" value="931529292,-969727922" type="List&lt;Long&gt;"/>
+    </capability>
+    <capability namespace="osgi.wiring.bundle">
+      <attribute name="bundle-version" value="1.3.0" type="Version"/>
+      <attribute name="osgi.wiring.bundle" value="eim.api"/>
+    </capability>
+    <capability namespace="osgi.wiring.host">
+      <attribute name="bundle-version" value="1.3.0" type="Version"/>
+      <attribute name="osgi.wiring.host" value="eim.api"/>
+    </capability>
+    <capability namespace="osgi.content">
+      <attribute name="size" value="4811" type="Long"/>
+      <attribute name="mime" value="application/vnd.osgi.bundle"/>
+      <attribute name="url" value="eim.api/eim.api-1.3.0.jar"/>
+      <attribute name="osgi.content" value="C0B3285DEF5C67742E02E38E1F251BB7AD441DC1E6BCCCBC01553AF36CC928CB"/>
+    </capability>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.lang)"/>
+      <attribute name="osgi.wiring.package" value="java.lang"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.nio.file)"/>
+      <attribute name="osgi.wiring.package" value="java.nio.file"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.util)"/>
+      <attribute name="osgi.wiring.package" value="java.util"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.eclipse.oomph.setup)(version&gt;=1.24.0)(!(version&gt;=2.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.eclipse.oomph.setup"/>
+    </requirement>
+    <requirement namespace="osgi.ee">
+      <directive name="filter" value="(&amp;(osgi.ee=JavaSE)(version=17))"/>
+    </requirement>
+  </resource>
+  <resource>
+    <capability namespace="osgi.identity">
+      <directive name="singleton" value="true"/>
+      <attribute name="license" value="EPL-2.0;description=&quot;This program and the accompanying materials are made avilable under the terms of the Eclipse Public License 2.0.&quot;;link=&quot;https://www.eclipse.org/legal/epl-2.0/&quot;"/>
+      <attribute name="osgi.identity" value="eim.impl"/>
+      <attribute name="type" value="osgi.bundle"/>
+      <attribute name="version" value="1.0.5" type="Version"/>
+    </capability>
+    <capability namespace="osgi.wiring.bundle">
+      <directive name="singleton" value="true"/>
+      <attribute name="bundle-version" value="1.0.5" type="Version"/>
+      <attribute name="osgi.wiring.bundle" value="eim.impl"/>
+    </capability>
+    <capability namespace="osgi.wiring.host">
+      <directive name="singleton" value="true"/>
+      <attribute name="bundle-version" value="1.0.5" type="Version"/>
+      <attribute name="osgi.wiring.host" value="eim.impl"/>
+    </capability>
+    <capability namespace="osgi.content">
+      <attribute name="size" value="16803" type="Long"/>
+      <attribute name="mime" value="application/vnd.osgi.bundle"/>
+      <attribute name="url" value="eim.impl/eim.impl-1.0.5.jar"/>
+      <attribute name="osgi.content" value="3DF6401DE35F96D2DFA1A048FCC2D326B48DEC3D90B717255A467C55FBCB8378"/>
+    </capability>
+    <capability namespace="osgi.service">
+      <directive name="uses" value="eim.api"/>
+      <attribute name="objectClass" value="eim.api.EIMService" type="List&lt;String&gt;"/>
+    </capability>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=eim.api)(version&gt;=1.2.0)(!(version&gt;=1.3.0)))"/>
+      <attribute name="osgi.wiring.package" value="eim.api"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=eim.util)(version&gt;=1.1.0)(!(version&gt;=2.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="eim.util"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.io)"/>
+      <attribute name="osgi.wiring.package" value="java.io"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.lang)"/>
+      <attribute name="osgi.wiring.package" value="java.lang"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.lang.invoke)"/>
+      <attribute name="osgi.wiring.package" value="java.lang.invoke"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.nio.file)"/>
+      <attribute name="osgi.wiring.package" value="java.nio.file"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.util)"/>
+      <attribute name="osgi.wiring.package" value="java.util"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.util.function)"/>
+      <attribute name="osgi.wiring.package" value="java.util.function"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.util.stream)"/>
+      <attribute name="osgi.wiring.package" value="java.util.stream"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.eclipse.emf.common.util)(version&gt;=2.28.0)(!(version&gt;=3.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.eclipse.emf.common.util"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.eclipse.emf.ecore)(version&gt;=2.33.0)(!(version&gt;=3.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.eclipse.emf.ecore"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.eclipse.emf.ecore.resource)(version&gt;=2.33.0)(!(version&gt;=3.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.eclipse.emf.ecore.resource"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.slf4j)(version&gt;=1.7.0)(!(version&gt;=2.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.slf4j"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.bundle">
+      <directive name="filter" value="(osgi.wiring.bundle=org.eclipse.core.runtime)"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.bundle">
+      <directive name="filter" value="(osgi.wiring.bundle=org.eclipse.oomph.setup)"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.bundle">
+      <directive name="filter" value="(osgi.wiring.bundle=org.eclipse.oomph.setup.core)"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.bundle">
+      <directive name="filter" value="(osgi.wiring.bundle=org.apache.felix.scr)"/>
+    </requirement>
+    <requirement namespace="osgi.ee">
+      <directive name="filter" value="(&amp;(osgi.ee=JavaSE)(version=17))"/>
+    </requirement>
+    <requirement namespace="osgi.extender">
+      <directive name="filter" value="(&amp;(osgi.extender=osgi.component)(version&gt;=1.4.0)(!(version&gt;=2.0.0)))"/>
+    </requirement>
+  </resource>
+  <resource>
+    <capability namespace="osgi.identity">
+      <directive name="singleton" value="true"/>
+      <attribute name="license" value="EPL-2.0;description=&quot;This program and the accompanying materials are made avilable under the terms of the Eclipse Public License 2.0.&quot;;link=&quot;https://www.eclipse.org/legal/epl-2.0/&quot;"/>
+      <attribute name="osgi.identity" value="eim.command"/>
+      <attribute name="type" value="osgi.bundle"/>
+      <attribute name="version" value="1.0.2" type="Version"/>
+    </capability>
+    <capability namespace="osgi.wiring.bundle">
+      <directive name="singleton" value="true"/>
+      <attribute name="bundle-version" value="1.0.2" type="Version"/>
+      <attribute name="osgi.wiring.bundle" value="eim.command"/>
+    </capability>
+    <capability namespace="osgi.wiring.host">
+      <directive name="singleton" value="true"/>
+      <attribute name="bundle-version" value="1.0.2" type="Version"/>
+      <attribute name="osgi.wiring.host" value="eim.command"/>
+    </capability>
+    <capability namespace="osgi.content">
+      <attribute name="size" value="5328" type="Long"/>
+      <attribute name="mime" value="application/vnd.osgi.bundle"/>
+      <attribute name="url" value="eim.command/eim.command-1.0.2.jar"/>
+      <attribute name="osgi.content" value="B05ACEDECFBB8F22ACB6E5A1D5ABFD6E256C41AAA9F4D6A4D63481D504807B12"/>
+    </capability>
+    <capability namespace="osgi.service">
+      <directive name="uses" value="command"/>
+      <attribute name="objectClass" value="command.EclipseStarterCommand" type="List&lt;String&gt;"/>
+    </capability>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=eim.api)(version&gt;=1.2.0)(!(version&gt;=2.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="eim.api"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.io)"/>
+      <attribute name="osgi.wiring.package" value="java.io"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.lang)"/>
+      <attribute name="osgi.wiring.package" value="java.lang"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.util)"/>
+      <attribute name="osgi.wiring.package" value="java.util"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.apache.felix.service.command)(version&gt;=1.0.0)(!(version&gt;=2.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.apache.felix.service.command"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.bundle">
+      <directive name="filter" value="(osgi.wiring.bundle=org.eclipse.oomph.setup.core)"/>
+    </requirement>
+    <requirement namespace="osgi.ee">
+      <directive name="filter" value="(&amp;(osgi.ee=JavaSE)(version=17))"/>
+    </requirement>
+    <requirement namespace="osgi.extender">
+      <directive name="filter" value="(&amp;(osgi.extender=osgi.component)(version&gt;=1.4.0)(!(version&gt;=2.0.0)))"/>
+    </requirement>
+    <requirement namespace="osgi.service">
+      <directive name="filter" value="(objectClass=eim.api.EIMService)"/>
+      <directive name="effective" value="active"/>
+    </requirement>
+  </resource>
+  <resource>
+    <capability namespace="osgi.identity">
+      <attribute name="license" value="EPL-2.0;description=&quot;This program and the accompanying materials are made avilable under the terms of the Eclipse Public License 2.0.&quot;;link=&quot;https://www.eclipse.org/legal/epl-2.0/&quot;"/>
+      <attribute name="osgi.identity" value="eim.pop"/>
+      <attribute name="type" value="osgi.bundle"/>
+      <attribute name="version" value="1.0.3" type="Version"/>
+    </capability>
+    <capability namespace="osgi.wiring.bundle">
+      <attribute name="bundle-version" value="1.0.3" type="Version"/>
+      <attribute name="osgi.wiring.bundle" value="eim.pop"/>
+    </capability>
+    <capability namespace="osgi.wiring.host">
+      <attribute name="bundle-version" value="1.0.3" type="Version"/>
+      <attribute name="osgi.wiring.host" value="eim.pop"/>
+    </capability>
+    <capability namespace="osgi.content">
+      <attribute name="size" value="9376" type="Long"/>
+      <attribute name="mime" value="application/vnd.osgi.bundle"/>
+      <attribute name="url" value="eim.pop/eim.pop-1.0.3.jar"/>
+      <attribute name="osgi.content" value="17B4D7C1AB538703734BBD7D59A906E448FA7CA11F829E58E64767E29268B284"/>
+    </capability>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=eim.api)(version&gt;=1.2.0)(!(version&gt;=2.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="eim.api"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.io)"/>
+      <attribute name="osgi.wiring.package" value="java.io"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.lang)"/>
+      <attribute name="osgi.wiring.package" value="java.lang"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.lang.invoke)"/>
+      <attribute name="osgi.wiring.package" value="java.lang.invoke"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.lang.management)"/>
+      <attribute name="osgi.wiring.package" value="java.lang.management"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.nio.file)"/>
+      <attribute name="osgi.wiring.package" value="java.nio.file"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.util)"/>
+      <attribute name="osgi.wiring.package" value="java.util"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.util.concurrent)"/>
+      <attribute name="osgi.wiring.package" value="java.util.concurrent"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.util.function)"/>
+      <attribute name="osgi.wiring.package" value="java.util.function"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.util.regex)"/>
+      <attribute name="osgi.wiring.package" value="java.util.regex"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.util.stream)"/>
+      <attribute name="osgi.wiring.package" value="java.util.stream"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.eclipse.emf.common.util)(version&gt;=2.28.0)(!(version&gt;=3.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.eclipse.emf.common.util"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.eclipse.emf.ecore.resource)(version&gt;=2.33.0)(!(version&gt;=3.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.eclipse.emf.ecore.resource"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.eclipse.oomph.setup)(version&gt;=1.24.0)(!(version&gt;=2.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.eclipse.oomph.setup"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.eclipse.oomph.setup.impl)(version&gt;=1.24.0)(!(version&gt;=2.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.eclipse.oomph.setup.impl"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.eclipse.oomph.setup.internal.core.util)(version&gt;=1.24.0)(!(version&gt;=2.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.eclipse.oomph.setup.internal.core.util"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.junit.jupiter.api)(version&gt;=5.9.0)(!(version&gt;=6.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.junit.jupiter.api"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.junit.jupiter.api.io)(version&gt;=5.9.0)(!(version&gt;=6.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.junit.jupiter.api.io"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.knowhowlab.osgi.testing.assertions)(version&gt;=1.1.0)(!(version&gt;=2.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.knowhowlab.osgi.testing.assertions"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.knowhowlab.osgi.testing.utils)(version&gt;=1.2.0)(!(version&gt;=2.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.knowhowlab.osgi.testing.utils"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.osgi.framework)(version&gt;=1.9.0)(!(version&gt;=2.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.osgi.framework"/>
+    </requirement>
+    <requirement namespace="osgi.ee">
+      <directive name="filter" value="(&amp;(osgi.ee=JavaSE)(version=17))"/>
+    </requirement>
+  </resource>
+  <resource>
+    <capability namespace="osgi.identity">
+      <directive name="singleton" value="true"/>
+      <attribute name="license" value="EPL-2.0;description=&quot;This program and the accompanying materials are made avilable under the terms of the Eclipse Public License 2.0.&quot;;link=&quot;https://www.eclipse.org/legal/epl-2.0/&quot;"/>
+      <attribute name="osgi.identity" value="eim.tray"/>
+      <attribute name="type" value="osgi.bundle"/>
+      <attribute name="version" value="0.4.1" type="Version"/>
+    </capability>
+    <capability namespace="osgi.wiring.package">
+      <directive name="uses" value="eim.api,org.osgi.framework"/>
+      <attribute name="bundle-symbolic-name" value="eim.tray"/>
+      <attribute name="bundle-version" value="0.4.1" type="Version"/>
+      <attribute name="osgi.wiring.package" value="tray.impl"/>
+      <attribute name="version" value="1.0.0" type="Version"/>
+      <attribute name="bnd.hashes" value="1824686511,504062939,838372456,-1394992728,-747834342,-1923478059" type="List&lt;Long&gt;"/>
+    </capability>
+    <capability namespace="osgi.wiring.bundle">
+      <directive name="singleton" value="true"/>
+      <attribute name="bundle-version" value="0.4.1" type="Version"/>
+      <attribute name="osgi.wiring.bundle" value="eim.tray"/>
+    </capability>
+    <capability namespace="osgi.wiring.host">
+      <directive name="singleton" value="true"/>
+      <attribute name="bundle-version" value="0.4.1" type="Version"/>
+      <attribute name="osgi.wiring.host" value="eim.tray"/>
+    </capability>
+    <capability namespace="osgi.content">
+      <attribute name="size" value="687381" type="Long"/>
+      <attribute name="mime" value="application/vnd.osgi.bundle"/>
+      <attribute name="url" value="eim.tray/eim.tray-0.4.1.jar"/>
+      <attribute name="osgi.content" value="68F434E8ABCFF865FC94F4431480E89E68E5CCC4E59036C504406536A791FCC1"/>
+    </capability>
+    <capability namespace="osgi.service">
+      <directive name="uses" value="tray.impl"/>
+      <attribute name="objectClass" value="tray.impl.ConfirmDeletePrompt" type="List&lt;String&gt;"/>
+    </capability>
+    <capability namespace="osgi.service">
+      <directive name="uses" value="tray.impl"/>
+      <attribute name="objectClass" value="tray.impl.DataProvider" type="List&lt;String&gt;"/>
+    </capability>
+    <capability namespace="osgi.service">
+      <directive name="uses" value="tray.impl"/>
+      <attribute name="objectClass" value="tray.impl.EditCatalogEntryView" type="List&lt;String&gt;"/>
+    </capability>
+    <capability namespace="osgi.service">
+      <directive name="uses" value="tray.impl"/>
+      <attribute name="objectClass" value="tray.impl.ManagementView" type="List&lt;String&gt;"/>
+    </capability>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=eim.api)(version&gt;=1.2.0)(!(version&gt;=2.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="eim.api"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=eim.util)(version&gt;=1.1.0)(!(version&gt;=2.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="eim.util"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.awt)"/>
+      <attribute name="osgi.wiring.package" value="java.awt"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.awt.event)"/>
+      <attribute name="osgi.wiring.package" value="java.awt.event"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.io)"/>
+      <attribute name="osgi.wiring.package" value="java.io"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.lang)"/>
+      <attribute name="osgi.wiring.package" value="java.lang"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.lang.invoke)"/>
+      <attribute name="osgi.wiring.package" value="java.lang.invoke"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.lang.reflect)"/>
+      <attribute name="osgi.wiring.package" value="java.lang.reflect"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.net)"/>
+      <attribute name="osgi.wiring.package" value="java.net"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.nio.file)"/>
+      <attribute name="osgi.wiring.package" value="java.nio.file"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.security)"/>
+      <attribute name="osgi.wiring.package" value="java.security"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.util)"/>
+      <attribute name="osgi.wiring.package" value="java.util"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.util.concurrent)"/>
+      <attribute name="osgi.wiring.package" value="java.util.concurrent"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.util.function)"/>
+      <attribute name="osgi.wiring.package" value="java.util.function"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.util.logging)"/>
+      <attribute name="osgi.wiring.package" value="java.util.logging"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.util.stream)"/>
+      <attribute name="osgi.wiring.package" value="java.util.stream"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=javax.accessibility)"/>
+      <attribute name="osgi.wiring.package" value="javax.accessibility"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=javax.swing)"/>
+      <attribute name="osgi.wiring.package" value="javax.swing"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=javax.swing.event)"/>
+      <attribute name="osgi.wiring.package" value="javax.swing.event"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=javax.swing.text)"/>
+      <attribute name="osgi.wiring.package" value="javax.swing.text"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.eclipse.core.runtime.preferences)(version&gt;=3.5.0)(!(version&gt;=4.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.eclipse.core.runtime.preferences"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=org.eclipse.jface.viewers)"/>
+      <attribute name="osgi.wiring.package" value="org.eclipse.jface.viewers"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.eclipse.oomph.setup)(version&gt;=1.24.0)(!(version&gt;=2.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.eclipse.oomph.setup"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=org.eclipse.swt.custom)"/>
+      <attribute name="osgi.wiring.package" value="org.eclipse.swt.custom"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=org.eclipse.swt.events)"/>
+      <attribute name="osgi.wiring.package" value="org.eclipse.swt.events"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=org.eclipse.swt.graphics)"/>
+      <attribute name="osgi.wiring.package" value="org.eclipse.swt.graphics"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=org.eclipse.swt.layout)"/>
+      <attribute name="osgi.wiring.package" value="org.eclipse.swt.layout"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=org.eclipse.swt.widgets)"/>
+      <attribute name="osgi.wiring.package" value="org.eclipse.swt.widgets"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.osgi.framework)(version&gt;=1.10.0)(!(version&gt;=2.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.osgi.framework"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.osgi.service.prefs)(version&gt;=1.1.0)(!(version&gt;=2.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.osgi.service.prefs"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.slf4j)(version&gt;=1.6.0)(!(version&gt;=2.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.slf4j"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=tray.impl)(version&gt;=1.0.0)(!(version&gt;=2.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="tray.impl"/>
+    </requirement>
+    <requirement namespace="osgi.ee">
+      <directive name="filter" value="(&amp;(osgi.ee=JavaSE)(version=17))"/>
+    </requirement>
+    <requirement namespace="osgi.extender">
+      <directive name="filter" value="(&amp;(osgi.extender=osgi.component)(version&gt;=1.4.0)(!(version&gt;=2.0.0)))"/>
+    </requirement>
+    <requirement namespace="osgi.service">
+      <directive name="filter" value="(objectClass=eim.api.EIMService)"/>
+      <directive name="effective" value="active"/>
+    </requirement>
+    <requirement namespace="osgi.service">
+      <directive name="filter" value="(objectClass=tray.impl.ConfirmDeletePrompt)"/>
+      <directive name="effective" value="active"/>
+      <directive name="resolution" value="optional"/>
+    </requirement>
+    <requirement namespace="osgi.service">
+      <directive name="filter" value="(objectClass=tray.impl.DataProvider)"/>
+      <directive name="effective" value="active"/>
+    </requirement>
+    <requirement namespace="osgi.service">
+      <directive name="filter" value="(objectClass=tray.impl.DataProvider)"/>
+      <directive name="effective" value="active"/>
+      <directive name="resolution" value="optional"/>
+    </requirement>
+    <requirement namespace="osgi.service">
+      <directive name="filter" value="(objectClass=tray.impl.EditCatalogEntryView)"/>
+      <directive name="effective" value="active"/>
+      <directive name="resolution" value="optional"/>
+    </requirement>
+    <requirement namespace="osgi.service">
+      <directive name="filter" value="(objectClass=tray.impl.ManagementView)"/>
+      <directive name="effective" value="active"/>
+      <directive name="resolution" value="optional"/>
+    </requirement>
+  </resource>
+  <resource>
+    <capability namespace="osgi.identity">
+      <attribute name="license" value="EPL-2.0;description=&quot;This program and the accompanying materials are made avilable under the terms of the Eclipse Public License 2.0.&quot;;link=&quot;https://www.eclipse.org/legal/epl-2.0/&quot;"/>
+      <attribute name="osgi.identity" value="eim.util"/>
+      <attribute name="type" value="osgi.bundle"/>
+      <attribute name="version" value="1.1.0" type="Version"/>
+    </capability>
+    <capability namespace="osgi.wiring.package">
+      <directive name="uses" value="org.eclipse.oomph.setup,org.osgi.service.prefs"/>
+      <attribute name="bundle-symbolic-name" value="eim.util"/>
+      <attribute name="bundle-version" value="1.1.0" type="Version"/>
+      <attribute name="osgi.wiring.package" value="eim.util"/>
+      <attribute name="version" value="1.1.0" type="Version"/>
+      <attribute name="bnd.hashes" value="678451317,-1564152714,123493282" type="List&lt;Long&gt;"/>
+    </capability>
+    <capability namespace="osgi.wiring.bundle">
+      <attribute name="bundle-version" value="1.1.0" type="Version"/>
+      <attribute name="osgi.wiring.bundle" value="eim.util"/>
+    </capability>
+    <capability namespace="osgi.wiring.host">
+      <attribute name="bundle-version" value="1.1.0" type="Version"/>
+      <attribute name="osgi.wiring.host" value="eim.util"/>
+    </capability>
+    <capability namespace="osgi.content">
+      <attribute name="size" value="7839" type="Long"/>
+      <attribute name="mime" value="application/vnd.osgi.bundle"/>
+      <attribute name="url" value="eim.util/eim.util-1.1.0.jar"/>
+      <attribute name="osgi.content" value="4E88C31900C62E69987CC67ACDE9BF16C7DAA9E43C40D38534C4C88320179D85"/>
+    </capability>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.lang)"/>
+      <attribute name="osgi.wiring.package" value="java.lang"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.nio.file)"/>
+      <attribute name="osgi.wiring.package" value="java.nio.file"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(osgi.wiring.package=java.util)"/>
+      <attribute name="osgi.wiring.package" value="java.util"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.eclipse.emf.common.util)(version&gt;=2.28.0)(!(version&gt;=3.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.eclipse.emf.common.util"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.eclipse.emf.ecore.resource)(version&gt;=2.33.0)(!(version&gt;=3.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.eclipse.emf.ecore.resource"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.eclipse.oomph.setup)(version&gt;=1.24.0)(!(version&gt;=2.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.eclipse.oomph.setup"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.osgi.service.prefs)(version&gt;=1.1.0)(!(version&gt;=2.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.osgi.service.prefs"/>
+    </requirement>
+    <requirement namespace="osgi.wiring.package">
+      <directive name="filter" value="(&amp;(osgi.wiring.package=org.slf4j)(version&gt;=1.7.0)(!(version&gt;=2.0.0)))"/>
+      <attribute name="osgi.wiring.package" value="org.slf4j"/>
+    </requirement>
+    <requirement namespace="osgi.ee">
+      <directive name="filter" value="(&amp;(osgi.ee=JavaSE)(version=17))"/>
+    </requirement>
+  </resource>
+</repository>
