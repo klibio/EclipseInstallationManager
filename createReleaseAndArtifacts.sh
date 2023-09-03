@@ -29,10 +29,10 @@ mv ${github_workspace}/eim/generated/gradle/distributions/executable/eim.jar ${g
 mv ${github_workspace}/eim.api/generated/gradle/eim.api.jar ${github_workspace}/eim.api/generated/gradle/eim.api_${apiVersion}.jar
 
 # rename all platform versions of the tray application
-mv ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.win32.x86_64.jar ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.win32.x86_64_${trayVersion}.jar
-mv ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.linux.x86_64.jar ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.linux.x86_64_${trayVersion}.jar
-mv ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.cocoa.aarch64.jar ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.cocoa.aarch64_${trayVersion}.jar
-mv ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.cocoa.x86_64.jar ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.cocoa.x86_64_${trayVersion}.jar
+mv ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.win32.win32.x86_64.jar ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.win32.x86_64_${trayVersion}.jar
+mv ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.gtk.linux.x86_64.jar ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.linux.x86_64_${trayVersion}.jar
+mv ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.cocoa.macosx.aarch64.jar ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.cocoa.aarch64_${trayVersion}.jar
+mv ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.cocoa.macosx.x86_64.jar ${github_workspace}/eim.tray/generated/gradle/distributions/executable/eim.tray.cocoa.x86_64_${trayVersion}.jar
 
 if [[ ${branch} = "main" ]]; then
     gh release create ${tag}\
