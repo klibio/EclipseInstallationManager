@@ -1,14 +1,10 @@
--include: ~eim.tray.win32.x86_64.bndrun
+-include: eim.tray.shared.bndrun
+-include: ~eim.tray.win32.win32.x86_64.bndrun
+-include: ~eim.tray.debug.shared.bndrun
 
--runproperties.debug: \
-    launch.trace=true,\
-    osgi.console=,\
-    osgi.console.enable.builtin=false,\
-    logback.configurationFile=${workspace}/eim/logback-DEBUG.xml
-    
--runrequires.debug: \
-    ${debug.console},\
-    ${debug.webconsole}
+-runblacklist.win32: \
+    osgi.identity;filter:='(osgi.identity=*cocoa*)',\
+    osgi.identity;filter:='(osgi.identity=*linux*)' 
 
 -runbundles: \
 	bcpg;version='[1.72.2,1.72.3)',\

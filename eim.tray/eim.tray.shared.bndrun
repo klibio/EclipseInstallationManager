@@ -1,0 +1,18 @@
+-runfw: org.eclipse.osgi;version='[3.18,4)'
+-runee: JavaSE-17
+-resolve.effective: active
+-runstorage: rt
+
+-runproperties: \
+    launch.keep=false,\
+    osgi.console.enable.builtin=false,\
+    org.osgi.framework.bootdelegation='org.xml.*,org.xml.sax.helpers.*',\
+    logback.configurationFile=${fileuri;../eim/logback.xml}
+    
+-runrequires: \
+    bnd.identity;id='eim.tray',\
+    bnd.identity;id='eim.api',\
+    bnd.identity;id='eim.impl',\
+    bnd.identity;id='ch.qos.logback.classic';version:Version='1.2.12',\
+    bnd.identity;id='ch.qos.logback.core';version:Version='1.2.12',\
+    bnd.identity;id='org.eclipse.osgi.compatibility.state'

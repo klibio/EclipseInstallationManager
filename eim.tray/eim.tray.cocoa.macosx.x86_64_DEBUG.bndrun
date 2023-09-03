@@ -1,14 +1,11 @@
+-include: eim.tray.shared.bndrun
 -include: ~eim.tray.cocoa.x86_64.bndrun
+-include: ~eim.tray.debug.shared.bndrun
 
--runproperties.debug: \
-    launch.trace=true,\
-    osgi.console=,\
-    osgi.console.enable.builtin=false,\
-    logback.configurationFile=${workspace}/eim/logback-DEBUG.xml
-    
--runrequires.debug: \
-    ${debug.console},\
-    ${debug.webconsole}
+-runblacklist.macos: \
+    osgi.identity;filter:='(osgi.identity=*linux*)',\
+    osgi.identity;filter:='(osgi.identity=*win32*)',\
+    osgi.identity;filter:='(osgi.identity=*aarch*)'
 
 -runbundles: \
 	bcpg;version='[1.72.2,1.72.3)',\
@@ -101,3 +98,4 @@
 	org.sat4j.pb;version='[2.3.6,2.3.7)',\
 	org.tukaani.xz;version='[1.9.0,1.9.1)',\
 	slf4j.api;version='[1.7.36,1.7.37)'
+-runrequires.macos: bnd.identity;id='org.eclipse.swt.cocoa.macosx.x86_64'

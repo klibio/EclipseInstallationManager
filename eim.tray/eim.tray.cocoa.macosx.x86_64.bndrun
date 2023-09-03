@@ -1,0 +1,22 @@
+-include: eim.tray.shared.bndrun
+
+-runvm.macos: \
+    -XstartOnFirstThread
+
+-runblacklist.macos: \
+    osgi.identity;filter:='(osgi.identity=*linux*)',\
+    osgi.identity;filter:='(osgi.identity=*win32*)'
+    
+-runrequires.macos: \
+	bnd.identity;id='org.eclipse.swt.cocoa.macosx.x84_64'
+
+-runsystemcapabilities.macos: \
+    osgi.native;osgi.native.osname:List<String>="macosx";osgi.native.processor:List<String>="x86-64"
+    
+-runproperties.macos: \
+    osgi.ws=cocoa,\
+    osgi.arch=x86_64,\
+    osgi.os=macosx
+
+-runbundles: \
+	
