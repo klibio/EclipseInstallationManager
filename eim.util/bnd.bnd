@@ -1,5 +1,5 @@
 Export-Package: eim.util
-Bundle-Version: 1.1.0
+Bundle-Version: 1.1.1
 -buildpath: \
 	org.osgi.service.prefs,\
 	org.slf4j.api,\

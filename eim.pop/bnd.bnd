@@ -29,4 +29,4 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 
 -privatepackage: \
     eim.pop
-Bundle-Version: 1.0.3
+Bundle-Version: 1.0.4
