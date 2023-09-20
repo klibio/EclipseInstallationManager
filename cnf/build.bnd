@@ -4,8 +4,8 @@ Bundle-License: EPL-2.0;\
     description="This program and the accompanying materials are made avilable under the terms of the Eclipse Public License 2.0.";\
     link="https://www.eclipse.org/legal/epl-2.0/"
 Bundle-SCM: \
-    url="https://github.com/A7exSchin/EclipseInstallationManager",\
-    connection=scm:git:https://github.com/A7exSchin/EclipseInstallationManager.git,\
+    url="https://github.com/klibio/EclipseInstallationManager",\
+    connection=scm:git:https://github.com/klibio/EclipseInstallationManager.git,\
     tag=${Bundle-Version}
 
 Bundle-Developers: \
@@ -29,5 +29,11 @@ testbin     ${target-dir}/test-classes
 
 -snapshot: ${tstamp}
 Bundle-Version: 1.1.0.SNAPSHOT
+
+# Maven info. The maven artifactId defaults to Bundle-SymbolicName
+-groupid:               io.klib.eim
+-pom:                   version=${if;${def;-snapshot};${versionmask;===;${@version}}-${-snapshot};${versionmask;===s;${@version}}}
+#-maven-release:         pom
+-maven-release:         pom,sign;passphrase=${env;GPG_PASSPHRASE}
 
 Automatic-Module-Name: ${project.name}
