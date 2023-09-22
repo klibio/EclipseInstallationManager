@@ -637,7 +637,6 @@ public class ManagementView {
 			Composite labelComposite = new Composite(listItemComposite, SWT.NONE);
 			labelComposite.setLayout(new GridLayout(1, false));
 			labelComposite.setLayoutData(new GridData(SWT.LEFT, SWT.BEGINNING, true, false));
-			labelComposite.setBackground(LIST_BACKGROUND);
 
 			Label nameLabel = new Label(labelComposite, SWT.NULL);
 			nameLabel.setFont(new Font(display, "Roboto", 16, SWT.NORMAL));
@@ -647,7 +646,7 @@ public class ManagementView {
 			// ToolBar for the Buttons on the right
 			ToolBar tools = new ToolBar(listItemComposite, SWT.FLAT);
 			tools.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false));
-			tools.setBackground(LIST_BACKGROUND);
+			tools.setBackground(NATIVE_BACKGROUND);
 
 			ToolItem editWorkspaceItem = new ToolItem(tools, SWT.PUSH);
 			editWorkspaceItem.setImage(editPen);
@@ -676,9 +675,12 @@ public class ManagementView {
 			descrLabel.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, true, false));
 			descrLabel.setForeground(new Color(new RGB(112, 115, 125)));
 
-			listItemComposite.setBackground(LIST_BACKGROUND);
-			nameLabel.setBackground(LIST_BACKGROUND);
-			descrLabel.setBackground(LIST_BACKGROUND);
+			listItemComposite.setBackground(NATIVE_BACKGROUND);
+			nameLabel.setBackground(NATIVE_BACKGROUND);
+			descrLabel.setBackground(NATIVE_BACKGROUND);
+			labelComposite.setBackground(NATIVE_BACKGROUND);
+			
+			
 			Listener changeColorEnterListener = new Listener() {
 
 				@Override
