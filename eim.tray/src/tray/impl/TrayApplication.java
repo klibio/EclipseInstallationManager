@@ -9,6 +9,8 @@ import java.util.LinkedList;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
@@ -105,9 +107,20 @@ public class TrayApplication {
 
 			// Start right click menu
 			final Menu subMenu = new Menu(shell, SWT.POP_UP);
+			
+			//Add menu item to allow entries into the main menu with a single installation-workspace assignment
+			MenuItem switchSingleEntries = new MenuItem(subMenu, SWT.CHECK);
+			switchSingleEntries.setText("Allow single mapped entries");
+			boolean currentSetting = eimPrefs.getBoolean("allow.single.entries", false);
 
+			switchSingleEntries.setSelection(currentSetting);
+			switchSingleEntries.addListener(SWT.Selection, event -> changeSingleEntrySetting(shell));
+			
 			// Add menuitem to set Eclipse Installer Location
-			MenuItem setInstallerLocation = new MenuItem(subMenu, SWT.WRAP | SWT.PUSH);
+			MenuItem setInstallerLocation = new MenuItem(subMenu, SWT.CHECK);
+			if(PreferenceUtils.checkIfPreferenceKeyExists("eclipse.installer.path", eimPrefs)) {
+				setInstallerLocation.setSelection(true);
+			}
 			setInstallerLocation.setText("Set Eclipse Installer Location");
 			setInstallerLocation.addListener(SWT.Selection, event -> spawnInstallerDialog(shell));
 
@@ -145,6 +158,12 @@ public class TrayApplication {
 			logger.debug("Something went wrong shutting down the OSGi framework");
 			e.printStackTrace();
 		}
+	}
+
+	private void changeSingleEntrySetting(Shell shell) {
+		boolean currentSetting = eimPrefs.getBoolean("allow.single.entries", false);
+		PreferenceUtils.savePreference("allow.single.entries", String.valueOf(!currentSetting), eimPrefs);
+		refresh(shell);
 	}
 
 	private void openManagementView() {
@@ -226,22 +245,53 @@ public class TrayApplication {
 
 		// Create a new MenuItem for each installation-workspace pair
 		installationGroupedMap.forEach((installation, workspaceList) -> {
+			
+			if (eimPrefs.getBoolean("allow.single.entries", false)) {
+				// If it is a single item, create a MenuItem in the Toplevel Menu
+				if (workspaceList.size() == 1) {
+					MenuItem mi = new MenuItem(menu, SWT.WRAP | SWT.PUSH);
+					LocationCatalogEntry workspaceCatalogEntry = workspaceList.get(0);
+					Integer launchNumber = workspaceCatalogEntry.getID();
+					String installationName = installation.getInstallationName();
+					if (installationName.equals("installation")) {
+						installationName = installation.getInstallationFolderName();
+					}
+					String itemLabel = launchNumber + " # " + installationName + " # "
+							+ workspaceCatalogEntry.getWorkspaceFolderName();
+					mi.setText(itemLabel);
+					mi.addListener(SWT.Selection, event -> eclService.startEntry(workspaceCatalogEntry, true));
+					mi.addListener(SWT.MenuDetect, event -> eclService.startEntry(workspaceCatalogEntry, false));
+					
+				} else {
+					MenuItem mi = new MenuItem(menu, SWT.CASCADE);
+					String name = installation.getInstallationName();
+					if(name.equals("installation")) {
+						mi.setText(installation.getInstallationFolderName());
+					} else {
+						mi.setText(name);
+					}
+					Menu subMenu = new Menu(shell, SWT.DROP_DOWN);
+					mi.setMenu(subMenu);
 
-			// If it is a single item, create a MenuItem in the Toplevel Menu
-			if (workspaceList.size() == 1) {
-				MenuItem mi = new MenuItem(menu, SWT.WRAP | SWT.PUSH);
-				LocationCatalogEntry workspaceCatalogEntry = workspaceList.get(0);
-				Integer launchNumber = workspaceCatalogEntry.getID();
-				String installationName = installation.getInstallationName();
-				if (installationName.equals("installation")) {
-					installationName = installation.getInstallationFolderName();
+					for (LocationCatalogEntry entry : workspaceList) {
+						MenuItem subMenuItem = new MenuItem(subMenu, SWT.PUSH);
+						Integer launchNumber = entry.getID();
+						subMenuItem.setToolTipText(entry.getInstallationPath().toString());
+						if(entry.getWorkspaceName().equals("ws") || entry.getWorkspaceName().equals("workspace")) {
+							subMenuItem.setText(launchNumber + " # " + entry.getWorkspaceFolderName());
+						} else {
+							subMenuItem.setText(launchNumber + " # " + entry.getWorkspaceName());
+						}
+						
+						subMenuItem.addListener(SWT.Selection, event -> eclService.startEntry(entry, true));
+					}
+					new MenuItem(subMenu, SWT.HORIZONTAL | SWT.SEPARATOR);
+					MenuItem openWithoutWorkspace = new MenuItem(subMenu, SWT.PUSH);
+					openWithoutWorkspace.setText("Let me choose...");
+					openWithoutWorkspace.addListener(SWT.Selection, event -> eclService.startEntry(installation, false));
+					mi.addListener(SWT.MouseHover, event -> subMenu.setVisible(true));
 				}
-				String itemLabel = launchNumber + " # " + installationName + " # "
-						+ workspaceCatalogEntry.getWorkspaceFolderName();
-				mi.setText(itemLabel);
-				mi.addListener(SWT.Selection, event -> eclService.startEntry(workspaceCatalogEntry, true));
-				// Create a SubMenu if more than 1 workspace is assigned to the installation
-			} else {
+			} else { 
 				MenuItem mi = new MenuItem(menu, SWT.CASCADE);
 				String name = installation.getInstallationName();
 				if(name.equals("installation")) {
@@ -270,6 +320,8 @@ public class TrayApplication {
 				openWithoutWorkspace.addListener(SWT.Selection, event -> eclService.startEntry(installation, false));
 				mi.addListener(SWT.MouseHover, event -> subMenu.setVisible(true));
 			}
+			
+			
 		});
 
 		return menu;
