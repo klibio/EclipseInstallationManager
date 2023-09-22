@@ -1,18 +1,18 @@
 title: "Eclipse Installation Manager" 
-email: schindler89@aol.com
+email: me@a7exschin.dev
 description: >- # this means to ignore newlines until "baseurl:"
   The Eclipse Installation Manager is a tool to manage your Eclipse Application installations, like the Eclipse IDE.
   It is used together with the official Eclipse Installer and leverages its capabilities.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://a7exschin.github.io/EclipseInstallationManager/" # the base hostname & protocol for your site, e.g. http://example.com
-github_username:  A7exSchin
+url: "https://klibio.github.io/EclipseInstallationManager/" # the base hostname & protocol for your site, e.g. http://example.com
+github_username:  "https://klibio.github.io/EclipseInstallationManager/"
 show_downloads: true
 header_logo: ./assets/images/EIM-Color_512x.png
 github:
   public: true
   is_project_page: true
-  release_url: https://github.com/A7exSchin/EclipseInstallationManager/releases/latest
-  repository_url: https://github.com/A7exSchin/EclipseInstallationManager
+  release_url: https://github.com/klibio/EclipseInstallationManager/releases/latest
+  repository_url: https://github.com/klibio/EclipseInstallationManager
 
 # Build settings
 theme: jekyll-theme-tactile

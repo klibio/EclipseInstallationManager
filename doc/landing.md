@@ -3,6 +3,48 @@ layout: default
 title: "Eclipse Installation Manager"
 permalink: /
 ---
+
+## Table of contents
+- **[Eclipse Installation Manager Homepage](https://eim.a7exschin.dev)**
+- [Table of contents](#table-of-contents)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Usage and capabilities](#usage-and-capabilities)
+- [Screenshots](#screenshots)
+
+## Prerequisites
+
+Eclipse Application installations done with the Eclipse Installer. Alternatively you can add them manually by following the [instructions](https://github.com/A7exSchin/bootPalladio) in the readme of the bootPalladio project.
+
+## Installation
+
+Currently the release is done as a executable java archive. This will change later.
+Visit the [Releases Page](https://github.com/A7exSchin/EclipseInstallationManager/releases) and download the latest `eim.tray.<platform>.jar` for your platform.
+
+Start the tray application by executing
+```
+java -jar eim.tray.<platform>.jar
+```
+
+For macOS the command differs slightly:
+
+```
+java -XstartOnFirstThread -jar eim.tray.cocoa.<arch>_<version>.jar
+```
+
+## Usage and Capabilities
+
+Feature list:
+- Easy quick access to all local installations. Simply click on the tray icon and select the installation you want to start, with the assigned workspace.
+- List all installations and workspaces and search for them by opening the Management view.
+- Change how installations are named within the Eclipse Installation Manager and delete them if they are not needed anymore. Just click the pencil or trash can icon in the Management view.
+- Double click to open the Eclipse Installer. If it is not set, the Eclipse Installation Manager will ask you to select the path to the Eclipse Installer.
+- Right click the tray icon to open the context menu and configure or quit the application
+
+Please check out the [Github Discussion](https://github.com/A7exSchin/EclipseInstallationManager/discussions/29) for more information about the current state and future plans.
+
+## Screenshots
+
 <p align="center">
     <img src="assets/images/simpleScreenshot.png"
         alt="Screenshot of the Application"
@@ -13,44 +55,18 @@ permalink: /
         alt="Screenshot of the Management View"
         style="float: center; margin-right: 10px;" />
 </p>
-
-## Prerequisites
-To be able to manage any Eclipse Installation, they need to be done with the official Eclipse Installer. EIM currently relies heavily on metadata provided by the Eclipse Installer and functionality to add installations manually is planned, but not yet ready.
-
-Please visit the project on Github for any ideas, issues or discussions surrounding the Eclipse Installation Manager.
-
-## The tray application
-Start the tray application by downloading the version which matches your platform and execute
-```
-java -jar eim.tray.<platform>.jar
-```
-
-Please note, that if you are on MacOS, you need to execute 
-
-```
-java -XstartOnFirstThread -jar eim.tray.cocoa.<arch>_<version>.jar
-```
-
-## How to run console application
-
-Download the latest `eim.jar` from the releases page.
-
-Execute the JAR with
-
-```
-java -jar eim.jar
-```
-
-## Current Features
-
-- List all Eclipse installations and workspaces
-- Start Eclipse
-- Open workspace in Eclipse
-
-Please check out the [Github Discussion](https://github.com/A7exSchin/EclipseInstallationManager/discussions/29) for more information about the current state and future plans.
+<p align="left">
+    <img src="assets/images/confirmDelete.png"
+        alt="Screenshot of the Management View"
+        style="float: left; margin-right: 10px;" />
+</p>
+<p align="right">
+    <img src="assets/images/modifyEntry.png"
+        alt="Screenshot of the Management View"
+        style="float: right; margin-right: 10px;" />
+</p>
 
 ## Additional packages
 Alongside the tray application there are additional packages available:
 1. The Eclipse Installation Manager API, which can be implemented yourself.
 2. The reference implementation for the Eclipse Installation Manager Service which includes a command line interface. 
-
