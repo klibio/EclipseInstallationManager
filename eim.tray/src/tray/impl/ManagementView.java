@@ -60,7 +60,6 @@ public class ManagementView {
 	private LinkedList<LocationCatalogEntry> shownFirstTabItems;
 	private LinkedList<LocationCatalogEntry> shownSecondTabItems;
 
-	private static boolean IS_DARK_THEMED = Display.isSystemDarkTheme();
 	private static Color NATIVE_BACKGROUND = getNativeBackgroundColor();
 	private static Color LIST_BACKGROUND = getListBackgroundColor();
 	private static Color SELECTION_COLOR = getSelectionColor();
@@ -90,25 +89,6 @@ public class ManagementView {
 			logger.error("Failed loading icons!");
 			e.printStackTrace();
 		}
-		/*
-		if (IS_DARK_THEMED) {
-			try {
-				editPen = new Image(display, bundle.getEntry("icons/editWhite.png").openStream());
-				trashCan = new Image(display, bundle.getEntry("icons/trashCanWhite.png").openStream());
-			} catch (IOException e) {
-				logger.error("Failed loading icons!");
-				e.printStackTrace();
-			}
-		} else {
-			try {
-				editPen = new Image(display, bundle.getEntry("icons/edit.png").openStream());
-				trashCan = new Image(display, bundle.getEntry("icons/trashCan.png").openStream());
-			} catch (IOException e) {
-				logger.error("Failed loading icons!");
-				e.printStackTrace();
-			}
-		}
-		*/
 	}
 
 	/**
@@ -132,7 +112,7 @@ public class ManagementView {
 
 		// Create the Display and Shell
 		shell = new Shell(display);
-		//shell.setBackground(NATIVE_BACKGROUND);
+		// shell.setBackground(NATIVE_BACKGROUND);
 		shell.setText("Eclipse Installation Manager");
 		shell.setSize(800, 500);
 		shell.setLayout(new GridLayout(1, false)); // Single column layout
@@ -147,7 +127,7 @@ public class ManagementView {
 		// Create the search bar and add it to the shell's top position
 		searchBar = new Text(shell, SWT.SEARCH | SWT.BORDER);
 		searchBar.setFont(new Font(display, "Roboto", 16, SWT.NORMAL));
-		//searchBar.setBackground(NATIVE_BACKGROUND);
+		// searchBar.setBackground(NATIVE_BACKGROUND);
 		searchBar.setMessage("Search...");
 		searchBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
@@ -205,7 +185,7 @@ public class ManagementView {
 	 */
 	private static ScrolledComposite createScrolledComposites(Composite parent) {
 		ScrolledComposite scrolled = new ScrolledComposite(parent, SWT.V_SCROLL);
-		//scrolled.setBackground(NATIVE_BACKGROUND);
+		// scrolled.setBackground(NATIVE_BACKGROUND);
 		scrolled.setExpandHorizontal(true);
 		scrolled.setExpandVertical(true);
 		scrolled.setAlwaysShowScrollBars(true);
@@ -297,13 +277,13 @@ public class ManagementView {
 
 			Composite listItemComposite = new Composite(installationTabComposite, SWT.NONE);
 			listItemComposite.setBackground(NATIVE_BACKGROUND);
-			GridLayout listItemLayout = new GridLayout(2, false); // Set GridLayout with 2 columns
-			listItemLayout.marginWidth = 5; // Remove the default margin
-			listItemLayout.horizontalSpacing = 10; // Add spacing between the items
+			GridLayout listItemLayout = new GridLayout(2, false);
+			listItemLayout.marginWidth = 5;
+			listItemLayout.horizontalSpacing = 10;
 			listItemComposite.setLayout(listItemLayout);
 			GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 			gridData.grabExcessHorizontalSpace = true;
-			listItemComposite.setLayoutData(gridData); // Set to fill horizontally
+			listItemComposite.setLayoutData(gridData);
 
 			Composite labelComposite = new Composite(listItemComposite, SWT.NONE);
 			labelComposite.setLayout(new GridLayout(1, false));
@@ -596,6 +576,7 @@ public class ManagementView {
 				contentDescriptionLabel.addMouseListener(mouseSubClickListener);
 
 			}
+
 			data.exclude = !data.exclude;
 			content.setVisible(!data.exclude);
 			content.getParent().pack();
@@ -637,7 +618,6 @@ public class ManagementView {
 			Composite labelComposite = new Composite(listItemComposite, SWT.NONE);
 			labelComposite.setLayout(new GridLayout(1, false));
 			labelComposite.setLayoutData(new GridData(SWT.LEFT, SWT.BEGINNING, true, false));
-			labelComposite.setBackground(LIST_BACKGROUND);
 
 			Label nameLabel = new Label(labelComposite, SWT.NULL);
 			nameLabel.setFont(new Font(display, "Roboto", 16, SWT.NORMAL));
@@ -647,7 +627,7 @@ public class ManagementView {
 			// ToolBar for the Buttons on the right
 			ToolBar tools = new ToolBar(listItemComposite, SWT.FLAT);
 			tools.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false));
-			tools.setBackground(LIST_BACKGROUND);
+			tools.setBackground(NATIVE_BACKGROUND);
 
 			ToolItem editWorkspaceItem = new ToolItem(tools, SWT.PUSH);
 			editWorkspaceItem.setImage(editPen);
@@ -676,9 +656,11 @@ public class ManagementView {
 			descrLabel.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, true, false));
 			descrLabel.setForeground(new Color(new RGB(112, 115, 125)));
 
-			listItemComposite.setBackground(LIST_BACKGROUND);
-			nameLabel.setBackground(LIST_BACKGROUND);
-			descrLabel.setBackground(LIST_BACKGROUND);
+			listItemComposite.setBackground(NATIVE_BACKGROUND);
+			nameLabel.setBackground(NATIVE_BACKGROUND);
+			descrLabel.setBackground(NATIVE_BACKGROUND);
+			labelComposite.setBackground(NATIVE_BACKGROUND);
+
 			Listener changeColorEnterListener = new Listener() {
 
 				@Override
@@ -746,48 +728,36 @@ public class ManagementView {
 	private static Color getNativeBackgroundColor() {
 		Color targetColor = new Color(new RGB(255, 255, 255));
 		/*
-		if (IS_DARK_THEMED) {
-			targetColor = new Color(new RGB(47, 47, 47));
-		} else {
-			targetColor = new Color(new RGB(240, 240, 240));
-		}
-		*/
+		 * if (IS_DARK_THEMED) { targetColor = new Color(new RGB(47, 47, 47)); } else {
+		 * targetColor = new Color(new RGB(240, 240, 240)); }
+		 */
 		return targetColor;
 	}
 
 	private static Color getSelectionColor() {
 		Color targetColor = new Color(new RGB(158, 180, 240));
 		/*
-		if (IS_DARK_THEMED) {
-			targetColor = new Color(new RGB(77, 77, 77));
-		} else {
-			targetColor = new Color(new RGB(158, 180, 240));
-		}
-		*/
+		 * if (IS_DARK_THEMED) { targetColor = new Color(new RGB(77, 77, 77)); } else {
+		 * targetColor = new Color(new RGB(158, 180, 240)); }
+		 */
 		return targetColor;
 	}
 
 	private static Color getListBackgroundColor() {
 		Color targetColor = new Color(new RGB(240, 240, 240));
 		/*
-		if (IS_DARK_THEMED) {
-			targetColor = new Color(new RGB(23, 23, 23));
-		} else {
-			targetColor = new Color(new RGB(240, 240, 240));
-		}
-		*/
+		 * if (IS_DARK_THEMED) { targetColor = new Color(new RGB(23, 23, 23)); } else {
+		 * targetColor = new Color(new RGB(240, 240, 240)); }
+		 */
 		return targetColor;
 	}
-	
+
 	private static Color getForegroundColor() {
 		Color targetColor = new Color(new RGB(0, 0, 0));
 		/*
-		if (IS_DARK_THEMED) {
-			targetColor = new Color(new RGB(255, 255, 255));
-		} else {
-			targetColor = new Color(new RGB(0, 0, 0));
-		}
-		*/
+		 * if (IS_DARK_THEMED) { targetColor = new Color(new RGB(255, 255, 255)); } else
+		 * { targetColor = new Color(new RGB(0, 0, 0)); }
+		 */
 		return targetColor;
 	}
 

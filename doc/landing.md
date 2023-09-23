@@ -41,6 +41,11 @@ Feature list:
 - Double click to open the Eclipse Installer. If it is not set, the Eclipse Installation Manager will ask you to select the path to the Eclipse Installer.
 - Right click the tray icon to open the context menu and configure or quit the application
 
+There are some settings that are saved and that can be changed:
+
+1. Right clicking on the tray icon and selecting `Set Eclipse Installer location` will prompt you to set the path to the Eclipse Installer. This is needed to open the Eclipse Installer from the tray application. If a checkbox appears next to this setting, the path is set.
+2. Right clicking on the tray icon and selecting `Allow single entries` will rerender the tray menu and show installations that only have one workspace mapped as a single entry with no submenu. For now, this does not allow to select another workspace. If a checkbox appears next to this setting, single entries are allowed.
+
 Please check out the [Github Discussion](https://github.com/A7exSchin/EclipseInstallationManager/discussions/29) for more information about the current state and future plans.
 
 ## Screenshots
