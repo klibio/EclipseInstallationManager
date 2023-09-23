@@ -22,7 +22,7 @@
 	org.eclipse.jface 
 	
 Bundle-SymbolicName: ${project.name};singleton:=true
-Bundle-Version: 0.5.1
+Bundle-Version: 0.5.2
 -includeresource: \
     ./resources,\
     @${repo;com.github.kwhat:jnativehook;2.2.2}!/!(META-INF/*),\
