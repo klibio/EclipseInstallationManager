@@ -5,8 +5,6 @@ permalink: /
 ---
 
 ## Table of contents
-- **[Eclipse Installation Manager Homepage](https://eim.a7exschin.dev)**
-- [Table of contents](#table-of-contents)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Usage and capabilities](#usage-and-capabilities)
