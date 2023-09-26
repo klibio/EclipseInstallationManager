@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?artifactRepository version='1.1.0'?>
+<repository name='file:/D:/eclipseWorkspaces/pdeWorkspace/target/repo/ - artifacts' type='org.eclipse.equinox.p2.artifact.repository.simpleRepository' version='1'>
+  <properties size='2'>
+    <property name='p2.timestamp' value='1694595465190'/>
+    <property name='p2.compressed' value='false'/>
+  </properties>
+  <mappings size='3'>
+    <rule filter='(&amp; (classifier=osgi.bundle))' output='${repoUrl}/plugins/${id}_${version}.jar'/>
+    <rule filter='(&amp; (classifier=binary))' output='${repoUrl}/binary/${id}_${version}'/>
+    <rule filter='(&amp; (classifier=org.eclipse.update.feature))' output='${repoUrl}/features/${id}_${version}.jar'/>
+  </mappings>
+  <artifacts size='6'>
+    <artifact classifier='osgi.bundle' id='eim.pop' version='1.0.3'>
+      <properties size='4'>
+        <property name='artifact.size' value='9376'/>
+        <property name='download.size' value='9376'/>
+        <property name='download.checksum.sha-512' value='c48cd3c704002ff3ac18d5531974780f44e8cf0f864c3ec4acf7800ddbcc455c271bbd52a7dbed5f9d9baf1eb0138978f39b4bec5140a7d227d3684c0c8c4a77'/>
+        <property name='download.checksum.sha-256' value='17b4d7c1ab538703734bbd7d59a906e448fa7ca11f829e58e64767e29268b284'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='eim.command' version='1.0.2'>
+      <properties size='4'>
+        <property name='artifact.size' value='5328'/>
+        <property name='download.size' value='5328'/>
+        <property name='download.checksum.sha-512' value='c2c0404c423e3da389cd8f109acf64595f8ec7a5d076c360f2f3409902359124cf6d2df74a34cb265b876928b27b5d5770bed6ee8f689c0e4ce44fd3178f1520'/>
+        <property name='download.checksum.sha-256' value='b05acedecfbb8f22acb6e5a1d5abfd6e256c41aaa9f4d6a4d63481d504807b12'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='eim.api' version='1.3.0'>
+      <properties size='4'>
+        <property name='artifact.size' value='4811'/>
+        <property name='download.size' value='4811'/>
+        <property name='download.checksum.sha-512' value='caa7ed2823ce9bbbe9256e828a965d1d3ccb9b1914cb569b0ec3967e0eabd7e9c1512f1825d427f8dce13766b9ed06aacf647cc4d5c65988480e3673d318e4ec'/>
+        <property name='download.checksum.sha-256' value='c0b3285def5c67742e02e38e1f251bb7ad441dc1e6bcccbc01553af36cc928cb'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='eim.impl' version='1.0.5'>
+      <properties size='4'>
+        <property name='artifact.size' value='16803'/>
+        <property name='download.size' value='16803'/>
+        <property name='download.checksum.sha-512' value='b9f3bcb007abeb699abc730b714a97d9adb4a9dcd1a4c8f0b08357365509520fd6f43cb336c8de16f68bc7a6856a59b0168172c8b85bf7eea75460032f0e4502'/>
+        <property name='download.checksum.sha-256' value='3df6401de35f96d2dfa1a048fcc2d326b48dec3d90b717255a467c55fbcb8378'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='eim.tray' version='0.4.1'>
+      <properties size='4'>
+        <property name='artifact.size' value='687381'/>
+        <property name='download.size' value='687381'/>
+        <property name='download.checksum.sha-512' value='60c2e6ea04383b8103b7f929863f67cbe52f71c16e30913df7f7da9fe4d8e8ebface41165ed8eac9779cb7a48dd6d93af6ceb69bc3bc98355cb610ae9c081a1a'/>
+        <property name='download.checksum.sha-256' value='68f434e8abcff865fc94f4431480e89e68e5ccc4e59036c504406536a791fcc1'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='eim.util' version='1.1.0'>
+      <properties size='4'>
+        <property name='artifact.size' value='7839'/>
+        <property name='download.size' value='7839'/>
+        <property name='download.checksum.sha-512' value='b486d72ba3456dccea8139b0183ce05197bb6d0a05e428f4b2845331c8d1c7c43c51ab4984670a97b2c33be905b49d6ee945dbb9a643441c31be7e76fa1b15d7'/>
+        <property name='download.checksum.sha-256' value='4e88c31900c62e69987cc67acde9bf16c7daa9e43c40d38534c4c88320179d85'/>
+      </properties>
+    </artifact>
+  </artifacts>
+</repository>

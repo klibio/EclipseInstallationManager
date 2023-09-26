@@ -1,0 +1,385 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?metadataRepository version='1.2.0'?>
+<repository name='file:/D:/eclipseWorkspaces/pdeWorkspace/target/repo/ - metadata' type='org.eclipse.equinox.internal.p2.metadata.repository.LocalMetadataRepository' version='1'>
+  <properties size='2'>
+    <property name='p2.timestamp' value='1694595465191'/>
+    <property name='p2.compressed' value='false'/>
+  </properties>
+  <units size='6'>
+    <unit id='eim.impl' version='1.0.5' generation='2'>
+      <update id='eim.impl' range='[0.0.0,1.0.5)' severity='0'/>
+      <properties size='1'>
+        <property name='org.eclipse.equinox.p2.name' value='eim.impl'/>
+      </properties>
+      <provides size='5'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='eim.impl' version='1.0.5'/>
+        <provided namespace='osgi.bundle' name='eim.impl' version='1.0.5'/>
+        <provided namespace='osgi.identity' name='eim.impl' version='1.0.5'>
+          <properties size='1'>
+            <property name='type' value='osgi.bundle'/>
+          </properties>
+        </provided>
+        <provided namespace='osgi.service' name='eim.impl_1.0.5-1' version='0.0.0'>
+          <properties size='1'>
+            <property name='objectClass' value='eim.api.EIMService' type='List'/>
+          </properties>
+        </provided>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+      </provides>
+      <requires size='19'>
+        <required namespace='osgi.bundle' name='org.eclipse.core.runtime' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.oomph.setup' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.eclipse.oomph.setup.core' range='0.0.0'/>
+        <required namespace='osgi.bundle' name='org.apache.felix.scr' range='0.0.0'/>
+        <required namespace='java.package' name='eim.api' range='[1.2.0,1.3.0)'/>
+        <required namespace='java.package' name='eim.util' range='[1.1.0,2.0.0)'/>
+        <required namespace='java.package' name='java.io' range='0.0.0'/>
+        <required namespace='java.package' name='java.lang' range='0.0.0'/>
+        <required namespace='java.package' name='java.lang.invoke' range='0.0.0'/>
+        <required namespace='java.package' name='java.nio.file' range='0.0.0'/>
+        <required namespace='java.package' name='java.util' range='0.0.0'/>
+        <required namespace='java.package' name='java.util.function' range='0.0.0'/>
+        <required namespace='java.package' name='java.util.stream' range='0.0.0'/>
+        <required namespace='java.package' name='org.eclipse.emf.common.util' range='[2.28.0,3.0.0)'/>
+        <required namespace='java.package' name='org.eclipse.emf.ecore' range='[2.33.0,3.0.0)'/>
+        <required namespace='java.package' name='org.eclipse.emf.ecore.resource' range='[2.33.0,3.0.0)'/>
+        <required namespace='java.package' name='org.slf4j' range='[1.7.0,2.0.0)'/>
+        <requiredProperties namespace='osgi.extender' match='(&amp;(osgi.extender=osgi.component)(version&gt;=1.4.0)(!(version&gt;=2.0.0)))'>
+          <description>
+            eim.impl
+          </description>
+        </requiredProperties>
+        <requiredProperties namespace='osgi.ee' match='(&amp;(osgi.ee=JavaSE)(version=17))'>
+          <description>
+            eim.impl
+          </description>
+        </requiredProperties>
+      </requires>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='eim.impl' version='1.0.5'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='manifest'>
+            Bundle-SymbolicName: eim.impl;singleton:=true&#xA;Bundle-Version: 1.0.5&#xA;
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
+    <unit id='eim.command' version='1.0.2' generation='2'>
+      <update id='eim.command' range='[0.0.0,1.0.2)' severity='0'/>
+      <properties size='1'>
+        <property name='org.eclipse.equinox.p2.name' value='eim.command'/>
+      </properties>
+      <provides size='5'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='eim.command' version='1.0.2'/>
+        <provided namespace='osgi.bundle' name='eim.command' version='1.0.2'/>
+        <provided namespace='osgi.identity' name='eim.command' version='1.0.2'>
+          <properties size='1'>
+            <property name='type' value='osgi.bundle'/>
+          </properties>
+        </provided>
+        <provided namespace='osgi.service' name='eim.command_1.0.2-1' version='0.0.0'>
+          <properties size='1'>
+            <property name='objectClass' value='command.EclipseStarterCommand' type='List'/>
+          </properties>
+        </provided>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+      </provides>
+      <requires size='9'>
+        <required namespace='osgi.bundle' name='org.eclipse.oomph.setup.core' range='0.0.0'/>
+        <required namespace='java.package' name='eim.api' range='[1.2.0,2.0.0)'/>
+        <required namespace='java.package' name='java.io' range='0.0.0'/>
+        <required namespace='java.package' name='java.lang' range='0.0.0'/>
+        <required namespace='java.package' name='java.util' range='0.0.0'/>
+        <required namespace='java.package' name='org.apache.felix.service.command' range='[1.0.0,2.0.0)'/>
+        <requiredProperties namespace='osgi.service' match='(objectClass=eim.api.EIMService)'>
+          <description>
+            eim.command
+          </description>
+        </requiredProperties>
+        <requiredProperties namespace='osgi.extender' match='(&amp;(osgi.extender=osgi.component)(version&gt;=1.4.0)(!(version&gt;=2.0.0)))'>
+          <description>
+            eim.command
+          </description>
+        </requiredProperties>
+        <requiredProperties namespace='osgi.ee' match='(&amp;(osgi.ee=JavaSE)(version=17))'>
+          <description>
+            eim.command
+          </description>
+        </requiredProperties>
+      </requires>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='eim.command' version='1.0.2'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='manifest'>
+            Bundle-SymbolicName: eim.command;singleton:=true&#xA;Bundle-Version: 1.0.2&#xA;
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
+    <unit id='eim.api' version='1.3.0' singleton='false' generation='2'>
+      <update id='eim.api' range='[0.0.0,1.3.0)' severity='0'/>
+      <properties size='1'>
+        <property name='org.eclipse.equinox.p2.name' value='eim.api'/>
+      </properties>
+      <provides size='5'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='eim.api' version='1.3.0'/>
+        <provided namespace='osgi.bundle' name='eim.api' version='1.3.0'/>
+        <provided namespace='java.package' name='eim.api' version='1.2.0'/>
+        <provided namespace='osgi.identity' name='eim.api' version='1.3.0'>
+          <properties size='1'>
+            <property name='type' value='osgi.bundle'/>
+          </properties>
+        </provided>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+      </provides>
+      <requires size='5'>
+        <required namespace='java.package' name='java.lang' range='0.0.0'/>
+        <required namespace='java.package' name='java.nio.file' range='0.0.0'/>
+        <required namespace='java.package' name='java.util' range='0.0.0'/>
+        <required namespace='java.package' name='org.eclipse.oomph.setup' range='[1.24.0,2.0.0)'/>
+        <requiredProperties namespace='osgi.ee' match='(&amp;(osgi.ee=JavaSE)(version=17))'>
+          <description>
+            eim.api
+          </description>
+        </requiredProperties>
+      </requires>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='eim.api' version='1.3.0'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='manifest'>
+            Bundle-SymbolicName: eim.api&#xA;Bundle-Version: 1.3.0&#xA;
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
+    <unit id='eim.util' version='1.1.0' singleton='false' generation='2'>
+      <update id='eim.util' range='[0.0.0,1.1.0)' severity='0'/>
+      <properties size='1'>
+        <property name='org.eclipse.equinox.p2.name' value='eim.util'/>
+      </properties>
+      <provides size='5'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='eim.util' version='1.1.0'/>
+        <provided namespace='osgi.bundle' name='eim.util' version='1.1.0'/>
+        <provided namespace='java.package' name='eim.util' version='1.1.0'/>
+        <provided namespace='osgi.identity' name='eim.util' version='1.1.0'>
+          <properties size='1'>
+            <property name='type' value='osgi.bundle'/>
+          </properties>
+        </provided>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+      </provides>
+      <requires size='9'>
+        <required namespace='java.package' name='java.lang' range='0.0.0'/>
+        <required namespace='java.package' name='java.nio.file' range='0.0.0'/>
+        <required namespace='java.package' name='java.util' range='0.0.0'/>
+        <required namespace='java.package' name='org.eclipse.emf.common.util' range='[2.28.0,3.0.0)'/>
+        <required namespace='java.package' name='org.eclipse.emf.ecore.resource' range='[2.33.0,3.0.0)'/>
+        <required namespace='java.package' name='org.eclipse.oomph.setup' range='[1.24.0,2.0.0)'/>
+        <required namespace='java.package' name='org.osgi.service.prefs' range='[1.1.0,2.0.0)'/>
+        <required namespace='java.package' name='org.slf4j' range='[1.7.0,2.0.0)'/>
+        <requiredProperties namespace='osgi.ee' match='(&amp;(osgi.ee=JavaSE)(version=17))'>
+          <description>
+            eim.util
+          </description>
+        </requiredProperties>
+      </requires>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='eim.util' version='1.1.0'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='manifest'>
+            Bundle-SymbolicName: eim.util&#xA;Bundle-Version: 1.1.0&#xA;
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
+    <unit id='eim.pop' version='1.0.3' singleton='false' generation='2'>
+      <update id='eim.pop' range='[0.0.0,1.0.3)' severity='0'/>
+      <properties size='1'>
+        <property name='org.eclipse.equinox.p2.name' value='eim.pop'/>
+      </properties>
+      <provides size='4'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='eim.pop' version='1.0.3'/>
+        <provided namespace='osgi.bundle' name='eim.pop' version='1.0.3'/>
+        <provided namespace='osgi.identity' name='eim.pop' version='1.0.3'>
+          <properties size='1'>
+            <property name='type' value='osgi.bundle'/>
+          </properties>
+        </provided>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+      </provides>
+      <requires size='22'>
+        <required namespace='java.package' name='eim.api' range='[1.2.0,2.0.0)'/>
+        <required namespace='java.package' name='java.io' range='0.0.0'/>
+        <required namespace='java.package' name='java.lang' range='0.0.0'/>
+        <required namespace='java.package' name='java.lang.invoke' range='0.0.0'/>
+        <required namespace='java.package' name='java.lang.management' range='0.0.0'/>
+        <required namespace='java.package' name='java.nio.file' range='0.0.0'/>
+        <required namespace='java.package' name='java.util' range='0.0.0'/>
+        <required namespace='java.package' name='java.util.concurrent' range='0.0.0'/>
+        <required namespace='java.package' name='java.util.function' range='0.0.0'/>
+        <required namespace='java.package' name='java.util.regex' range='0.0.0'/>
+        <required namespace='java.package' name='java.util.stream' range='0.0.0'/>
+        <required namespace='java.package' name='org.eclipse.emf.common.util' range='[2.28.0,3.0.0)'/>
+        <required namespace='java.package' name='org.eclipse.emf.ecore.resource' range='[2.33.0,3.0.0)'/>
+        <required namespace='java.package' name='org.eclipse.oomph.setup' range='[1.24.0,2.0.0)'/>
+        <required namespace='java.package' name='org.eclipse.oomph.setup.impl' range='[1.24.0,2.0.0)'/>
+        <required namespace='java.package' name='org.eclipse.oomph.setup.internal.core.util' range='[1.24.0,2.0.0)'/>
+        <required namespace='java.package' name='org.junit.jupiter.api' range='[5.9.0,6.0.0)'/>
+        <required namespace='java.package' name='org.junit.jupiter.api.io' range='[5.9.0,6.0.0)'/>
+        <required namespace='java.package' name='org.knowhowlab.osgi.testing.assertions' range='[1.1.0,2.0.0)'/>
+        <required namespace='java.package' name='org.knowhowlab.osgi.testing.utils' range='[1.2.0,2.0.0)'/>
+        <required namespace='java.package' name='org.osgi.framework' range='[1.9.0,2.0.0)'/>
+        <requiredProperties namespace='osgi.ee' match='(&amp;(osgi.ee=JavaSE)(version=17))'>
+          <description>
+            eim.pop
+          </description>
+        </requiredProperties>
+      </requires>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='eim.pop' version='1.0.3'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='manifest'>
+            Bundle-SymbolicName: eim.pop&#xA;Bundle-Version: 1.0.3&#xA;
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
+    <unit id='eim.tray' version='0.4.1' generation='2'>
+      <update id='eim.tray' range='[0.0.0,0.4.1)' severity='0'/>
+      <properties size='1'>
+        <property name='org.eclipse.equinox.p2.name' value='eim.tray'/>
+      </properties>
+      <provides size='9'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='eim.tray' version='0.4.1'/>
+        <provided namespace='osgi.bundle' name='eim.tray' version='0.4.1'/>
+        <provided namespace='java.package' name='tray.impl' version='1.0.0'/>
+        <provided namespace='osgi.identity' name='eim.tray' version='0.4.1'>
+          <properties size='1'>
+            <property name='type' value='osgi.bundle'/>
+          </properties>
+        </provided>
+        <provided namespace='osgi.service' name='eim.tray_0.4.1-1' version='0.0.0'>
+          <properties size='1'>
+            <property name='objectClass' value='tray.impl.ConfirmDeletePrompt' type='List'/>
+          </properties>
+        </provided>
+        <provided namespace='osgi.service' name='eim.tray_0.4.1-2' version='0.0.0'>
+          <properties size='1'>
+            <property name='objectClass' value='tray.impl.DataProvider' type='List'/>
+          </properties>
+        </provided>
+        <provided namespace='osgi.service' name='eim.tray_0.4.1-3' version='0.0.0'>
+          <properties size='1'>
+            <property name='objectClass' value='tray.impl.EditCatalogEntryView' type='List'/>
+          </properties>
+        </provided>
+        <provided namespace='osgi.service' name='eim.tray_0.4.1-4' version='0.0.0'>
+          <properties size='1'>
+            <property name='objectClass' value='tray.impl.ManagementView' type='List'/>
+          </properties>
+        </provided>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+      </provides>
+      <requires size='40'>
+        <required namespace='java.package' name='eim.api' range='[1.2.0,2.0.0)'/>
+        <required namespace='java.package' name='eim.util' range='[1.1.0,2.0.0)'/>
+        <required namespace='java.package' name='java.awt' range='0.0.0'/>
+        <required namespace='java.package' name='java.awt.event' range='0.0.0'/>
+        <required namespace='java.package' name='java.io' range='0.0.0'/>
+        <required namespace='java.package' name='java.lang' range='0.0.0'/>
+        <required namespace='java.package' name='java.lang.invoke' range='0.0.0'/>
+        <required namespace='java.package' name='java.lang.reflect' range='0.0.0'/>
+        <required namespace='java.package' name='java.net' range='0.0.0'/>
+        <required namespace='java.package' name='java.nio.file' range='0.0.0'/>
+        <required namespace='java.package' name='java.security' range='0.0.0'/>
+        <required namespace='java.package' name='java.util' range='0.0.0'/>
+        <required namespace='java.package' name='java.util.concurrent' range='0.0.0'/>
+        <required namespace='java.package' name='java.util.function' range='0.0.0'/>
+        <required namespace='java.package' name='java.util.logging' range='0.0.0'/>
+        <required namespace='java.package' name='java.util.stream' range='0.0.0'/>
+        <required namespace='java.package' name='javax.accessibility' range='0.0.0'/>
+        <required namespace='java.package' name='javax.swing' range='0.0.0'/>
+        <required namespace='java.package' name='javax.swing.event' range='0.0.0'/>
+        <required namespace='java.package' name='javax.swing.text' range='0.0.0'/>
+        <required namespace='java.package' name='org.eclipse.core.runtime.preferences' range='[3.5.0,4.0.0)'/>
+        <required namespace='java.package' name='org.eclipse.jface.viewers' range='0.0.0'/>
+        <required namespace='java.package' name='org.eclipse.oomph.setup' range='[1.24.0,2.0.0)'/>
+        <required namespace='java.package' name='org.eclipse.swt.custom' range='0.0.0'/>
+        <required namespace='java.package' name='org.eclipse.swt.events' range='0.0.0'/>
+        <required namespace='java.package' name='org.eclipse.swt.graphics' range='0.0.0'/>
+        <required namespace='java.package' name='org.eclipse.swt.layout' range='0.0.0'/>
+        <required namespace='java.package' name='org.eclipse.swt.widgets' range='0.0.0'/>
+        <required namespace='java.package' name='org.osgi.framework' range='[1.10.0,2.0.0)'/>
+        <required namespace='java.package' name='org.osgi.service.prefs' range='[1.1.0,2.0.0)'/>
+        <required namespace='java.package' name='org.slf4j' range='[1.6.0,2.0.0)'/>
+        <required namespace='java.package' name='tray.impl' range='[1.0.0,2.0.0)'/>
+        <requiredProperties namespace='osgi.service' match='(objectClass=eim.api.EIMService)'>
+          <description>
+            eim.tray
+          </description>
+        </requiredProperties>
+        <requiredProperties namespace='osgi.service' match='(objectClass=tray.impl.ConfirmDeletePrompt)' min='0' greedy='false'>
+          <description>
+            eim.tray
+          </description>
+        </requiredProperties>
+        <requiredProperties namespace='osgi.service' match='(objectClass=tray.impl.DataProvider)'>
+          <description>
+            eim.tray
+          </description>
+        </requiredProperties>
+        <requiredProperties namespace='osgi.service' match='(objectClass=tray.impl.DataProvider)' min='0' greedy='false'>
+          <description>
+            eim.tray
+          </description>
+        </requiredProperties>
+        <requiredProperties namespace='osgi.service' match='(objectClass=tray.impl.EditCatalogEntryView)' min='0' greedy='false'>
+          <description>
+            eim.tray
+          </description>
+        </requiredProperties>
+        <requiredProperties namespace='osgi.service' match='(objectClass=tray.impl.ManagementView)' min='0' greedy='false'>
+          <description>
+            eim.tray
+          </description>
+        </requiredProperties>
+        <requiredProperties namespace='osgi.extender' match='(&amp;(osgi.extender=osgi.component)(version&gt;=1.4.0)(!(version&gt;=2.0.0)))'>
+          <description>
+            eim.tray
+          </description>
+        </requiredProperties>
+        <requiredProperties namespace='osgi.ee' match='(&amp;(osgi.ee=JavaSE)(version=17))'>
+          <description>
+            eim.tray
+          </description>
+        </requiredProperties>
+      </requires>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='eim.tray' version='0.4.1'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='manifest'>
+            Bundle-SymbolicName: eim.tray;singleton:=true&#xA;Bundle-Version: 0.4.1&#xA;
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
+  </units>
+</repository>
