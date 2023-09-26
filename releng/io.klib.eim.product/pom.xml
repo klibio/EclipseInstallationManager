@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.klib.eim</groupId>
   <artifactId>io.klib.eim.product</artifactId>
@@ -12,8 +13,19 @@
     <groupId>io.klib.eim</groupId>
     <artifactId>io.klib.eim.parent</artifactId>
     <version>0.5.3-SNAPSHOT</version>
-	<relativePath>../..</relativePath>
+    <relativePath>../..</relativePath>
   </parent>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>eclipse-maven-releases</id>
+      <url>https://repo.eclipse.org/content/repositories/releases</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>eclipse-cbi-releases</id>
+      <url>https://repo.eclipse.org/content/repositories/cbi-releases</url>
+    </pluginRepository>
+  </pluginRepositories>
 
   <profiles>
     <profile>
@@ -152,101 +164,103 @@
       </build>
     </profile>
     <profile>
-        <id>eclipse-sign</id>
-        <activation>
-          <property>
-            <name>PACK_AND_SIGN</name>
-            <value>true</value>
-          </property>
-        </activation>
-        <build>
-          <plugins>
-            <plugin>
-              <groupId>org.eclipse.cbi.maven.plugins</groupId>
-              <artifactId>eclipse-winsigner-plugin</artifactId>
-              <version>${jarsigner-version}</version>
-              <executions>
-                <execution>
-                  <id>installer-executables</id>
-                  <goals>
-                    <goal>sign</goal>
-                  </goals>
-                  <phase>package</phase>
-                  <configuration>
-                    <fileNames>
-                      <fileName>Eclipse-Installation-Managerc.exe</fileName>
-                      <fileName>Eclipse-Installation-Manager.exe</fileName>
-                    </fileNames>
-                  </configuration>
-                </execution>
-                <execution>
-                  <id>eim-product-executables</id>
-                  <goals>
-                    <goal>sign</goal>
-                  </goals>
-                  <phase>post-integration-test</phase>
-                  <configuration>
-                    <baseSearchDir>${project.build.directory}/repackaged-products/</baseSearchDir>
-                    <fileNames>
-                      <fileName>Eclipse-Installation-Manager-win64.exe</fileName>
-                    </fileNames>
-                  </configuration>
-                </execution>
-              </executions>
-            </plugin>
-            <plugin>
-              <groupId>org.eclipse.cbi.maven.plugins</groupId>
-              <artifactId>eclipse-macsigner-plugin</artifactId>
-              <version>${jarsigner-version}</version>
-              <executions>
-                <execution>
-                  <goals>
-                    <goal>sign</goal>
-                  </goals>
-                  <phase>package</phase>
-                  <configuration>
-                    <fileNames>
-                      <fileName>Eclipse-Installation-Manager.app</fileName>
-                    </fileNames>
-                    <timeoutMillis>300000</timeoutMillis> <!-- 5 min -->
-                    <entitlements>${project.basedir}/releng/test.entitlements</entitlements>
-                  </configuration>
-                </execution>
-              </executions>
-            </plugin>
-            <plugin>
-              <groupId>org.eclipse.cbi.maven.plugins</groupId>
-              <artifactId>eclipse-dmg-packager</artifactId>
-              <version>${jarsigner-version}</version>
-              <executions>
-                <execution>
-                  <id>product</id>
-                  <goals>
-                    <goal>package-dmg</goal>
-                  </goals>
-                  <phase>integration-test</phase>
-                  <configuration>
-                    <source>${project.build.directory}/repackaged-products/Eclipse-Installation-Manager-mac64.tar.gz</source>
-                    <timeoutMillis>600000</timeoutMillis> <!-- 10 min -->
-                    <sign>true</sign>
-                  </configuration>
-                </execution>
-                <execution>
-                  <id>product-aarch64</id>
-                  <goals>
-                    <goal>package-dmg</goal>
-                  </goals>
-                  <phase>integration-test</phase>
-                  <configuration>
-                    <source>${project.build.directory}/repackaged-products/Eclipse-Installation-Manager-mac-aarch64.tar.gz</source>
-                    <timeoutMillis>600000</timeoutMillis> <!-- 10 min -->
-                    <sign>true</sign>
-                  </configuration>
-                </execution>
-              </executions>
-            </plugin>
-          </plugins>
-        </build>
-      </profile>
+      <id>eclipse-sign</id>
+      <activation>
+        <property>
+          <name>PACK_AND_SIGN</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.cbi.maven.plugins</groupId>
+            <artifactId>eclipse-winsigner-plugin</artifactId>
+            <version>${jarsigner-version}</version>
+            <executions>
+              <execution>
+                <id>eim-executables</id>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+                <phase>package</phase>
+                <configuration>
+                  <fileNames>
+                    <fileName>Eclipse-Installation-Managerc.exe</fileName>
+                    <fileName>Eclipse-Installation-Manager.exe</fileName>
+                  </fileNames>
+                </configuration>
+              </execution>
+              <execution>
+                <id>eim-product-executables</id>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+                <phase>post-integration-test</phase>
+                <configuration>
+                  <baseSearchDir>${project.build.directory}/repackaged-products/</baseSearchDir>
+                  <fileNames>
+                    <fileName>Eclipse-Installation-Manager-win64.exe</fileName>
+                  </fileNames>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.eclipse.cbi.maven.plugins</groupId>
+            <artifactId>eclipse-macsigner-plugin</artifactId>
+            <version>${jarsigner-version}</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+                <phase>package</phase>
+                <configuration>
+                  <fileNames>
+                    <fileName>Eclipse-Installation-Manager.app</fileName>
+                  </fileNames>
+                  <timeoutMillis>300000</timeoutMillis> <!-- 5 min -->
+                  <entitlements>${project.basedir}/releng/test.entitlements</entitlements>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.eclipse.cbi.maven.plugins</groupId>
+            <artifactId>eclipse-dmg-packager</artifactId>
+            <version>${jarsigner-version}</version>
+            <executions>
+              <execution>
+                <id>product</id>
+                <goals>
+                  <goal>package-dmg</goal>
+                </goals>
+                <phase>integration-test</phase>
+                <configuration>
+                  <source>
+                    ${project.build.directory}/repackaged-products/Eclipse-Installation-Manager-mac64.tar.gz</source>
+                  <timeoutMillis>600000</timeoutMillis> <!-- 10 min -->
+                  <sign>true</sign>
+                </configuration>
+              </execution>
+              <execution>
+                <id>product-aarch64</id>
+                <goals>
+                  <goal>package-dmg</goal>
+                </goals>
+                <phase>integration-test</phase>
+                <configuration>
+                  <source>
+                    ${project.build.directory}/repackaged-products/Eclipse-Installation-Manager-mac-aarch64.tar.gz</source>
+                  <timeoutMillis>600000</timeoutMillis> <!-- 10 min -->
+                  <sign>true</sign>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 </project>

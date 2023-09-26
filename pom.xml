@@ -13,13 +13,6 @@
   <properties>
     <tycho-version>4.0.2</tycho-version>
   </properties>
-  <repositories>
-    <repository>
-      <id>eclipse</id>
-      <layout>p2</layout>
-      <url>${target-platform}</url>
-    </repository>
-  </repositories>
   <build>
     <plugins>
       <plugin>
