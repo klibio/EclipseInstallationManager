@@ -16,7 +16,9 @@
 	org.slf4j.api,\
 	eim.api;version=latest,\
 	eim.util;version=latest
--sub: *.bnd
+-sub: \
+    command.bnd,\
+    impl.bnd
 -dependson: eim.api
 -includeresource: \
     ./root/,\

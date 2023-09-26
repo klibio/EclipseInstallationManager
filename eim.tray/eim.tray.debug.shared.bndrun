@@ -1,4 +1,5 @@
 -include: ~eim.tray.shared.bndrun
+-runstorage.debug: rt
 
 -runproperties.debug: \
     launch.trace=true,\
