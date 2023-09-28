@@ -41,7 +41,8 @@ public class TrayApplication {
 
 	private IEclipsePreferences properties = InstanceScope.INSTANCE.getNode("tray.impl");
 	private Preferences eimPrefs = properties.node("eim.prefs");
-	private BundleContext bc = FrameworkUtil.getBundle(this.getClass()).getBundleContext();
+	private Bundle bundle = FrameworkUtil.getBundle(this.getClass());
+	private BundleContext bc = bundle.getBundleContext();
 	@Reference
 	private EIMService eclService;
 
@@ -79,7 +80,6 @@ public class TrayApplication {
 		logger.debug("Starting to create UI");
 		display = Display.getDefault();
 		Shell shell = new Shell(display);
-		Bundle bundle = FrameworkUtil.getBundle(this.getClass());
 		Image trayIcon = null;
 		try {
 			trayIcon = new Image(display, bundle.getEntry("/icons/EIM-Color_512x.png").openStream());
@@ -133,7 +133,7 @@ public class TrayApplication {
 			quitApp.addListener(SWT.Selection, event -> dispose());
 			// End right click menu
 
-			if (SystemUtils.IS_OS_MAC) {
+			if (SystemUtils.IS_OS_MAC || SystemUtils.IS_OS_LINUX) {
 				item.addSelectionListener(new SelectionListener() {
 
 					@Override
