@@ -6,7 +6,7 @@
     launch.keep=false,\
     osgi.console.enable.builtin=false,\
     org.osgi.framework.bootdelegation='org.xml.*,org.xml.sax.helpers.*',\
-    logback.configurationFile=file:${.}/../eim/logback.xml
+    logback.configurationFile=logback.xml
     
 -runrequires: \
     bnd.identity;id='eim.tray',\
