@@ -73,10 +73,7 @@ Please check out the [Github Discussion](https://github.com/A7exSchin/EclipseIns
 
 ## Known issues
 
-- If you are using Wayland on Unix systems, the tray icon might not be shown. This is a known issue with SWT and Wayland. You can work around this by exeuting
-```shell
-GDK_BACKEND=X11 java -jar eim.tray.<platform>.jar
-```
+- If you are using Wayland on Unix systems, the tray icon might not be shown. This is a known issue with SWT and Wayland. You need to change the display driver to X11 to continue using this application. However, pull requests fixing this issue are welcome.
 
 ## Additional packages
 Alongside the tray application there are additional packages available:
