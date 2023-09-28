@@ -12,7 +12,8 @@ This application enables a developer to manage all Eclipse Product installations
 
 ## Prerequisites
 
-Eclipse Application installations done with the Eclipse Installer. Alternatively you can add them manually by following the [instructions](https://github.com/A7exSchin/bootPalladio) in the readme of the bootPalladio project.
+1. **JavaSE version 17 or higher!**
+2. Eclipse Application installations done with the Eclipse Installer. Alternatively you can add local isntallations manually by following the [instructions](https://github.com/A7exSchin/bootPalladio) in the readme of the bootPalladio project.
 
 ## Installation
 
