@@ -9,6 +9,7 @@ permalink: /
 - [Installation](#installation)
 - [Usage and capabilities](#usage-and-capabilities)
 - [Screenshots](#screenshots)
+- [Known issues](#known-issues)
 
 ## Prerequisites
 

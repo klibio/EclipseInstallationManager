@@ -9,6 +9,7 @@ This application enables a developer to manage all Eclipse Product installations
 - [Installation](#installation)
 - [Usage and capabilities](#usage-and-capabilities)
 - [Screenshots](#screenshots)
+- [Known issues](#known-issues)
 
 ## Prerequisites
 
