@@ -21,13 +21,13 @@ Currently the release is done as a executable java archive. This will change lat
 Visit the [Releases Page](https://github.com/A7exSchin/EclipseInstallationManager/releases) and download the latest `eim.tray.<platform>.jar` for your platform.
 
 Start the tray application by executing
-```
+```shell
 java -jar eim.tray.<platform>.jar
 ```
 
 For macOS the command differs slightly:
 
-```
+```shell
 java -XstartOnFirstThread -jar eim.tray.cocoa.<arch>_<version>.jar
 ```
 
@@ -37,7 +37,7 @@ Feature list:
 - Easy quick access to all local installations. Simply click on the tray icon and select the installation you want to start, with the assigned workspace.
 - List all installations and workspaces and search for them by opening the Management view.
 - Change how installations are named within the Eclipse Installation Manager and delete them if they are not needed anymore. Just click the pencil or trash can icon in the Management view.
-- Double click to open the Eclipse Installer. If it is not set, the Eclipse Installation Manager will ask you to select the path to the Eclipse Installer.
+- Quickly launch the Eclipse Installer. If it is not set, the Eclipse Installation Manager will ask you to select the path to the Eclipse Installer. On Windows use a `Double-Click`, on Unix `Alt+Left Click` and on MacOS use `Option+Left Click`.
 - Right click the tray icon to open the context menu and configure or quit the application
 
 There are some settings that are saved and that can be changed:
@@ -56,7 +56,12 @@ Please check out the [Github Discussion](https://github.com/A7exSchin/EclipseIns
 
 ![Modify Entry](doc/assets/images/modifyEntry.png)![Confirm Delete Parent Folder](doc/assets/images/confirmDeleteParent.png)
 
+## Known issues
 
+- If you are using Wayland on Unix systems, the tray icon might not be shown. This is a known issue with SWT and Wayland. You can work around this by exeuting
+```shell
+GDK_BACKEND=X11 java -jar eim.tray.<platform>.jar
+```
 
 ## Additional packages
 Alongside the tray application there are additional packages available:
