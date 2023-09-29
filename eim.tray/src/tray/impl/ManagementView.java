@@ -341,7 +341,7 @@ public class ManagementView {
 			Listener changeColorEnterListener = new Listener() {
 				@Override
 				public void handleEvent(Event event) {
-					setCompositesLightBlue(listItemComposite, labelComposite, nameLabel, tools, descrLabel);
+					setCompositesLightBlue(listItemComposite, labelComposite, nameLabel, tools, descrLabel, true);
 				}
 			};
 
@@ -355,7 +355,7 @@ public class ManagementView {
 
 				@Override
 				public void handleEvent(Event event) {
-					setCompositesLightBlue(listItemComposite, labelComposite, nameLabel, tools, descrLabel);
+					setCompositesLightBlue(listItemComposite, labelComposite, nameLabel, tools, descrLabel, true);
 				}
 			};
 
@@ -504,7 +504,7 @@ public class ManagementView {
 					@Override
 					public void handleEvent(Event event) {
 						setCompositesLightBlue(contentItemComposite, contentLabelComposite, contentNameLabel,
-								contentTools, contentDescriptionLabel);
+								contentTools, contentDescriptionLabel, true);
 					}
 				};
 
@@ -521,7 +521,7 @@ public class ManagementView {
 					@Override
 					public void handleEvent(Event event) {
 						setCompositesLightBlue(contentItemComposite, contentLabelComposite, contentNameLabel,
-								contentTools, contentDescriptionLabel);
+								contentTools, contentDescriptionLabel, true);
 					}
 				};
 
@@ -665,7 +665,7 @@ public class ManagementView {
 
 				@Override
 				public void handleEvent(Event event) {
-					setCompositesLightBlue(listItemComposite, labelComposite, nameLabel, tools, descrLabel);
+					setCompositesLightBlue(listItemComposite, labelComposite, nameLabel, tools, descrLabel, false);
 				}
 			};
 
@@ -680,7 +680,7 @@ public class ManagementView {
 
 				@Override
 				public void handleEvent(Event event) {
-					setCompositesLightBlue(listItemComposite, labelComposite, nameLabel, tools, descrLabel);
+					setCompositesLightBlue(listItemComposite, labelComposite, nameLabel, tools, descrLabel, false);
 				}
 			};
 
@@ -698,13 +698,15 @@ public class ManagementView {
 	}
 
 	private void setCompositesLightBlue(Composite listItemComposite, Composite labelComposite, Label nameLabel,
-			ToolBar tools, Label descrLabel) {
+			ToolBar tools, Label descrLabel, boolean cursorChange) {
 		listItemComposite.setBackground(SELECTION_COLOR);
 		labelComposite.setBackground(SELECTION_COLOR);
 		nameLabel.setBackground(SELECTION_COLOR);
 		tools.setBackground(SELECTION_COLOR);
 		descrLabel.setBackground(SELECTION_COLOR);
-		listItemComposite.setCursor(new Cursor(display, SWT.CURSOR_HAND));
+		if (cursorChange) {
+			listItemComposite.setCursor(new Cursor(display, SWT.CURSOR_HAND));
+		}
 	}
 
 	private void setCompositesWhite(Composite listItemComposite, Composite labelComposite, Label nameLabel,

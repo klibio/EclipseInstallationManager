@@ -1,13 +1,12 @@
 -runfw: org.eclipse.osgi;version='[3.18,4)'
 -runee: JavaSE-17
 -resolve.effective: active
--runstorage: rt
 
 -runproperties: \
     launch.keep=false,\
     osgi.console.enable.builtin=false,\
     org.osgi.framework.bootdelegation='org.xml.*,org.xml.sax.helpers.*',\
-    logback.configurationFile=${fileuri;../eim/logback.xml}
+    logback.configurationFile=logback.xml
     
 -runrequires: \
     bnd.identity;id='eim.tray',\

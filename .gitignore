@@ -9,3 +9,4 @@ Archive
 /generated/
 .to
 *.log
+*.polyglot*

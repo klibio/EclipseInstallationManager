@@ -41,7 +41,8 @@ public class TrayApplication {
 
 	private IEclipsePreferences properties = InstanceScope.INSTANCE.getNode("tray.impl");
 	private Preferences eimPrefs = properties.node("eim.prefs");
-	private BundleContext bc = FrameworkUtil.getBundle(this.getClass()).getBundleContext();
+	private Bundle bundle = FrameworkUtil.getBundle(this.getClass());
+	private BundleContext bc = bundle.getBundleContext();
 	@Reference
 	private EIMService eclService;
 
@@ -61,14 +62,14 @@ public class TrayApplication {
 	public void activate(BundleContext context) {
 		logger.debug("Activating TrayApplication component");
 		installationGroupedMap = dataController.getInstallationMap();
-		
+
 		Display.getDefault().syncExec(new Runnable() {
 
 			@Override
 			public void run() {
-				createDisplay();	
+				createDisplay();
 			}
-			
+
 		});
 	}
 
@@ -79,7 +80,6 @@ public class TrayApplication {
 		logger.debug("Starting to create UI");
 		display = Display.getDefault();
 		Shell shell = new Shell(display);
-		Bundle bundle = FrameworkUtil.getBundle(this.getClass());
 		Image trayIcon = null;
 		try {
 			trayIcon = new Image(display, bundle.getEntry("/icons/EIM-Color_512x.png").openStream());
@@ -95,9 +95,6 @@ public class TrayApplication {
 			// Start creating Tray Item
 			final TrayItem item = new TrayItem(tray, SWT.NONE);
 			item.setToolTipText("Eclipse Installation Manager");
-			item.addListener(SWT.Show, event -> System.out.println("show"));
-			item.addListener(SWT.Hide, event -> System.out.println("hide"));
-			item.addListener(SWT.DefaultSelection, event -> startEclipseInstaller(shell));
 
 			// End TrayItem
 
@@ -107,18 +104,19 @@ public class TrayApplication {
 
 			// Start right click menu
 			final Menu subMenu = new Menu(shell, SWT.POP_UP);
-			
-			//Add menu item to allow entries into the main menu with a single installation-workspace assignment
+
+			// Add menu item to allow entries into the main menu with a single
+			// installation-workspace assignment
 			MenuItem switchSingleEntries = new MenuItem(subMenu, SWT.CHECK);
 			switchSingleEntries.setText("Allow single mapped entries");
 			boolean currentSetting = eimPrefs.getBoolean("allow.single.entries", false);
 
 			switchSingleEntries.setSelection(currentSetting);
 			switchSingleEntries.addListener(SWT.Selection, event -> changeSingleEntrySetting(shell));
-			
+
 			// Add menuitem to set Eclipse Installer Location
 			MenuItem setInstallerLocation = new MenuItem(subMenu, SWT.CHECK);
-			if(PreferenceUtils.checkIfPreferenceKeyExists("eclipse.installer.path", eimPrefs)) {
+			if (PreferenceUtils.checkIfPreferenceKeyExists("eclipse.installer.path", eimPrefs)) {
 				setInstallerLocation.setSelection(true);
 			}
 			setInstallerLocation.setText("Set Eclipse Installer Location");
@@ -135,7 +133,29 @@ public class TrayApplication {
 			quitApp.addListener(SWT.Selection, event -> dispose());
 			// End right click menu
 
-			item.addListener(SWT.Selection, event -> menu.setVisible(true));
+			if (SystemUtils.IS_OS_MAC || SystemUtils.IS_OS_LINUX) {
+				item.addSelectionListener(new SelectionListener() {
+
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						if ((e.stateMask & SWT.ALT) != 0) {
+							startEclipseInstaller(shell);
+						} else {
+							menu.setVisible(true);
+						}
+
+					}
+
+					@Override
+					public void widgetDefaultSelected(SelectionEvent e) {
+						// Do nothing, because default selection is not part of the MacOS Menu Bar behavior
+
+					}
+				});
+			} else {
+				item.addListener(SWT.Selection, event -> menu.setVisible(true));
+				item.addListener(SWT.DefaultSelection, event -> startEclipseInstaller(shell));
+			}
 			item.addListener(SWT.MenuDetect, event -> subMenu.setVisible(true));
 
 			item.setImage(trayIcon);
@@ -209,7 +229,7 @@ public class TrayApplication {
 		}
 		selectInstallerLocation.setFilterPath(null);
 		String result = selectInstallerLocation.open();
-		if(SystemUtils.IS_OS_MAC) {
+		if (SystemUtils.IS_OS_MAC) {
 			Path macExecutable = Paths.get(result).resolve("Contents/MacOS/eclipse-inst");
 			result = macExecutable.toString();
 		}
@@ -245,7 +265,7 @@ public class TrayApplication {
 
 		// Create a new MenuItem for each installation-workspace pair
 		installationGroupedMap.forEach((installation, workspaceList) -> {
-			
+
 			if (eimPrefs.getBoolean("allow.single.entries", false)) {
 				// If it is a single item, create a MenuItem in the Toplevel Menu
 				if (workspaceList.size() == 1) {
@@ -261,11 +281,11 @@ public class TrayApplication {
 					mi.setText(itemLabel);
 					mi.addListener(SWT.Selection, event -> eclService.startEntry(workspaceCatalogEntry, true));
 					mi.addListener(SWT.MenuDetect, event -> eclService.startEntry(workspaceCatalogEntry, false));
-					
+
 				} else {
 					MenuItem mi = new MenuItem(menu, SWT.CASCADE);
 					String name = installation.getInstallationName();
-					if(name.equals("installation")) {
+					if (name.equals("installation")) {
 						mi.setText(installation.getInstallationFolderName());
 					} else {
 						mi.setText(name);
@@ -277,24 +297,25 @@ public class TrayApplication {
 						MenuItem subMenuItem = new MenuItem(subMenu, SWT.PUSH);
 						Integer launchNumber = entry.getID();
 						subMenuItem.setToolTipText(entry.getInstallationPath().toString());
-						if(entry.getWorkspaceName().equals("ws") || entry.getWorkspaceName().equals("workspace")) {
+						if (entry.getWorkspaceName().equals("ws") || entry.getWorkspaceName().equals("workspace")) {
 							subMenuItem.setText(launchNumber + " # " + entry.getWorkspaceFolderName());
 						} else {
 							subMenuItem.setText(launchNumber + " # " + entry.getWorkspaceName());
 						}
-						
+
 						subMenuItem.addListener(SWT.Selection, event -> eclService.startEntry(entry, true));
 					}
 					new MenuItem(subMenu, SWT.HORIZONTAL | SWT.SEPARATOR);
 					MenuItem openWithoutWorkspace = new MenuItem(subMenu, SWT.PUSH);
 					openWithoutWorkspace.setText("Let me choose...");
-					openWithoutWorkspace.addListener(SWT.Selection, event -> eclService.startEntry(installation, false));
+					openWithoutWorkspace.addListener(SWT.Selection,
+							event -> eclService.startEntry(installation, false));
 					mi.addListener(SWT.MouseHover, event -> subMenu.setVisible(true));
 				}
-			} else { 
+			} else {
 				MenuItem mi = new MenuItem(menu, SWT.CASCADE);
 				String name = installation.getInstallationName();
-				if(name.equals("installation")) {
+				if (name.equals("installation")) {
 					mi.setText(installation.getInstallationFolderName());
 				} else {
 					mi.setText(name);
@@ -306,12 +327,12 @@ public class TrayApplication {
 					MenuItem subMenuItem = new MenuItem(subMenu, SWT.PUSH);
 					Integer launchNumber = entry.getID();
 					subMenuItem.setToolTipText(entry.getInstallationPath().toString());
-					if(entry.getWorkspaceName().equals("ws") || entry.getWorkspaceName().equals("workspace")) {
+					if (entry.getWorkspaceName().equals("ws") || entry.getWorkspaceName().equals("workspace")) {
 						subMenuItem.setText(launchNumber + " # " + entry.getWorkspaceFolderName());
 					} else {
 						subMenuItem.setText(launchNumber + " # " + entry.getWorkspaceName());
 					}
-					
+
 					subMenuItem.addListener(SWT.Selection, event -> eclService.startEntry(entry, true));
 				}
 				new MenuItem(subMenu, SWT.HORIZONTAL | SWT.SEPARATOR);
@@ -320,8 +341,7 @@ public class TrayApplication {
 				openWithoutWorkspace.addListener(SWT.Selection, event -> eclService.startEntry(installation, false));
 				mi.addListener(SWT.MouseHover, event -> subMenu.setVisible(true));
 			}
-			
-			
+
 		});
 
 		return menu;
