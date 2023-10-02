@@ -169,6 +169,14 @@ public class DataProvider {
 	public void refreshData() {
 		eclService.refreshLocations();
 		this.locationEntries = eclService.getLocationEntries();
+		
+		//empty all present Lists
+		uniqueInstallations.clear();
+		uniqueWorkspaces.clear();
+		installationGroupedMap.clear();
+		
+		identifyUniqueInstallations();
+		identifyUniqueWorkspaces();
 		createMappedInstallationEntries();
 	}
 

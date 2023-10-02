@@ -464,6 +464,7 @@ public class ManagementView {
 				}
 
 				contentNameLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+				contentNameLabel.setForeground(FOREGROUND_COLOR);
 				contentNameLabel.setBackground(LIST_BACKGROUND);
 
 				// ToolBar for the Buttons on the right
@@ -623,6 +624,7 @@ public class ManagementView {
 			nameLabel.setFont(new Font(display, "Roboto", 16, SWT.NORMAL));
 			nameLabel.setText(workspaceName);
 			nameLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			nameLabel.setForeground(FOREGROUND_COLOR);
 
 			// ToolBar for the Buttons on the right
 			ToolBar tools = new ToolBar(listItemComposite, SWT.FLAT);

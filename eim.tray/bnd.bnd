@@ -26,7 +26,7 @@ Bundle-Version: 0.5.4
 -includeresource: \
     ./resources,\
     @${repo;com.github.kwhat:jnativehook;2.2.2}!/!(META-INF/*),\
-    ../eim/logback.xml
+    ./../eim/logback.xml
 
 -dependson: eim
 

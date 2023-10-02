@@ -9,8 +9,6 @@ import java.util.LinkedList;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
@@ -172,8 +170,13 @@ public class TrayApplication {
 
 		try {
 			logger.debug("Shutting down the OSGi framework");
-			bc.getBundle(0).stop();
+			FrameworkUtil.getBundle(ManagementView.class).stop();
+			FrameworkUtil.getBundle(DataProvider.class).stop();
+			FrameworkUtil.getBundle(ConfirmDeletePrompt.class).stop();
+			FrameworkUtil.getBundle(EditCatalogEntryView.class).stop();
 			bundle.stop();
+			bc.getBundle(0).stop();
+			
 		} catch (BundleException e) {
 			logger.debug("Something went wrong shutting down the OSGi framework");
 			e.printStackTrace();
@@ -355,6 +358,7 @@ public class TrayApplication {
 	private void refresh(Shell shell) {
 		logger.debug("Refreshing location catalog entries!");
 		dataController.refreshData();
+		installationGroupedMap = dataController.getInstallationMap();
 		shell.dispose();
 		tray.dispose();
 		createDisplay();
