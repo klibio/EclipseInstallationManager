@@ -46,6 +46,8 @@ public class ConfirmDeletePrompt {
 	private String message = "Do you really want to delete the following path?";
 	private Display display = Display.getDefault();
 	private Shell shell;
+	
+	private boolean deleted = false;
 
 	@Reference
 	private EIMService eimService;
@@ -78,11 +80,18 @@ public class ConfirmDeletePrompt {
 		createContents(shell);
 		shell.open();
 	}
+	
+	public Shell getShell() {
+		return shell;
+	}
+	
+	public boolean getDeleted() {
+		return deleted;
+	}
 
 	private void createContents(Shell shell) {
 		shell.setLayout(new GridLayout(2, true));
 
-		// Show the message
 		Label label = new Label(shell, SWT.NONE);
 		label.setText(message);
 		label.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 2, 1));
@@ -153,16 +162,22 @@ public class ConfirmDeletePrompt {
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-
+				// Do nothing
 			}
 
 		});
 		
+		Label separatorEnd = new Label(shell, SWT.SEPARATOR | SWT.SHADOW_OUT | SWT.HORIZONTAL);
+		separatorEnd.setLayoutData(new GridData(SWT.FILL, SWT.END, true, false, 2, 1));
+		
+		Label refreshHint = new Label(shell, SWT.NONE);
+		refreshHint.setText("Please Refresh the tray application to synchronize the modifications!");
+		refreshHint.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 2, 1));
+		
 		Button okButton = new Button(shell, SWT.PUSH);
 		okButton.setLayoutData(new GridData(SWT.END, SWT.END, true, false, 1, 1));
 		okButton.setText("Delete");
-		okButton.setForeground(new Color(new RGB(125, 125, 125)));
+		okButton.setForeground(new Color(new RGB(100, 100, 100)));
 		okButton.addListener(SWT.Selection, new Listener() {
 
 			@Override
@@ -172,6 +187,7 @@ public class ConfirmDeletePrompt {
 				} else {
 					eimService.deletePath(pathToDelete);
 				}
+				deleted = true;
 				shell.close();
 			}
 		});
@@ -187,6 +203,7 @@ public class ConfirmDeletePrompt {
 			
 			@Override
 			public void handleEvent(Event event) {
+				deleted = false;
 				shell.dispose();
 			}
 		});

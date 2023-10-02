@@ -9,6 +9,8 @@ import java.util.LinkedList;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
@@ -55,6 +57,7 @@ public class TrayApplication {
 	public boolean dispose = false;
 	private Display display;
 	private Tray tray;
+	private Shell shell;
 
 	@Activate
 	public void activate(BundleContext context) {
@@ -77,7 +80,7 @@ public class TrayApplication {
 	public void createDisplay() {
 		logger.debug("Starting to create UI");
 		display = Display.getDefault();
-		Shell shell = new Shell(display);
+		shell = new Shell(display);
 		Image trayIcon = null;
 		try {
 			trayIcon = new Image(display, bundle.getEntry("/icons/EIM-Color_512x.png").openStream());
@@ -123,7 +126,7 @@ public class TrayApplication {
 			// Add button to refresh catalog
 			MenuItem refreshApp = new MenuItem(subMenu, SWT.WRAP | SWT.PUSH);
 			refreshApp.setText("Refresh Entries");
-			refreshApp.addListener(SWT.Selection, event -> refresh(shell));
+			refreshApp.addListener(SWT.Selection, event -> refresh());
 
 			// Add the button to Quit the application
 			MenuItem quitApp = new MenuItem(subMenu, SWT.WRAP | SWT.PUSH);
@@ -186,7 +189,7 @@ public class TrayApplication {
 	private void changeSingleEntrySetting(Shell shell) {
 		boolean currentSetting = eimPrefs.getBoolean("allow.single.entries", false);
 		PreferenceUtils.savePreference("allow.single.entries", String.valueOf(!currentSetting), eimPrefs);
-		refresh(shell);
+		refresh();
 	}
 
 	private void openManagementView() {
@@ -355,7 +358,7 @@ public class TrayApplication {
 	 * 
 	 * @param shell
 	 */
-	private void refresh(Shell shell) {
+	public void refresh() {
 		logger.debug("Refreshing location catalog entries!");
 		dataController.refreshData();
 		installationGroupedMap = dataController.getInstallationMap();

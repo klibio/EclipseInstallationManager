@@ -7,6 +7,8 @@ import java.util.Map.Entry;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
@@ -78,6 +80,9 @@ public class ManagementView {
 
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
 	private ConfirmDeletePrompt deletePrompt;
+	
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
+	private TrayApplication trayApp;
 
 	@Activate
 	public void activate(BundleContext context) {
@@ -314,6 +319,14 @@ public class ManagementView {
 				@Override
 				public void handleEvent(Event event) {
 					editInstallationView.showModifyEntryView(entry, "installation");
+					editInstallationView.getShell().addDisposeListener(new DisposeListener() {
+						
+						@Override
+						public void widgetDisposed(DisposeEvent e) {
+							filterLists();
+						}
+					});
+					
 				}
 
 			});
@@ -321,10 +334,17 @@ public class ManagementView {
 			ToolItem deleteItem = new ToolItem(tools, SWT.PUSH);
 			deleteItem.setImage(trashCan);
 			deleteItem.addListener(SWT.Selection, new Listener() {
-
 				@Override
 				public void handleEvent(Event event) {
 					deletePrompt.open(entry.getInstallationPath());
+					deletePrompt.getShell().addDisposeListener(new DisposeListener() {
+
+						@Override
+						public void widgetDisposed(DisposeEvent e) {
+							filterLists();
+						}
+						
+					});
 				}
 			});
 
