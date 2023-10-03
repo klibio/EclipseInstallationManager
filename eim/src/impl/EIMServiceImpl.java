@@ -331,8 +331,15 @@ public class EIMServiceImpl implements EIMService {
 		logger.debug("Renaming workspace " + entry.getWorkspace().getName() + " to " + name);
 		Workspace workspace = entry.getWorkspace();
 		workspace.setName(name);
-		URI uri = URI.createFileURI(entry.getWorkspacePath()
-				.resolve(".metadata\\.plugins\\org.eclipse.oomph.setup\\workspace.setup").toString());
+		URI uri;
+		if(SystemUtils.IS_OS_WINDOWS) {
+			uri = URI.createFileURI(entry.getWorkspacePath()
+					.resolve(".metadata\\.plugins\\org.eclipse.oomph.setup\\workspace.setup").toString());
+		} else {
+			uri = URI.createFileURI(entry.getWorkspacePath()
+					.resolve(".metadata/.plugins/org.eclipse.oomph.setup/workspace.setup").toString());
+		}
+		
 		Resource workspaceResource = workspace.eResource();
 		workspaceResource.setURI(uri);
 
@@ -352,13 +359,25 @@ public class EIMServiceImpl implements EIMService {
 	@Override
 	public void renameInstallation(LocationCatalogEntry entry, String name) {
 		Installation installation = entry.getInstallation();
-		logger.debug("Renaming installation " + installation.getName() + " to " + name);
 		installation.setName(name);
-		URI uri = URI.createFileURI(entry.getInstallationPath()
-				.resolve("configuration\\org.eclipse.oomph.setup\\installation.setup").toString());
+		URI uri;
+		if(SystemUtils.IS_OS_MAC) {
+			uri = URI.createFileURI(entry.getInstallationPath()
+					.resolve("contents/Eclipse/configuration/org.eclipse.oomph.setup/installation.setup").toString());
+		} else if (SystemUtils.IS_OS_WINDOWS) {
+			uri = URI.createFileURI(entry.getInstallationPath()
+					.resolve("configuration\\org.eclipse.oomph.setup\\installation.setup").toString());
+		} else {
+			uri = URI.createFileURI(entry.getInstallationPath()
+					.resolve("configuration/org.eclipse.oomph.setup/installation.setup").toString());
+		}
+		
 		Resource installationResource = installation.eResource();
 		installationResource.setURI(uri);
-
+		
+		logger.debug("Renaming installation " + installation.getName() + " to " + name + "\n"
+				+ "At location " + uri);
+		
 		try {
 			installationResource.save(null);
 		} catch (IOException e) {

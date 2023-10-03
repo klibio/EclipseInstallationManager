@@ -7,10 +7,6 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.oomph.setup.Installation;
 import org.eclipse.oomph.setup.Workspace;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
-import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -169,6 +165,14 @@ public class DataProvider {
 	public void refreshData() {
 		eclService.refreshLocations();
 		this.locationEntries = eclService.getLocationEntries();
+		
+		//empty all present Lists
+		uniqueInstallations.clear();
+		uniqueWorkspaces.clear();
+		installationGroupedMap.clear();
+		
+		identifyUniqueInstallations();
+		identifyUniqueWorkspaces();
 		createMappedInstallationEntries();
 	}
 

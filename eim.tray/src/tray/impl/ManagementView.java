@@ -7,6 +7,8 @@ import java.util.Map.Entry;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
@@ -78,6 +80,9 @@ public class ManagementView {
 
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
 	private ConfirmDeletePrompt deletePrompt;
+
+	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
+	private TrayApplication trayApp;
 
 	@Activate
 	public void activate(BundleContext context) {
@@ -314,6 +319,14 @@ public class ManagementView {
 				@Override
 				public void handleEvent(Event event) {
 					editInstallationView.showModifyEntryView(entry, "installation");
+					editInstallationView.getShell().addDisposeListener(new DisposeListener() {
+
+						@Override
+						public void widgetDisposed(DisposeEvent e) {
+							filterLists();
+						}
+					});
+
 				}
 
 			});
@@ -321,10 +334,17 @@ public class ManagementView {
 			ToolItem deleteItem = new ToolItem(tools, SWT.PUSH);
 			deleteItem.setImage(trashCan);
 			deleteItem.addListener(SWT.Selection, new Listener() {
-
 				@Override
 				public void handleEvent(Event event) {
 					deletePrompt.open(entry.getInstallationPath());
+					deletePrompt.getShell().addDisposeListener(new DisposeListener() {
+
+						@Override
+						public void widgetDisposed(DisposeEvent e) {
+							filterLists();
+						}
+
+					});
 				}
 			});
 
@@ -464,6 +484,7 @@ public class ManagementView {
 				}
 
 				contentNameLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+				contentNameLabel.setForeground(FOREGROUND_COLOR);
 				contentNameLabel.setBackground(LIST_BACKGROUND);
 
 				// ToolBar for the Buttons on the right
@@ -478,6 +499,13 @@ public class ManagementView {
 					@Override
 					public void handleEvent(Event event) {
 						editInstallationView.showModifyEntryView(entry, "workspace");
+						editInstallationView.getShell().addDisposeListener(new DisposeListener() {
+
+							@Override
+							public void widgetDisposed(DisposeEvent e) {
+								filterLists();
+							}
+						});
 					}
 
 				});
@@ -593,8 +621,6 @@ public class ManagementView {
 		secondTabComposite.setLayout(new GridLayout(1, false));
 		secondTabComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		secondTabComposite.setBackground(LIST_BACKGROUND);
-
 		secondTabComposite.requestLayout();
 
 		scrolledCompositeSecondTab.setContent(secondTabComposite);
@@ -623,6 +649,7 @@ public class ManagementView {
 			nameLabel.setFont(new Font(display, "Roboto", 16, SWT.NORMAL));
 			nameLabel.setText(workspaceName);
 			nameLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			nameLabel.setForeground(FOREGROUND_COLOR);
 
 			// ToolBar for the Buttons on the right
 			ToolBar tools = new ToolBar(listItemComposite, SWT.FLAT);
@@ -636,6 +663,13 @@ public class ManagementView {
 				@Override
 				public void handleEvent(Event event) {
 					editInstallationView.showModifyEntryView(entry, "workspace");
+					editInstallationView.getShell().addDisposeListener(new DisposeListener() {
+
+						@Override
+						public void widgetDisposed(DisposeEvent e) {
+							filterLists();
+						}
+					});
 				}
 
 			});

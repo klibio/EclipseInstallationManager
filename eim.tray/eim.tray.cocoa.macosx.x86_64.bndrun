@@ -5,7 +5,8 @@
 
 -runblacklist.macos: \
     osgi.identity;filter:='(osgi.identity=*linux*)',\
-    osgi.identity;filter:='(osgi.identity=*win32*)'
+    osgi.identity;filter:='(osgi.identity=*win32*)',\
+    osgi.identity;filter:='(osgi.identity=*aarch64*)'
     
 -runrequires.macos: bnd.identity;id='org.eclipse.swt.cocoa.macosx.x86_64'
 
@@ -86,7 +87,6 @@
 	org.eclipse.oomph.util;version='[1.19.0,1.19.1)',\
 	org.eclipse.osgi.compatibility.state;version='[1.2.800,1.2.801)',\
 	org.eclipse.swt;version='[3.123.0,3.123.1)',\
-	org.eclipse.swt.cocoa.macosx.aarch64;version='[3.123.0,3.123.1)',\
 	org.eclipse.swt.cocoa.macosx.x86_64;version='[3.123.0,3.123.1)',\
 	org.osgi.service.component;version='[1.5.1,1.5.2)',\
 	org.osgi.service.prefs;version='[1.1.2,1.1.3)',\

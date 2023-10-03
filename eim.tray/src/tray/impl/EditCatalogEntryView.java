@@ -39,6 +39,7 @@ public class EditCatalogEntryView {
 	private Shell shell;
 	private LocationCatalogEntry entryToModify;
 	private Bundle bundle = FrameworkUtil.getBundle(this.getClass());
+	private boolean resourceModified = false;
 	
 	@Reference
 	private EIMService eimService;
@@ -70,7 +71,7 @@ public class EditCatalogEntryView {
 			logger.error("Error loading the EIM icon!");
 			e.printStackTrace();
 		}
-
+		
 		Label titleLabel = new Label(shell, SWT.NONE);
 		titleLabel.setFont(new Font(display, "Roboto", 16, SWT.NORMAL));
 		titleLabel.setText("Modify entry " + name);
@@ -137,6 +138,10 @@ public class EditCatalogEntryView {
 
 		Label separatorEnd = new Label(shell, SWT.SEPARATOR | SWT.SHADOW_OUT | SWT.HORIZONTAL);
 		separatorEnd.setLayoutData(new GridData(SWT.FILL, SWT.END, true, false, 2, 1));
+		
+		Label refreshHint = new Label(shell, SWT.NONE);
+		refreshHint.setText("Please Refresh the tray application to synchronize the modifications!");
+		refreshHint.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 2, 1));
 
 		Button okButton = new Button(shell, SWT.FLAT);
 		okButton.setText("Save");
@@ -145,8 +150,8 @@ public class EditCatalogEntryView {
 
 			@Override
 			public void handleEvent(Event event) {
+				resourceModified = true;
 				saveChanges(entryToModify, enterNewName.getText(), modifyTarget);
-
 			}
 		});
 
@@ -158,6 +163,7 @@ public class EditCatalogEntryView {
 
 			@Override
 			public void handleEvent(Event event) {
+				resourceModified = false;
 				cancelButton();
 			}
 		});
@@ -183,6 +189,14 @@ public class EditCatalogEntryView {
 
 	private void cancelButton() {
 		shell.dispose();
+	}
+	
+	public boolean getIfModified() {
+		return resourceModified;
+	}
+	
+	public Shell getShell() {
+		return shell;
 	}
 
 }
