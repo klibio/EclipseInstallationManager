@@ -621,8 +621,6 @@ public class ManagementView {
 		secondTabComposite.setLayout(new GridLayout(1, false));
 		secondTabComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		secondTabComposite.setBackground(LIST_BACKGROUND);
-
 		secondTabComposite.requestLayout();
 
 		scrolledCompositeSecondTab.setContent(secondTabComposite);
