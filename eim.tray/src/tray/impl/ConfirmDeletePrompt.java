@@ -178,6 +178,7 @@ public class ConfirmDeletePrompt {
 		okButton.setLayoutData(new GridData(SWT.END, SWT.END, true, false, 1, 1));
 		okButton.setText("Delete");
 		okButton.setForeground(new Color(new RGB(100, 100, 100)));
+		okButton.setBackground(new Color(new RGB(255, 255, 255)));
 		okButton.addListener(SWT.Selection, new Listener() {
 
 			@Override

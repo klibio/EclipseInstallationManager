@@ -80,7 +80,7 @@ public class ManagementView {
 
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
 	private ConfirmDeletePrompt deletePrompt;
-	
+
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
 	private TrayApplication trayApp;
 
@@ -320,13 +320,13 @@ public class ManagementView {
 				public void handleEvent(Event event) {
 					editInstallationView.showModifyEntryView(entry, "installation");
 					editInstallationView.getShell().addDisposeListener(new DisposeListener() {
-						
+
 						@Override
 						public void widgetDisposed(DisposeEvent e) {
 							filterLists();
 						}
 					});
-					
+
 				}
 
 			});
@@ -343,7 +343,7 @@ public class ManagementView {
 						public void widgetDisposed(DisposeEvent e) {
 							filterLists();
 						}
-						
+
 					});
 				}
 			});
@@ -499,6 +499,13 @@ public class ManagementView {
 					@Override
 					public void handleEvent(Event event) {
 						editInstallationView.showModifyEntryView(entry, "workspace");
+						editInstallationView.getShell().addDisposeListener(new DisposeListener() {
+
+							@Override
+							public void widgetDisposed(DisposeEvent e) {
+								filterLists();
+							}
+						});
 					}
 
 				});
@@ -658,6 +665,13 @@ public class ManagementView {
 				@Override
 				public void handleEvent(Event event) {
 					editInstallationView.showModifyEntryView(entry, "workspace");
+					editInstallationView.getShell().addDisposeListener(new DisposeListener() {
+
+						@Override
+						public void widgetDisposed(DisposeEvent e) {
+							filterLists();
+						}
+					});
 				}
 
 			});
