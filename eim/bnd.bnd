@@ -1,6 +1,5 @@
 -buildpath: \
 	osgi.core,\
-	osgi.cmpn,\
 	osgi.annotation,\
 	org.apache.felix.gogo.runtime,\
 	org.apache.felix.scr,\
@@ -13,9 +12,10 @@
 	org.eclipse.oomph.setup,\
 	org.eclipse.oomph.setup.core,\
 	org.eclipse.oomph.util,\
-	org.slf4j.api,\
+	slf4j.api,\
 	eim.api;version=latest,\
-	eim.util;version=latest
+	eim.util;version=latest,\
+	org.osgi.service.component.annotations
 -sub: \
     command.bnd,\
     impl.bnd
@@ -23,6 +23,5 @@
 -includeresource: \
     ./root/ ,\
     logback.xml
-
 
 Require-Bundle: org.eclipse.oomph.setup.core

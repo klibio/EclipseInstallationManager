@@ -5,9 +5,8 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 -buildpath: \
 	${junit},\
 	${mockito},\
-	osgi.annotation;version='7.0.0',\
-	osgi.core;version='7.0.0',\
-	osgi.cmpn;version='7.0.0',\
+	osgi.annotation,\
+	osgi.core,\
 	org.mockito.mockito-core,\
 	org.knowhowlab.osgi.testing.all,\
 	org.eclipse.e4.core.di.annotations,\

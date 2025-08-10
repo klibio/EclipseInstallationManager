@@ -2,11 +2,6 @@
 com.github.kwhat:jnativehook:2.2.2
 
 # Testing
-org.junit.jupiter:junit-jupiter:5.9.2
-org.junit.jupiter:junit-jupiter-api:5.9.2
-org.junit.jupiter:junit-jupiter-engine:5.9.2
-org.junit.platform:junit-platform-commons:1.9.2
-org.mockito:mockito-all:2.0.2-beta
 biz.aQute.bnd:biz.aQute.tester.junit-platform:6.4.0
 org.apiguardian:apiguardian-api:1.1.2
 org.junit.platform:junit-platform-engine:1.9.2
@@ -20,20 +15,41 @@ org.jacoco:org.jacoco.agent:jar:0.8.10
 org.jacoco:org.jacoco.core:0.8.10
 org.mockito:mockito-core:5.3.1
 
-# Logging
-ch.qos.logback:logback-classic:1.2.12
-ch.qos.logback:logback-core:1.2.12
-org.slf4j:osgi-over-slf4j:1.7.25
+# logging
+ch.qos.logback:logback-classic:1.5.18
+ch.qos.logback:logback-core:1.5.18
 
-#webconsole
-org.apache.felix:org.apache.felix.webconsole:4.8.12
-org.apache.felix:org.apache.felix.webconsole.plugins.ds:2.2.0
-org.apache.felix:org.apache.felix.webconsole.plugins.memoryusage:1.0.10
-org.apache.felix:org.apache.felix.webconsole.plugins.packageadmin:1.0.4
-org.apache.aries.jax.rs:org.apache.aries.jax.rs.whiteboard:2.0.2
-org.apache.felix:org.apache.felix.inventory:1.1.0
-com.fasterxml.woodstox:woodstox-core:6.5.1
-org.apache.felix:org.apache.felix.bundlerepository:2.0.10
-org.apache.felix:org.osgi.service.obr:1.0.2
-org.apache.felix:org.apache.felix.framework:7.0.5
-org.osgi:org.osgi.service.http.whiteboard:1.1.1
+#
+# webconsole
+#
+org.apache.felix:org.apache.felix.webconsole:5.0.12
+    org.apache.felix:org.apache.felix.configadmin:1.9.26
+    org.apache.felix:org.apache.felix.http.jetty:5.1.34
+    org.apache.felix:org.apache.felix.http.servlet-api:6.1.0
+    org.apache.felix:org.apache.felix.inventory:2.0.0
+    jakarta.servlet:jakarta.servlet-api:5.0.0
+    org.owasp.encoder:encoder:1.3.1
+    javax.servlet:javax.servlet-api:3.1.0
+#    org.osgi:org.osgi.service.servlet:2.0.0 - already provided by eclipse
+    org.osgi:org.osgi.service.http.whiteboard:1.1.1
+    org.slf4j:slf4j-api:2.0.17
+    org.slf4j:slf4j-simple:2.0.17
+
+#
+# webconsole plugins
+#
+org.apache.felix:org.apache.felix.webconsole.plugins.ds:2.3.0
+org.apache.felix:org.apache.felix.webconsole.plugins.event:1.2.0
+org.apache.felix:org.apache.felix.webconsole.plugins.memoryusage:1.1.0
+org.apache.felix:org.apache.felix.webconsole.plugins.obr:1.1.0
+org.apache.felix:org.apache.felix.webconsole.plugins.packageadmin:1.1.0
+#    commons-io:commons-io:2.19.0 - already provided by eclipse
+
+#
+# provides osgi.extender=osgi.serviceloader.processor
+#
+org.apache.aries.spifly:org.apache.aries.spifly.dynamic.bundle:1.3.7
+    org.ow2.asm:asm:9.8
+    org.ow2.asm:asm-analysis:9.8
+    org.ow2.asm:asm-commons:9.8
+    org.ow2.asm:asm-tree:9.8

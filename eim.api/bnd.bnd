@@ -1,8 +1,7 @@
 Bundle-Version: 2.0.2
 
--baseline: *
 -buildpath: \
-	osgi.annotation;version='7.0.0',\
+	osgi.annotation,\
 	org.eclipse.oomph.setup,\
 	org.eclipse.oomph.util,\
 	org.eclipse.oomph.base

@@ -2,7 +2,7 @@
 -runstorage.debug: rt
 
 -runproperties.debug: \
-    launch.trace=true,\
+    launch.trace=false,\
     osgi.console=,\
     osgi.console.enable.builtin=false,\
     logback.configurationFile=logback-DEBUG.xml

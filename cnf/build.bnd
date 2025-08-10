@@ -1,4 +1,8 @@
-cache=${.}/cache
+# optional include of credentials for gpg, repositories
+# the leading dash, of the file locations makes it optional
+-include: \
+	-${env;USERPROFILE}/.ssh/repository-tokens.properties, \
+	-${user.home}/.ssh/repository-tokens.properties
 
 Bundle-License: EPL-2.0;\
     description="This program and the accompanying materials are made avilable under the terms of the Eclipse Public License 2.0.";\
@@ -9,6 +13,13 @@ Bundle-SCM: \
     tag=${Bundle-Version}
 
 Bundle-Developers: \
+    peterkir; \
+        email=peter@klib.io; \
+        name="Peter Kirschner"; \
+        organization=Kirschners GmbH; \
+        organizationUrl=https://klib.io; \
+        roles="architect,developer"; \
+        timezone="Europe/Berlin",\
     aschin; \
         email=alex@klib.io;\
         name="Alexander Schindler";\
@@ -18,7 +29,6 @@ Bundle-Developers: \
 
 # JUnit
 junit: \
-  junit-jupiter,\
   junit-jupiter-api
 mockito: org.mockito.mockito-all
 
@@ -33,7 +43,6 @@ Bundle-Version: 1.1.0.SNAPSHOT
 # Maven info. The maven artifactId defaults to Bundle-SymbolicName
 -groupid:               io.klib.eim
 -pom:                   version=${if;${def;-snapshot};${versionmask;===;${@version}}-${-snapshot};${versionmask;===s;${@version}}}
-#-maven-release:         pom
--maven-release:         pom,sign;passphrase=${env;GPG_PASSPHRASE}
+-maven-release:         pom,sign;passphrase=${gpg_passphrase}
 
 Automatic-Module-Name: ${project.name}

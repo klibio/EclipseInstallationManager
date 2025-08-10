@@ -1,33 +1,71 @@
--releaserepo: Release
--baselinerepo: Release
+releaserepo:         ${workspace}/dist/bundles
+# local maven repo server
+reposilite_release:  https://releases.reposilite.klib.io/releases
+reposilite_snapshot: https://snapshots.reposilite.klib.io/snapshots
+# internet maven repo server
+mavencentral:        https://repo.maven.apache.org/maven2/
+sonatype_release:    https://central.sonatype.com/api/v1/publisher/upload/
+sonatype_snapshots:  https://central.sonatype.com/repository/maven-snapshots/
 
-#Configure Repositories
--plugin.1.Local: \
+-buildrepo: Local
+
+#-releaserepo: Rel_Local,Rel_Reposilite,Rel_Sonatype
+-releaserepo: Rel_Local
+#-releaserepo: Rel_Reposilite
+#-releaserepo: Rel_Sonatype
+
+-plugin.0.Main:\
+    aQute.bnd.repository.maven.provider.MavenBndRepository;\
+        name="Local";\
+        noupdateOnRelease=true
+
+-plugin.10.AddOns: \
     aQute.bnd.deployer.repository.LocalIndexedRepo; \
-        name = Local; \
+        name = AddOns; \
         pretty = true; \
-        local = ${build}/local
+        local = ${build}/addons
+        
+-plugin.90.LocalRelease:\
+    aQute.bnd.repository.maven.provider.MavenBndRepository;\
+        releaseUrl  = "${fileuri;${releaserepo}}";\
+        snapshotUrl = "${fileuri;${releaserepo}}";\
+        name        = "Rel_Local";\
+        noupdateOnRelease=true
 
--plugin.2.R7.API: \
-    aQute.bnd.repository.maven.pom.provider.BndPomRepository; \
-        snapshotUrls=https://oss.sonatype.org/content/repositories/osgi/; \
-        releaseUrls=https://repo1.maven.org/maven2/; \
-        revision=org.osgi.enroute:osgi-api:7.0.0; \
-        name="OSGi R7 API"
+# configure access credentials to server
+-connection-settings.reposilite:\
+   server;    id = ${reposilite_release};\
+        username = ${reposilite_release_user};\
+        password = ${reposilite_release_token};\
+          verify = false,\
+   server; 	  id = ${reposilite_snapshot};\
+        username = ${reposilite_snapshot_user};\
+        password = ${reposilite_snapshot_token};\
+          verify = false
 
--plugin.3.Release: \
-    aQute.bnd.deployer.repository.LocalIndexedRepo; \
-        name = Release; \
-        pretty = true; \
-        local = ${build}/release
+-plugin.91.reposilite: \
+    aQute.bnd.repository.maven.provider.MavenBndRepository; \
+        snapshotUrl = ${reposilite_snapshot}; \
+        releaseUrl	= ${reposilite_release}; \
+        index       = ${.}/gav_91_reposilite.mvn; \
+        name        = "Rel_Reposilite"
 
--plugin.4.R7.Impl: \
-    aQute.bnd.repository.maven.pom.provider.BndPomRepository; \
-        snapshotUrls=https://oss.sonatype.org/content/repositories/osgi/; \
-        releaseUrls=https://repo.maven.apache.org/maven2/; \
-        revision=org.osgi.enroute:impl-index:7.0.0; \
-        readOnly=true; \
-        name="OSGi R7 Reference Implementations"
+-connection-settings.sonatype:\
+   server;    id = ${sonatype_release};\
+        password = ${sonatype_bearer};\
+          verify = false,\
+   server;    id = ${sonatype_snapshots};\
+        password = ${sonatype_bearer};\
+          verify = false
+
+-plugin.92.sonatype: \
+    aQute.bnd.repository.maven.provider.MavenBndRepository; \
+        snapshotUrl = ${sonatype_snapshots};\
+        releaseUrl  = ${sonatype_release}; \
+        index       = ${.}/gav_92_sonatype.mvn; \
+        name        = "Rel_Sonatype"; \
+        autopublish = false
+
 
 -plugin.6.Central: \
     aQute.bnd.repository.maven.provider.MavenBndRepository; \
@@ -43,13 +81,12 @@
         local = ${build}/templates
         
 # eclipse release details
-eclipse.version          = 4.27
-eclipse.name             = 2023-03
-eclipse.platform.version = R-4.27-202303020300
 eclipse.url              = https://download.eclipse.org
-eclipse.simu.version     = 202303151000
 
 # Eclipse Platform release 
+eclipse.version          = 4.36
+eclipse.platform.version = R-4.36-202505281830
+# Eclipse Platform release - do not edit - derived variables
 eclipse.platform.baseurl = ${eclipse.url}/eclipse/updates
 eclipse.platform.name    = Platform_${eclipse.platform.version}
 eclipse.platform.url     = "${eclipse.platform.baseurl}/${eclipse.version}/${eclipse.platform.version}"
@@ -60,22 +97,21 @@ eclipse.platform.url     = "${eclipse.platform.baseurl}/${eclipse.version}/${ecl
         url   = ${eclipse.platform.url}
 
 # Eclipse Simultaneous release 
+eclipse.name             = 2025-06
+eclipse.simu.version     = 202506111000
+# Eclipse Simultaneous release- do not edit - derived variables
 eclipse.simu.baseurl     = ${eclipse.url}/releases
 eclipse.simu.name        = "SimuRel_${eclipse.name}_${eclipse.simu.version}"
 eclipse.simu.url         = "${eclipse.simu.baseurl}/${eclipse.name}/${eclipse.simu.version}"
- uncomment the following line to include the simultaneous release
+ 
+# uncomment the following line to include the simultaneous release
 #-plugin.11.eclipse.simu: \
 #    aQute.bnd.repository.p2.provider.P2Repository; \
 #        name  = ${eclipse.simu.name}; \
 #        url   = ${eclipse.simu.url}
 
+oomph.version=1.37.0
 -plugin.11.oomph.platform: \
     aQute.bnd.repository.p2.provider.P2Repository; \
-        name  = "Oomph 1.25"; \
-        url   = "https://download.eclipse.org/oomph/drops/release/1.25.0/"
-
--plugin.99.Local: \
-    aQute.bnd.deployer.repository.LocalIndexedRepo; \
-        name = Local; \
-        pretty = true; \
-        local = ${build}/local
+        name  = "Oomph ${oomph.version}"; \
+        url   = "${eclipse.url}/oomph/drops/release/${oomph.version}/"
