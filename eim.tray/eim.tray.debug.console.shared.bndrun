@@ -7,6 +7,4 @@
     osgi.console.enable.builtin=false,\
     logback.configurationFile=logback-DEBUG.xml
 
--runrequires.debug: \
-    ${debug.console},\
-    ${debug.webconsole}
+-runrequires.debug: ${debug.console}

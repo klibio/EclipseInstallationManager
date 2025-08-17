@@ -42,20 +42,22 @@ public class LocationCatalogEntryImpl extends LocationCatalogEntry {
 		this.installationFolderName = installationPath.getParent().toFile().getName();
 		this.workspaceFolderName = workspacePath.toFile().getName();
 	}
-	
+
 	@Override
 	public String getInstallationName() {
 		return installationName;
 	}
+
 	@Override
 	public void setInstallationName(String name) {
 		this.installationName = name;
 	}
-	
+
 	@Override
 	public String getWorkspaceName() {
 		return workspaceName;
 	}
+
 	@Override
 	public void setWorkspaceName(String name) {
 		this.workspaceName = name;

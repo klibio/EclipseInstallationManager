@@ -1,5 +1,3 @@
-Bundle-Version: 2.0.2
-
 -buildpath: \
 	osgi.annotation,\
 	org.eclipse.oomph.setup,\
@@ -7,3 +5,5 @@ Bundle-Version: 2.0.2
 	org.eclipse.oomph.base
 
 Export-Package: eim.api
+
+Bundle-Version: 2.0.2.${tstamp;yyyymmdd-hhmmss}

@@ -38,7 +38,7 @@ bin         ${target-dir}/classes
 testbin     ${target-dir}/test-classes
 
 -snapshot: ${tstamp}
-Bundle-Version: 1.1.0.SNAPSHOT
+Bundle-Version: 1.1.0.${tstamp;yyyymmdd-hhMMss}
 
 # Maven info. The maven artifactId defaults to Bundle-SymbolicName
 -groupid:               io.klib.eim

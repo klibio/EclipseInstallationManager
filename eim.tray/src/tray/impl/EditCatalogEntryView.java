@@ -31,7 +31,9 @@ import org.slf4j.LoggerFactory;
 import eim.api.EIMService;
 import eim.api.LocationCatalogEntry;
 
-@Component(service = EditCatalogEntryView.class)
+@Component(
+		service = EditCatalogEntryView.class
+)
 public class EditCatalogEntryView {
 	private Logger logger = LoggerFactory.getLogger(EditCatalogEntryView.class);
 
@@ -40,19 +42,21 @@ public class EditCatalogEntryView {
 	private LocationCatalogEntry entryToModify;
 	private Bundle bundle = FrameworkUtil.getBundle(this.getClass());
 	private boolean resourceModified = false;
-	
+
 	@Reference
 	private EIMService eimService;
-	
+
 	/**
 	 * Shows the Edit View, for either a installation or workspace.
-	 * @param entry			The LocationCatalogEntry that is to be edited.
-	 * @param modifyTarget	Either "workspace" or "installation", defines the target variables to modify.
+	 * 
+	 * @param entry        The LocationCatalogEntry that is to be edited.
+	 * @param modifyTarget Either "workspace" or "installation", defines the target
+	 *                     variables to modify.
 	 */
 	public void showModifyEntryView(LocationCatalogEntry entry, String modifyTarget) {
 		entryToModify = entry;
 		String name = null;
-		if(modifyTarget.equals("installation")) {
+		if (modifyTarget.equals("installation")) {
 			name = entry.getInstallationName();
 		} else if (modifyTarget.equals("workspace")) {
 			name = entry.getWorkspaceName();
@@ -71,7 +75,7 @@ public class EditCatalogEntryView {
 			logger.error("Error loading the EIM icon!");
 			e.printStackTrace();
 		}
-		
+
 		Label titleLabel = new Label(shell, SWT.NONE);
 		titleLabel.setFont(new Font(display, "Roboto", 16, SWT.NORMAL));
 		titleLabel.setText("Modify entry " + name);
@@ -138,7 +142,7 @@ public class EditCatalogEntryView {
 
 		Label separatorEnd = new Label(shell, SWT.SEPARATOR | SWT.SHADOW_OUT | SWT.HORIZONTAL);
 		separatorEnd.setLayoutData(new GridData(SWT.FILL, SWT.END, true, false, 2, 1));
-		
+
 		Label refreshHint = new Label(shell, SWT.NONE);
 		refreshHint.setText("Please Refresh the tray application to synchronize the modifications!");
 		refreshHint.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 2, 1));
@@ -172,15 +176,15 @@ public class EditCatalogEntryView {
 		shell.open();
 
 	}
-	
+
 	/**
 	 * Saves changes to the data entry and the resources xml file
 	 */
 	private void saveChanges(LocationCatalogEntry entry, String newName, String modifyTarget) {
-		if(modifyTarget.equals("installation")) {
+		if (modifyTarget.equals("installation")) {
 			eimService.renameInstallation(entry, newName);
 			entry.setInstallationName(newName);
-		} else if(modifyTarget.equals("workspace")) {
+		} else if (modifyTarget.equals("workspace")) {
 			eimService.renameWorkspace(entry, newName);
 			entry.setWorkspaceName(newName);
 		}
@@ -190,11 +194,11 @@ public class EditCatalogEntryView {
 	private void cancelButton() {
 		shell.dispose();
 	}
-	
+
 	public boolean getIfModified() {
 		return resourceModified;
 	}
-	
+
 	public Shell getShell() {
 		return shell;
 	}

@@ -23,9 +23,10 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test}
 	eim.api;version='1.0',\
 	eim.util;version=latest
 
+Bundle-Version: 1.0.4.${tstamp;yyyymmdd-hhmmss}
+
 -dependson: \
     eim
 
 -privatepackage: \
     eim.pop
-Bundle-Version: 1.0.4

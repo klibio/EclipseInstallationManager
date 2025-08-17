@@ -8,12 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PreferenceUtils {
-	
+
 	private static Logger logger = LoggerFactory.getLogger(PreferenceUtils.class);
-	
+
 	/**
 	 * Checks if a preference in the eimPrefs preferences already exists
-	 * @param key 
+	 * 
+	 * @param key
 	 * @return True or False
 	 */
 	public static boolean checkIfPreferenceKeyExists(String key, Preferences prefs) {
@@ -29,10 +30,11 @@ public class PreferenceUtils {
 
 		return result;
 	}
-	
+
 	/**
-	 * Saves a preference to the EIM Preferences 
-	 * @param key for the new preference
+	 * Saves a preference to the EIM Preferences
+	 * 
+	 * @param key  for the new preference
 	 * @param pref preference value
 	 */
 	public static void savePreference(String key, String pref, Preferences prefs) {
@@ -45,5 +47,5 @@ public class PreferenceUtils {
 			e.printStackTrace();
 		}
 	}
-	
+
 }

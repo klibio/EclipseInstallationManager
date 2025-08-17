@@ -40,13 +40,13 @@ abstract public class LocationCatalogEntry implements Comparable<LocationCatalog
 	public abstract Path getInstallationPath();
 
 	public abstract Path getWorkspacePath();
-	
+
 	public abstract String getInstallationName();
-	
+
 	public abstract String getWorkspaceName();
 
 	public abstract void setInstallationName(String name);
-	
+
 	public abstract void setWorkspaceName(String name);
 
 	@Override

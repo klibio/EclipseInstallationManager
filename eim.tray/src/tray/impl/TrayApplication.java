@@ -36,7 +36,9 @@ import eim.api.LocationCatalogEntry;
 import eim.util.PreferenceUtils;
 import eim.util.SystemUtils;
 
-@Component(immediate = true)
+@Component(
+		immediate = true
+)
 public class TrayApplication {
 
 	private IEclipsePreferences properties = InstanceScope.INSTANCE.getNode("tray.impl");
@@ -49,7 +51,9 @@ public class TrayApplication {
 	@Reference
 	private DataProvider dataController;
 
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
+	@Reference(
+			cardinality = ReferenceCardinality.OPTIONAL
+	)
 	private ManagementView managementView;
 
 	private Logger logger = LoggerFactory.getLogger(TrayApplication.class);
@@ -149,7 +153,8 @@ public class TrayApplication {
 
 					@Override
 					public void widgetDefaultSelected(SelectionEvent e) {
-						// Do nothing, because default selection is not part of the MacOS Menu Bar behavior
+						// Do nothing, because default selection is not part of the MacOS Menu Bar
+						// behavior
 
 					}
 				});
@@ -179,7 +184,7 @@ public class TrayApplication {
 			FrameworkUtil.getBundle(EditCatalogEntryView.class).stop();
 			bundle.stop();
 			bc.getBundle(0).stop();
-			
+
 		} catch (BundleException e) {
 			logger.debug("Something went wrong shutting down the OSGi framework");
 			e.printStackTrace();

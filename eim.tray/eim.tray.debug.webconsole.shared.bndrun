@@ -1,0 +1,12 @@
+-include: ~eim.tray.shared.bndrun
+-runstorage.debug: rt
+
+-runproperties.debug: \
+    launch.trace=false,\
+    osgi.console=,\
+    osgi.console.enable.builtin=false,\
+    logback.configurationFile=logback-DEBUG.xml
+
+-runrequires.debug: \
+	${debug.console},\
+    ${debug.webconsole}

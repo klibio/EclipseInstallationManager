@@ -20,6 +20,6 @@ public interface EIMService {
 	public void renameWorkspace(LocationCatalogEntry entry, String name);
 
 	public void renameInstallation(LocationCatalogEntry entry, String name);
-	
+
 	public void deletePath(Path path);
 }

@@ -1,0 +1,53 @@
+-runfw: org.eclipse.osgi;version='[3.23,4)'
+-runee: JavaSE-17
+-runvm.macos: -XstartOnFirstThread
+
+-runsystemcapabilities.macos: \
+    osgi.native;osgi.native.osname:List<String>="macosx";osgi.native.processor:List<String>="aarch64"
+ 
+-runblacklist.macos: \
+    osgi.identity;filter:='(osgi.identity=*linux*)',\
+    osgi.identity;filter:='(osgi.identity=*win32*)',\
+    osgi.identity;filter:='(osgi.identity=*x86_64*)'
+    
+-runstorage.debug: rt
+
+-runproperties.debug: \
+    launch.trace=false,\
+    osgi.console=,\
+    osgi.console.enable.builtin=false,\
+    logback.configurationFile=logback-DEBUG.xml
+
+-runrequires.debug: \
+    ${debug.console},\
+    ${debug.webconsole}
+-runrequires.macos: \
+    bnd.identity;id='org.eclipse.swt.cocoa.macosx.aarch64'    
+-runrequires: bnd.identity;id='eim.hello'
+-runbundles: \
+	eim.hello;version=snapshot,\
+	org.apache.aries.spifly.dynamic.bundle;version='[1.3.7,1.3.8)',\
+	org.apache.felix.configadmin;version='[1.9.26,1.9.27)',\
+	org.apache.felix.gogo.command;version='[1.1.2,1.1.3)',\
+	org.apache.felix.gogo.runtime;version='[1.1.6,1.1.7)',\
+	org.apache.felix.gogo.shell;version='[1.1.4,1.1.5)',\
+	org.apache.felix.http.jetty;version='[5.1.34,5.1.35)',\
+	org.apache.felix.http.servlet-api;version='[6.1.0,6.1.1)',\
+	org.apache.felix.inventory;version='[2.0.0,2.0.1)',\
+	org.apache.felix.scr;version='[2.2.12,2.2.13)',\
+	org.apache.felix.webconsole;version='[5.0.12,5.0.13)',\
+	org.eclipse.swt;version='[3.130.0,3.130.1)',\
+	org.eclipse.swt.cocoa.macosx.aarch64;version='[3.130.0,3.130.1)',\
+	org.objectweb.asm;version='[9.8.0,9.8.1)',\
+	org.objectweb.asm.commons;version='[9.8.0,9.8.1)',\
+	org.objectweb.asm.tree;version='[9.8.0,9.8.1)',\
+	org.objectweb.asm.tree.analysis;version='[9.8.0,9.8.1)',\
+	org.objectweb.asm.util;version='[9.8.0,9.8.1)',\
+	org.osgi.service.component;version='[1.5.1,1.5.2)',\
+	org.osgi.service.http.whiteboard;version='[1.1.1,1.1.2)',\
+	org.osgi.service.servlet;version='[2.0.0,2.0.1)',\
+	org.osgi.util.function;version='[1.2.0,1.2.1)',\
+	org.osgi.util.promise;version='[1.3.0,1.3.1)',\
+	org.owasp.encoder;version='[1.3.1,1.3.2)',\
+	slf4j.api;version='[2.0.17,2.0.18)',\
+	slf4j.simple;version='[2.0.17,2.0.18)'

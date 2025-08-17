@@ -44,7 +44,9 @@ import org.slf4j.LoggerFactory;
 import eim.api.EIMService;
 import eim.api.LocationCatalogEntry;
 
-@Component(service = ManagementView.class)
+@Component(
+		service = ManagementView.class
+)
 public class ManagementView {
 	private Logger logger = LoggerFactory.getLogger(ManagementView.class);
 
@@ -69,19 +71,27 @@ public class ManagementView {
 	private Image editPen;
 	private Image trashCan;
 
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
+	@Reference(
+			cardinality = ReferenceCardinality.OPTIONAL
+	)
 	private DataProvider dataController;
 
 	@Reference
 	private EIMService eclService;
 
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
+	@Reference(
+			cardinality = ReferenceCardinality.OPTIONAL
+	)
 	private EditCatalogEntryView editInstallationView;
 
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
+	@Reference(
+			cardinality = ReferenceCardinality.OPTIONAL
+	)
 	private ConfirmDeletePrompt deletePrompt;
 
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
+	@Reference(
+			cardinality = ReferenceCardinality.OPTIONAL
+	)
 	private TrayApplication trayApp;
 
 	@Activate

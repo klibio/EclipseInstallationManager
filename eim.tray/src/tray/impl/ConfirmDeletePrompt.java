@@ -36,17 +36,19 @@ import org.slf4j.LoggerFactory;
 
 import eim.api.EIMService;
 
-@Component(service = ConfirmDeletePrompt.class)
+@Component(
+		service = ConfirmDeletePrompt.class
+)
 public class ConfirmDeletePrompt {
 	private Logger logger = LoggerFactory.getLogger(ConfirmDeletePrompt.class);
 	private Bundle bundle = FrameworkUtil.getBundle(this.getClass());
-	
+
 	private Path pathToDelete;
 	private Path parentPath;
 	private String message = "Do you really want to delete the following path?";
 	private Display display = Display.getDefault();
 	private Shell shell;
-	
+
 	private boolean deleted = false;
 
 	@Reference
@@ -59,7 +61,7 @@ public class ConfirmDeletePrompt {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
+
 	@Activate
 	public void activate() {
 		logger.debug("Activating ConfirmDeletePrompt component");
@@ -80,11 +82,11 @@ public class ConfirmDeletePrompt {
 		createContents(shell);
 		shell.open();
 	}
-	
+
 	public Shell getShell() {
 		return shell;
 	}
-	
+
 	public boolean getDeleted() {
 		return deleted;
 	}
@@ -166,14 +168,14 @@ public class ConfirmDeletePrompt {
 			}
 
 		});
-		
+
 		Label separatorEnd = new Label(shell, SWT.SEPARATOR | SWT.SHADOW_OUT | SWT.HORIZONTAL);
 		separatorEnd.setLayoutData(new GridData(SWT.FILL, SWT.END, true, false, 2, 1));
-		
+
 		Label refreshHint = new Label(shell, SWT.NONE);
 		refreshHint.setText("Please Refresh the tray application to synchronize the modifications!");
 		refreshHint.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 2, 1));
-		
+
 		Button okButton = new Button(shell, SWT.PUSH);
 		okButton.setLayoutData(new GridData(SWT.END, SWT.END, true, false, 1, 1));
 		okButton.setText("Delete");
@@ -183,7 +185,7 @@ public class ConfirmDeletePrompt {
 
 			@Override
 			public void handleEvent(Event event) {
-				if(checkboxParentFolder.getSelection()) {
+				if (checkboxParentFolder.getSelection()) {
 					eimService.deletePath(parentPath);
 				} else {
 					eimService.deletePath(pathToDelete);
@@ -192,7 +194,7 @@ public class ConfirmDeletePrompt {
 				shell.close();
 			}
 		});
-		
+
 		Button cancelButton = new Button(shell, SWT.PUSH);
 		cancelButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.END, true, false, 1, 1));
 		cancelButton.setText("Cancel");
@@ -201,7 +203,7 @@ public class ConfirmDeletePrompt {
 		cancelButton.setBackground(new Color(new RGB(0, 95, 184)));
 		cancelButton.setForeground(display.getSystemColor(SWT.COLOR_WHITE));
 		cancelButton.addListener(SWT.Selection, new Listener() {
-			
+
 			@Override
 			public void handleEvent(Event event) {
 				deleted = false;

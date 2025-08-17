@@ -29,7 +29,9 @@ public class EclipseStarterCommand {
 		this.eclService = eclsvc;
 	}
 
-	@Descriptor("Start a process with a specific command.")
+	@Descriptor(
+		"Start a process with a specific command."
+	)
 	public void startProcess(String command, String workingDir, String[] args) {
 		System.out.println("Executing " + command);
 		if (workingDir == "null") {
@@ -41,29 +43,33 @@ public class EclipseStarterCommand {
 		eclService.startProcess(command, workingDir, args);
 	}
 
-	@Descriptor("Starts a process from the given list of entries")
+	@Descriptor(
+		"Starts a process from the given list of entries"
+	)
 	public void startEntry(Integer index) {
 		LinkedList<LocationCatalogEntry> locationEntries = eclService.getLocationEntries();
 		LocationCatalogEntry entry = null;
 		for (LocationCatalogEntry locationCatalogEntry : locationEntries) {
-			if(locationCatalogEntry.getID() == index) {
+			if (locationCatalogEntry.getID() == index) {
 				entry = locationCatalogEntry;
 			}
 		}
 
 		eclService.startEntry(entry, true);
 	}
-	
-		
-	@Descriptor("List all available installations and workspaces done with the Eclipse Installer")
+
+	@Descriptor(
+		"List all available installations and workspaces done with the Eclipse Installer"
+	)
 	public void listLocations() {
 		eclService.listLocations(null);
 	}
-	
-	@Descriptor("List all available installations and workspaces from a specific locations file")
+
+	@Descriptor(
+		"List all available installations and workspaces from a specific locations file"
+	)
 	public void listLocations(String locationFile) {
 		eclService.listLocations(locationFile);
 	}
 
-	
 }

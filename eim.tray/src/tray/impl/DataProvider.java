@@ -18,7 +18,9 @@ import eim.api.EIMService;
 import eim.api.LocationCatalogEntry;
 import eim.util.FileUtils;
 
-@Component(service=DataProvider.class)
+@Component(
+		service = DataProvider.class
+)
 public class DataProvider {
 
 	private LinkedList<LocationCatalogEntry> locationEntries;
@@ -42,7 +44,7 @@ public class DataProvider {
 
 		createMappedInstallationEntries();
 	}
-	
+
 	/**
 	 * Puts unique installations into a separate List
 	 */
@@ -55,6 +57,7 @@ public class DataProvider {
 			}
 		});
 	}
+
 	/**
 	 * Puts unique workspaces into a separate List
 	 */
@@ -158,19 +161,19 @@ public class DataProvider {
 	public LinkedList<LocationCatalogEntry> getWorkspaces() {
 		return uniqueWorkspaces;
 	}
-	
+
 	/**
 	 * Reloads and refreshes the data structures.
 	 */
 	public void refreshData() {
 		eclService.refreshLocations();
 		this.locationEntries = eclService.getLocationEntries();
-		
-		//empty all present Lists
+
+		// empty all present Lists
 		uniqueInstallations.clear();
 		uniqueWorkspaces.clear();
 		installationGroupedMap.clear();
-		
+
 		identifyUniqueInstallations();
 		identifyUniqueWorkspaces();
 		createMappedInstallationEntries();

@@ -22,8 +22,13 @@
 	\
 	*;startlevel=10
 
+-runblacklist: \
+	bnd.identity;id='org.osgi.compendium',\
+	bnd.identity;id='osgi.cmpn'
+
+#    bnd.identity;id='eim.tray',\
+
 -runrequires: \
-    bnd.identity;id='eim.tray',\
     bnd.identity;id='eim.api',\
     bnd.identity;id='eim.impl',\
     bnd.identity;id='ch.qos.logback.classic',\
